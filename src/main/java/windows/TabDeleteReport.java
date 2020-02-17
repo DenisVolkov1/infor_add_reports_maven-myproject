@@ -1,0 +1,292 @@
+package windows;
+
+import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
+
+import database.CategoryAndCode;
+import database.ReportRelatedData;
+import exception.ConfirmException;
+import exception.InfoException;
+import log.LOg;
+
+import javax.swing.border.EtchedBorder;
+import javax.imageio.ImageIO;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+
+import util.DialogWindows;
+import util.MyHoverButton;
+import war.WarArchive;
+
+import javax.swing.JComboBox;
+import java.awt.ComponentOrientation;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Vector;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JCheckBox;
+import java.awt.Cursor;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+
+public class TabDeleteReport extends TabSuperClass {
+	private static TabDeleteReport TAB_DELETE_REPORT = null;
+	
+	private JTextField nameReportField;
+	private JComboBox<String> categoriesComboBox;
+	private MyHoverButton deleteReportButton;
+	private JCheckBox deleteFromArchiveCheckBox;
+	private JTextField nameFileTextField;
+	private MyHoverButton deleteFileButton;
+	/**
+	 * Create the panel.
+	 */
+	private TabDeleteReport() {
+		setLayout(null);
+		JPanel panel = new JPanel();
+		panel.setBounds(8, 0, 504, 323);
+		add(panel);
+		
+		deleteReportButton = new MyHoverButton("Delete report");
+
+		categoriesComboBox = new JComboBox<String>();
+		categoriesComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		categoriesComboBox.setMaximumRowCount(10);
+		categoriesComboBox.setInheritsPopupMenu(true);
+		categoriesComboBox.setFont(new Font("Dialog", Font.BOLD, 14));
+		categoriesComboBox.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		
+		nameReportField = new JTextField();
+		nameReportField.setFont(new Font("Dialog", Font.PLAIN, 14));
+		nameReportField.setColumns(10);
+		
+		JLabel categoryLabel = new JLabel("Category");
+		categoryLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		JLabel nameLabel = new JLabel("Name report");
+		nameLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		deleteFromArchiveCheckBox = new JCheckBox("Delete from archive");
+		deleteFromArchiveCheckBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		deleteFromArchiveCheckBox.setFont(new Font("Dialog", Font.BOLD, 13));
+		deleteFromArchiveCheckBox.setSelected(true);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Delete from war archive", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		GroupLayout gl_panel = new GroupLayout(panel);
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGap(30)
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
+								.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+								.addComponent(nameLabel, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
+									.addGroup(gl_panel.createSequentialGroup()
+										.addComponent(deleteFromArchiveCheckBox)
+										.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(deleteReportButton, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE))
+									.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 420, GroupLayout.PREFERRED_SIZE))))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)))
+					.addContainerGap())
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(6)
+					.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(nameLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGap(10)
+							.addComponent(deleteReportButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(deleteFromArchiveCheckBox)))
+					.addGap(18)
+					.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+		
+		deleteFileButton = new MyHoverButton("Delete file");
+		
+		nameFileTextField = new JTextField();
+		nameFileTextField.setFont(new Font("Dialog", Font.PLAIN, 14));
+		nameFileTextField.setColumns(10);
+		
+		JLabel lblNameFileReport = new JLabel("Name file report");
+		lblNameFileReport.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
+		gl_panel_1.setHorizontalGroup(
+			gl_panel_1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_1.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
+								.addComponent(deleteFileButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(nameFileTextField, GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE))
+							.addGap(24))
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addComponent(lblNameFileReport)
+							.addContainerGap(346, Short.MAX_VALUE))))
+		);
+		gl_panel_1.setVerticalGroup(
+			gl_panel_1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_1.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblNameFileReport, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(nameFileTextField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+					.addGap(10)
+					.addComponent(deleteFileButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		panel_1.setLayout(gl_panel_1);
+		panel.setLayout(gl_panel);
+	//////////////////Code
+	/////////////
+	primaryInit();
+	//////
+	}
+	private void primaryInit() {
+		final DefaultComboBoxModel<String> model3 = new DefaultComboBoxModel(listCategoryAndCodes);
+		categoriesComboBox.setModel(model3);
+		
+		deleteReportButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Connection connectionForCommit = null;
+				String pathString = null;
+				String nameReport = null;
+				Integer categoryId = null;
+				String nameFileReport = null;
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				try {
+					if (deleteFromArchiveCheckBox.isSelected()) {
+						matchCheckingDeleteReport();
+						matchCheckingDeleteReportFromArchive();
+						//
+						nameReport = nameReportField.getText().trim();
+						categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
+						
+						pathString = ReportRelatedData.getReportFilePath(nameReport, categoryId);
+						nameFileReport = (pathString.replace("/frameset?__report=report/", "")).replace(".rptdesign", "");
+							ReportRelatedData.deleteReport(nameReport, categoryId);
+								WarArchive.deleteReportFileFromArchive(nameFileReport);
+					} else {
+						matchCheckingDeleteReport();
+						//
+						nameReport = nameReportField.getText().trim();
+						categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
+							ReportRelatedData.deleteReport(nameReport, categoryId);
+					}
+					DialogWindows.dialogWindowWarning("Successfully delete!");
+				} catch (InfoException ie) {
+					 DialogWindows.dialogWindowError(ie); 
+				} catch (Exception e1) {
+					 DialogWindows.dialogWindowError(e1);
+					 	LOg.logToFile(e1);
+				} finally {
+					 setCursor(null);
+						if (connectionForCommit != null) {
+							try {
+								connectionForCommit.close();
+							} catch (SQLException e1) {
+								DialogWindows.dialogWindowError(e1);
+									LOg.logToFile(e1);
+							}
+						}
+				}	
+			}
+		});
+		deleteFileButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				try {
+					matchCheckingDeleteReportFileFromArchive();
+					//
+					String nameFileReport = nameFileTextField.getText().trim();
+					WarArchive.deleteReportFileFromArchive(nameFileReport);
+						DialogWindows.dialogWindowWarning("Successfully delete!");
+				} catch (InfoException ie) {
+					 DialogWindows.dialogWindowError(ie); 
+				} catch (Exception e1) {
+					 DialogWindows.dialogWindowError(e1);
+					 	LOg.logToFile(e1);
+				} finally {
+					 setCursor(null);
+				}	
+			}
+		});
+	}
+	private void matchCheckingDeleteReport() throws Exception {
+		if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
+		
+		String nameReport = nameReportField.getText().trim();
+		if (nameReport.isEmpty()) throw new InfoException("Field name report is empty.");
+	
+		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
+		Vector<String> listReportStrings = ReportRelatedData.getListOfReportNames(categoryId);
+	
+		boolean isMatch = false;
+		for (String repNameExists : listReportStrings) {
+			if (nameReport.equals(repNameExists.trim())) isMatch = true;
+		}
+		if (!isMatch) throw new InfoException("A report with the this name \""+nameReport+"\" absent.");
+		
+	}
+	private void matchCheckingDeleteReportFromArchive() throws Exception {
+		String nameReport = nameReportField.getText().trim();
+		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
+		String pathString = ReportRelatedData.getReportFilePath(nameReport, categoryId);
+		//
+		String nameFileReport = pathString.replace("/frameset?__report=report/", "");
+		Vector<String> listFileNameReport = WarArchive.getListOfReportFilesNames();
+		boolean b = false;
+		for (String fileNameReportExists : listFileNameReport) {
+			if (nameFileReport.equals(fileNameReportExists)) b = true;
+		}
+		if(!b) throw new InfoException("A file report absent.");			
+	}
+	private void matchCheckingDeleteReportFileFromArchive() throws Exception {
+		String nameReport = nameFileTextField.getText().trim();
+		if (nameReport.isEmpty()) throw new InfoException("Field file name report is empty.");
+		//
+		String nameFileReport = nameReport + ".rptdesign";
+		Vector<String> listFileNameReport = WarArchive.getListOfReportFilesNames();
+	
+		boolean b = false;
+		for (String fileNameReportExists : listFileNameReport) {
+			if (nameFileReport.equals(fileNameReportExists)) b = true;
+		}
+		if(!b) throw new InfoException("A file report absent.");
+	}
+	public static TabDeleteReport getInstance() {
+		if (TAB_DELETE_REPORT == null) {
+			TAB_DELETE_REPORT = new TabDeleteReport();
+			return TAB_DELETE_REPORT;
+		} else {
+			return TAB_DELETE_REPORT;
+		}
+	}
+}
