@@ -71,9 +71,13 @@ public class WarArchive {
 		Files.copy(originalPathArchive, destinationPath, StandardCopyOption.REPLACE_EXISTING);
 	}
 	
-	
 	public static void addOrUpdateReportFileInArchive(final File selectedFile) throws Exception {
 		checkPathArchive();
+		File tempWarArchiveFile = Paths.get(selectedFile.getParent() + "\\scprd_scereports$$$$_temp.war").toFile();
+		File targetWarArchiveFile = Paths.get(selectedFile.getParent() + "\\scprd_scereports.war").toFile();
+			if(targetWarArchiveFile.exists()) targetWarArchiveFile.delete(); //delete if exist old file archive.
+			if(tempWarArchiveFile.exists()) tempWarArchiveFile.delete();//delete if exist old temporary file archive.
+		//	
 		String nameFile = selectedFile.toPath().getFileName().toString();
 		String pathFile = selectedFile.getAbsolutePath();
 		  //Copy archive from origin directory in file report dir with name 'scprd_scereports$$$$_temp.war'.
@@ -84,10 +88,6 @@ public class WarArchive {
 		
 		//From temporary archive rewrite all files except added file if it update archive.
 		//else add extra file
-		//
-		File tempWarArchiveFile = Paths.get(selectedFile.getParent() + "\\scprd_scereports$$$$_temp.war").toFile();
-		File targetWarArchiveFile = Paths.get(selectedFile.getParent() + "\\scprd_scereports.war").toFile();
-			if(targetWarArchiveFile.exists()) targetWarArchiveFile.delete(); //delete if exist old file archive.
 		//
 		try (final ZipFile war = new ZipFile(tempWarArchiveFile);
 				FileOutputStream stream = new FileOutputStream(targetWarArchiveFile);     
@@ -113,13 +113,12 @@ public class WarArchive {
 		        append.write(data);
 		        append.closeEntry();
 		}
-		//delete temp archive.
-		tempWarArchiveFile.delete();
         //Replace existing origin file archive
 		  Path originalPathArchiveAfter = Paths.get(selectedFile.getParent() + "\\scprd_scereports.war");
 		  Path destinationPathAfter = Paths.get(warPathOrigin);
-		  
-		Files.copy(originalPathArchiveAfter, destinationPathAfter, StandardCopyOption.REPLACE_EXISTING); 
+		Files.copy(originalPathArchiveAfter, destinationPathAfter, StandardCopyOption.REPLACE_EXISTING);
+		//delete temp archive.
+		tempWarArchiveFile.delete();
 		//delete target archive.
 		targetWarArchiveFile.delete();
 	}
