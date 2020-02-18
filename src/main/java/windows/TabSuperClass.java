@@ -18,6 +18,7 @@ import database.CategoryAndCode;
 import database.CategoryRelatedData;
 import database.ConnectionMSSQL;
 import database.ReportRelatedData;
+import exception.InfoException;
 import log.LOg;
 import util.DialogWindows;
 import util.MyProperties;
@@ -50,10 +51,17 @@ public class TabSuperClass extends JPanel {
 		refreshService = new ActionListener() { 
 			@Override									//BranchCache //Infor SCE Reports Server scprd-reports1
 			public void actionPerformed(ActionEvent e) {
-				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					ServiceWindow.stopService("Infor SCE Reports Server scprd-reports1");
-					ServiceWindow.startService("Infor SCE Reports Server scprd-reports1");
-				setCursor(null);
+				try {	
+					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						ServiceWindow.stopService("Infor SCE Reports Server scprd-reports1");
+						ServiceWindow.startService("Infor SCE Reports Server scprd-reports1");
+					setCursor(null);
+				} catch (InfoException e1) {
+					DialogWindows.dialogWindowError(e1);			
+				} catch (Exception e2) {
+					DialogWindows.dialogWindowError(e2);
+						LOg.logToFile(e2);
+				} finally {setCursor(null);}
 			}
 		};
 	}
