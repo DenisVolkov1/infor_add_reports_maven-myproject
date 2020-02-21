@@ -55,7 +55,6 @@ public class TabSuperClass extends JPanel {
 					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 						ServiceWindow.stopService("Infor SCE Reports Server scprd-reports1");
 						ServiceWindow.startService("Infor SCE Reports Server scprd-reports1");
-					setCursor(null);
 				} catch (InfoException e1) {
 					DialogWindows.dialogWindowError(e1);			
 				} catch (Exception e2) {

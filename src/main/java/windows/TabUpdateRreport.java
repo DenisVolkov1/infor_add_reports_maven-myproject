@@ -349,6 +349,7 @@ public class TabUpdateRreport extends TabSuperClass {
 		});
 	}
 	private void matchCheckingIsNullValues() throws InfoException {
+		if (inputNewValuesReport == null) throw new InfoException("Input report for update.");
 		String newRPT_ID = inputNewValuesReport.getRPT_ID();
 		Integer newCategoryId = inputNewValuesReport.getCategory();
 		String newNameReport = inputNewValuesReport.getNameReport();

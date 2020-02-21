@@ -9,6 +9,7 @@ import javax.swing.border.TitledBorder;
 import database.CategoryAndCode;
 import database.CategoryRelatedData;
 import database.ReportRelatedData;
+import exception.InfoException;
 import log.LOg;
 import util.DialogWindows;
 import util.MyHoverButton;
@@ -20,6 +21,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 import java.awt.Rectangle;
@@ -143,52 +145,53 @@ public class TabCategories extends TabSuperClass {
 		
 		addCategoryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				String newCategory = nameCategoryTextField.getText().trim();
-				if (newCategory.isEmpty()) {
-					DialogWindows.dialogWindowError("Field name category is empty.");
-					return;
-				}
-				Vector<String> listCategories;
 				try {
-					listCategories = CategoryRelatedData.getListOfCategoryNames();
-					for (String nameExistCategory : listCategories) {
-						if (nameExistCategory.equals(nameCategoryTextField.getText().trim())) {
-							DialogWindows.dialogWindowError("This name category is already exist.");
-							return;
-						}
-					}
-					CategoryRelatedData.insertCategory(newCategory);		
+					matchCheckingNameCategory();
+					String newCategory = nameCategoryTextField.getText().trim();
+		
+					CategoryRelatedData.insertCategory(newCategory);	
+						DialogWindows.dialogWindowWarning("Category successfully added!");
+				} catch (InfoException ei) {
+					DialogWindows.dialogWindowError(ei);		
 				} catch (Exception e1) {
 					DialogWindows.dialogWindowError(e1);
 						LOg.logToFile(e1);
 							return;
 				}
-				DialogWindows.dialogWindowWarning("Category successfully added!");
 			}
 		});
 		renameCategoryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (renameCategoriesComboBox.getSelectedItem() == null) {
-					DialogWindows.dialogWindowError("Choose a category.");
-					return;
-				}
-				String newNameCategory = newNameCategoryTextField.getText().trim();
-				if (newNameCategory.isEmpty()) {
-					DialogWindows.dialogWindowError("Field new name category is empty.");
-					return;
-				}
-				int categoryId = ((CategoryAndCode) renameCategoriesComboBox.getSelectedItem()).getCategoryId();
-				
 				try {
+					matchCheckingNewNameCategory();
+					String newNameCategory = newNameCategoryTextField.getText().trim();
+					int categoryId = ((CategoryAndCode) renameCategoriesComboBox.getSelectedItem()).getCategoryId();
+	
 					CategoryRelatedData.updateCategory(newNameCategory, categoryId);
+						DialogWindows.dialogWindowWarning("Category successfully rename!");
+				} catch (InfoException ei) {
+					DialogWindows.dialogWindowError(ei);
 				} catch (Exception e1) {
 					DialogWindows.dialogWindowError(e1);
 						LOg.logToFile(e1);
 				}
-				DialogWindows.dialogWindowWarning("Category successfully rename!");
 			}
 		});
+	}
+	private void matchCheckingNameCategory() throws Exception {
+		String newCategory = nameCategoryTextField.getText().trim();
+		if (newCategory.isEmpty()) throw new InfoException("Field name category is empty.");
+	
+		Vector<String> listCategories = CategoryRelatedData.getListOfCategoryNames(); 
+		for (String nameExistCategory : listCategories) {
+			if (nameExistCategory.equals(nameCategoryTextField.getText().trim())) throw new InfoException("This name category already exist");
+		}
+	}
+	private void matchCheckingNewNameCategory() throws Exception {
+		if (renameCategoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
+		
+		String newNameCategory = newNameCategoryTextField.getText().trim();
+		if (newNameCategory.isEmpty()) throw new InfoException("Field new name category is empty.");
 	}
 	public static TabCategories getInstance() {
 		if (TAB_CATWGORY_REPORT == null) {
