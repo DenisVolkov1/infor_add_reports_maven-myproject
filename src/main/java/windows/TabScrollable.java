@@ -9,8 +9,8 @@ public class TabScrollable extends JScrollPane {
 	private static final long serialVersionUID = 1L;
 
 	public TabScrollable(final TabSuperClass tabPanel) {
-		
-		  setPreferredSize(new Dimension(535, 200));
+		//	setBounds(tabPanel.getBounds());
+		  //setPreferredSize(new Dimension(535, 400));
 		  setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		  setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		 

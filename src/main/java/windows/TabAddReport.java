@@ -45,6 +45,7 @@ import javax.swing.SwingConstants;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JCheckBox;
+import java.awt.CardLayout;
 
 public class TabAddReport extends TabSuperClass {
 	
@@ -68,6 +69,7 @@ public class TabAddReport extends TabSuperClass {
 	private JLabel rptIdLabel;
 	private JTextField RPT_IDField;
 	private JCheckBox autoInsertCheckBox;
+	private JComboBox<String> folersProjectComboBox;
 
 	/**
 	 * Create the panel.
@@ -76,11 +78,12 @@ public class TabAddReport extends TabSuperClass {
 
 		setBackground(UIManager.getColor("Button.background"));
 		setFont(new Font("Dialog", Font.PLAIN, 12));
-		setPreferredSize(new Dimension(520, 390));
+		//setPreferredSize(new Dimension(520, 390));
 		setLayout(null);
 		JPanel addReportPanel = new JPanel();
-		addReportPanel.setBounds(8, 1, 504, 389);
+		addReportPanel.setBounds(0, 0, 520, 407);
 		add(addReportPanel);
+		setPreferredSize(addReportPanel.getSize());
 
 		nameReportField = new JTextField();
 		nameReportField.setFont(new Font("Dialog", Font.PLAIN, 14));
@@ -145,57 +148,71 @@ public class TabAddReport extends TabSuperClass {
 		autoInsertCheckBox.setSelected(true);
 		autoInsertCheckBox.setFont(new Font("Dialog", Font.PLAIN, 14));
 		
+		folersProjectComboBox = new JComboBox<String>();
+		folersProjectComboBox.setMaximumRowCount(10);
+		folersProjectComboBox.setInheritsPopupMenu(true);
+		folersProjectComboBox.setFont(new Font("Dialog", Font.BOLD, 14));
+		folersProjectComboBox.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		
 		GroupLayout gl_addReportPanel = new GroupLayout(addReportPanel);
 		gl_addReportPanel.setHorizontalGroup(
-			gl_addReportPanel.createParallelGroup(Alignment.TRAILING)
+			gl_addReportPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_addReportPanel.createSequentialGroup()
-					.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
-						.addComponent(addArchiveToggleButton, 0, 0, Short.MAX_VALUE)
-						.addComponent(addDataBaseToggleButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-					.addGap(24)
+					.addGap(6)
 					.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_addReportPanel.createSequentialGroup()
-							.addComponent(nameFileReportLabel, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap())
-						.addGroup(gl_addReportPanel.createSequentialGroup()
+							.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(addArchiveToggleButton, 0, 0, Short.MAX_VALUE)
+								.addComponent(addDataBaseToggleButton, GroupLayout.PREFERRED_SIZE, 27, Short.MAX_VALUE))
+							.addPreferredGap(ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
 							.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
 								.addGroup(gl_addReportPanel.createSequentialGroup()
-									.addGroup(gl_addReportPanel.createParallelGroup(Alignment.TRAILING)
-										.addGroup(gl_addReportPanel.createSequentialGroup()
-											.addComponent(fileReportLabel, GroupLayout.PREFERRED_SIZE, 353, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(fileReportButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-										.addComponent(refreshServiceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addGroup(gl_addReportPanel.createSequentialGroup()
-											.addComponent(ipDataSrcLabel, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-											.addComponent(addReportButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-									.addGap(14)))
-							.addGap(22))
-						.addGroup(gl_addReportPanel.createSequentialGroup()
-							.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(rptIdLabel, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
-								.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE))
-							.addGap(102))
-						.addGroup(gl_addReportPanel.createSequentialGroup()
-							.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(nameReportFileTextField, GroupLayout.PREFERRED_SIZE, 429, GroupLayout.PREFERRED_SIZE)
-								.addComponent(nameFileReportLabelTF, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
-								.addComponent(nameReportField, GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+									.addComponent(nameFileReportLabel, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
+									.addContainerGap())
 								.addGroup(gl_addReportPanel.createSequentialGroup()
 									.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
-										.addComponent(nameReportLabel)
-										.addComponent(RPT_IDField, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(autoInsertCheckBox)))
-							.addGap(38))))
+										.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+										.addGroup(gl_addReportPanel.createSequentialGroup()
+											.addGroup(gl_addReportPanel.createParallelGroup(Alignment.TRAILING)
+												.addGroup(gl_addReportPanel.createSequentialGroup()
+													.addComponent(fileReportLabel, GroupLayout.PREFERRED_SIZE, 353, GroupLayout.PREFERRED_SIZE)
+													.addPreferredGap(ComponentPlacement.RELATED)
+													.addComponent(fileReportButton, GroupLayout.PREFERRED_SIZE, 68, Short.MAX_VALUE))
+												.addComponent(refreshServiceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addGroup(gl_addReportPanel.createSequentialGroup()
+													.addComponent(ipDataSrcLabel, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE)
+													.addPreferredGap(ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+													.addComponent(addReportButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+											.addGap(14)))
+									.addGap(22))
+								.addGroup(gl_addReportPanel.createSequentialGroup()
+									.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
+										.addComponent(rptIdLabel, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
+										.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE))
+									.addGap(102))
+								.addGroup(gl_addReportPanel.createSequentialGroup()
+									.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
+										.addComponent(nameReportFileTextField, GroupLayout.PREFERRED_SIZE, 429, GroupLayout.PREFERRED_SIZE)
+										.addComponent(nameFileReportLabelTF, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
+										.addComponent(nameReportField, GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+										.addGroup(gl_addReportPanel.createSequentialGroup()
+											.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
+												.addComponent(nameReportLabel)
+												.addComponent(RPT_IDField, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(autoInsertCheckBox)))
+									.addGap(38))))
+						.addGroup(gl_addReportPanel.createSequentialGroup()
+							.addComponent(folersProjectComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap(149, Short.MAX_VALUE))))
 		);
 		gl_addReportPanel.setVerticalGroup(
 			gl_addReportPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_addReportPanel.createSequentialGroup()
-					.addGap(6)
-					.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING, false)
+					.addContainerGap()
+					.addComponent(folersProjectComboBox, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_addReportPanel.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_addReportPanel.createSequentialGroup()
 							.addComponent(categoryLabel)
 							.addPreferredGap(ComponentPlacement.RELATED)
@@ -216,7 +233,7 @@ public class TabAddReport extends TabSuperClass {
 							.addComponent(nameReportFileTextField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
 						.addComponent(addDataBaseToggleButton, GroupLayout.PREFERRED_SIZE, 218, GroupLayout.PREFERRED_SIZE))
 					.addGap(12)
-					.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING, false)
+					.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_addReportPanel.createSequentialGroup()
 							.addComponent(nameFileReportLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
 							.addGap(1)
@@ -267,11 +284,16 @@ public class TabAddReport extends TabSuperClass {
 		});
 		fileReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fileChooser.setDialogTitle("Select file");
-				int result = fileChooser.showDialog(MainRunWindow.getInstance(), "Select report");
-				if (result == JFileChooser.APPROVE_OPTION) {
-					fileReportLabel.setText(fileChooser.getSelectedFile().getName().replace(".rptdesign",""));
-					ipDataSrcLabel.setText(ReadXML.getIpDataSource(fileChooser.getSelectedFile()));
+				try {
+					fileChooser.setDialogTitle("Select file");
+					int result = fileChooser.showDialog(MainRunWindow.getInstance(), "Select report");
+					if (result == JFileChooser.APPROVE_OPTION) {
+						fileReportLabel.setText(fileChooser.getSelectedFile().getName().replace(".rptdesign",""));
+						ipDataSrcLabel.setText(ReadXML.getIpDataSource(fileChooser.getSelectedFile()));
+					}
+				} catch (Exception e2) {
+					DialogWindows.dialogWindowError(e2);
+						LOg.logToFile(e2);
 				}
 			}
 		});

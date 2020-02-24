@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
+
+import exception.InfoException;
 import util.DialogWindows;
 import util.MyProperties;
 
@@ -212,10 +214,7 @@ public class ReportRelatedData {
 						ResultSet rs = statement.executeQuery(getRptId)) {	
 			while(rs.next()) {
 				result = rs.getString(1);
-				if (rs.getRow() > 1) {
-					DialogWindows.dialogWindowError("Two or more reports with equality name is unacceptable!");
-					throw new Exception("Two or more reports with equality name is unacceptable!");
-				} 
+				if (rs.getRow() > 1) throw new InfoException("Two or more reports with equality name is unacceptable!");
 			}
 		}
 		return result; 
@@ -384,7 +383,4 @@ public class ReportRelatedData {
 		}
 		return result;
 	}
-	
-	
-	
 }

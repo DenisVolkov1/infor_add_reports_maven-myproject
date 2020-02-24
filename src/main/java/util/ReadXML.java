@@ -4,6 +4,7 @@ import java.io.File;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,13 +17,11 @@ public class ReadXML {
 	
 	private ReadXML() {}
 	
-	public static String getIpDataSource(File file) {
+	public static String getIpDataSource(File file) throws Exception {
 		String res = null;
-		try {
-			 
+
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();  
-			DocumentBuilder db;
-			db = dbf.newDocumentBuilder();
+			DocumentBuilder db= dbf.newDocumentBuilder();
 			
 			Document doc = db.parse(file);  
 			doc.getDocumentElement().normalize();  
@@ -42,11 +41,7 @@ public class ReadXML {
 									}
 							}
 				}  
-			}  
-		} catch (Exception e1) {
-			DialogWindows.dialogWindowError(e1);
-				LOg.logToFile(e1);
-		}
+			} 
 		return res;
 	}
 }
