@@ -22,7 +22,7 @@ public class DialogWindows {
 	}
 	public static void dialogWindowError(Exception e) {
 		 JOptionPane.showMessageDialog(MainRunWindow.getInstance(),
-				    e.getMessage().replaceAll("[a-zA-Z]\\.[a-zA-Z&&[^wrz]]", "."+"\r\n"),
+				    e.getMessage().replaceAll("[à-ÿÀ-ßa-zA-Z]\\.[ à-ÿÀ-ßa-zA-Z&&[^wrz]]", "."+"\r\n"),
 			e.getClass().getName(),
 				     JOptionPane.ERROR_MESSAGE);
 	}

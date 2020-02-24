@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.border.TitledBorder;
 
 import database.ConnectionMSSQL;
+import log.LOg;
 import util.DialogWindows;
 import util.MyHoverButton;
 import util.MyProperties;
@@ -148,8 +149,8 @@ public class TabConnectionMSSQLServer extends JPanel {
 		   
 				} catch (Exception e1 ) {
 					 DialogWindows.dialogWindowError(e1);
-				}
-		        setCursor(null);
+					 	LOg.logToFile(e1);
+				} finally {setCursor(null);}
 		    }
 		});
 		testButton.addMouseListener(new MouseAdapter() {
