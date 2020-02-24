@@ -1,5 +1,6 @@
 package test;
 
+import files_repository.FilesRepository;
 
 public class MT {
 	
@@ -7,11 +8,16 @@ public class MT {
 
 	public static void main(String[] args) {
 	
-		String cString = "C:\\infor\\sce\\jboss-as-7.2.0.Final\\scprd-reports1\\deployments\\scprd_scereports$$$$_temp.war (Не удается найти указанный файл)";
-		cString = cString.replaceAll("[a-zA-Z]\\.[a-zA-Z&&[^wrz]]", "."+"\r\n");
+	
 		
-		System.out.println(cString);
+		try {
+			System.out.println(FilesRepository.isOpenRepo());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+	
 	}
 
 

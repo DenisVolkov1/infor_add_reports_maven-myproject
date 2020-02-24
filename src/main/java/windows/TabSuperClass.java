@@ -28,10 +28,14 @@ public class TabSuperClass extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	protected static Vector<CategoryAndCode> listCategoryAndCodes = new Vector<>();
+	protected static Vector<String> listNamesFoldersProject = new Vector<>();
 	protected static ActionListener refreshService;
 	private ComponentAdapter adapter;
+	private ComponentAdapter adapter2;
 	
 	protected TabSuperClass() {
+		
+		
 		adapter = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
@@ -46,6 +50,21 @@ public class TabSuperClass extends JPanel {
 				setCursor(null);
 			}
 		};
+		adapter2 = new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC()){
+					//
+				} catch (Exception e1) {
+					listCategoryAndCodes.clear();
+					return;
+				}
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					refreshCategory();
+				setCursor(null);
+			}
+		};
+		
 		this.addComponentListener(adapter);
 		
 		refreshService = new ActionListener() { 

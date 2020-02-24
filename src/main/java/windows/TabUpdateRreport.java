@@ -208,11 +208,16 @@ public class TabUpdateRreport extends TabSuperClass {
 		
 		fileReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fileChooser.setDialogTitle("Select file");
-				int result = fileChooser.showDialog(MainRunWindow.getInstance(), "Select report");
-				if (result == JFileChooser.APPROVE_OPTION) {
-					fileReportLabel.setText(fileChooser.getSelectedFile().getName().replace(".rptdesign",""));
-					ipDataSrcLabel.setText(ReadXML.getIpDataSource(fileChooser.getSelectedFile()));
+				try {
+					fileChooser.setDialogTitle("Select file");
+					int result = fileChooser.showDialog(MainRunWindow.getInstance(), "Select report");
+					if (result == JFileChooser.APPROVE_OPTION) {
+						fileReportLabel.setText(fileChooser.getSelectedFile().getName().replace(".rptdesign",""));
+						ipDataSrcLabel.setText(ReadXML.getIpDataSource(fileChooser.getSelectedFile()));
+					}
+				} catch (Exception e2) {
+					DialogWindows.dialogWindowError(e2);
+						LOg.logToFile(e2);
 				}
 			}
 		});
