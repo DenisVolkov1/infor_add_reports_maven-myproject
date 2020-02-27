@@ -3,25 +3,31 @@ package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import log.LOg;
+import util.DialogWindows;
 import util.MyProperties;
 import windows.TabConnectionMSSQLServer;
 
 public class ConnectionMSSQL {
+	public static boolean isGoodLastsConnection = true;
 	
 private ConnectionMSSQL() {}	
 	
 public static Connection getInstanceConneectionJDBC() throws SQLException, ClassNotFoundException {
-	
-		String login = TabConnectionMSSQLServer.getLoginField().getText();
-		char[] password = TabConnectionMSSQLServer.getPasswordField().getPassword();
-		String connectionTo = MyProperties.getProperty("ipDataBase");
 		Connection connection = null;
-			 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			 connection = DriverManager.getConnection("jdbc:sqlserver://"+connectionTo+":1433;databaseName=;user="+login+";password="+String.valueOf(password));
-			 MyProperties.saveProperties("login", login, "password", String.valueOf(password));
+		try {
+			String login = TabConnectionMSSQLServer.getLoginField().getText();
+			char[] password = TabConnectionMSSQLServer.getPasswordField().getPassword();
+			String connectionTo = MyProperties.getProperty("ipDataBase");
+				 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+				 	connection = DriverManager.getConnection("jdbc:sqlserver://"+connectionTo+":1433;databaseName=;user="+login+";password="+String.valueOf(password));
+				 		MyProperties.saveProperties("login", login, "password", String.valueOf(password));
+		} catch (Exception e) {
+				isGoodLastsConnection = false;
+				throw e;
+		}
+		isGoodLastsConnection = connection != null ? true : false;
 		return connection;
 	}
-
-	
-
 }

@@ -39,12 +39,13 @@ public class TabSuperClass extends JPanel {
 		adapter = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
-				try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC()){
-					//
-				} catch (Exception e1) {
-					listCategoryAndCodes.clear();
-					return;
-				}
+//				try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC()) {
+//					//
+//				} catch (Exception e1) {
+//					listCategoryAndCodes.clear();
+//					return;
+//				}
+				if(!ConnectionMSSQL.isGoodLastsConnection) return;
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					refreshCategory();
 				setCursor(null);
