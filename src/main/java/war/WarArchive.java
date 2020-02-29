@@ -98,7 +98,7 @@ public class WarArchive {
 	            ZipEntry e = entries.nextElement();
 	            //Ñreate new ZipEntry object for clean out all attribute.
 	            ZipEntry destEntry = new ZipEntry (e.getName());
-	            destEntry.setTime(e.getTime());
+	            destEntry.setTime(e.getTime());//set time modification from old object
 	            	//don`t copy update file
 	            	if (e.getName().equals("report/"+nameFile)) continue;
 	            		append.putNextEntry(destEntry);
