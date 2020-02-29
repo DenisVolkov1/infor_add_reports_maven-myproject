@@ -456,8 +456,12 @@ public class TabAddReport extends TabSuperClass {
 	private void matchCheckingFileName() throws Exception {
 		String newFileNameReport = nameReportFileTextField.getText().trim();
 		if (newFileNameReport.isEmpty()) throw new InfoException("Field file name report is empty.");
-		
-		Vector<String> listFileNameReport = WarArchive.getListOfReportFilesNames();
+		Vector<String> listFileNameReport = null;
+		try {
+			 listFileNameReport = WarArchive.getListOfReportFilesNames();
+		} catch (InfoException ie) {
+			return;
+		}
 		for (String fileNameReportExists : listFileNameReport) {
 			if (newFileNameReport.equals(fileNameReportExists.replace(".rptdesign",""))) {
 				int d = DialogWindows.dialogWindowConfirm("A file report with the same name already exists.\n Continue?");

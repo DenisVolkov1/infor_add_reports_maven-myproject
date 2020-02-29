@@ -21,8 +21,10 @@ public class DialogWindows {
 				     JOptionPane.ERROR_MESSAGE);
 	}
 	public static void dialogWindowError(Exception e) {
+		String pattern = "([à-ÿÀ-ßa-zA-Z'])(\\.)([' à-ÿÀ-ßa-zA-Z&&[^wrz]])";
+		if (e.getMessage() == null) { e.printStackTrace(); return; }
 		 JOptionPane.showMessageDialog(MainRunWindow.getInstance(),
-				    e.getMessage().replaceAll("[à-ÿÀ-ßa-zA-Z]\\.[ à-ÿÀ-ßa-zA-Z&&[^wrz]]", "."+"\r\n"),
+				    e.getMessage().replaceAll(pattern,"$1\\.\n$3"),
 			e.getClass().getName(),
 				     JOptionPane.ERROR_MESSAGE);
 	}

@@ -96,11 +96,14 @@ public class WarArchive {
 	        Enumeration<? extends ZipEntry> entries = war.entries();
 	        while (entries.hasMoreElements()) {
 	            ZipEntry e = entries.nextElement();
+	            //Ñreate new ZipEntry object for clean out all attribute.
+	            ZipEntry destEntry = new ZipEntry (e.getName());
+	            destEntry.setTime(e.getTime());
 	            	//don`t copy update file
 	            	if (e.getName().equals("report/"+nameFile)) continue;
-	            		append.putNextEntry(e);
+	            		append.putNextEntry(destEntry);
 	            if (!e.isDirectory()) {
-	            	 copy(war.getInputStream(e), append);
+	            	 copy(war.getInputStream(destEntry), append);
 	            }
 	            append.closeEntry();
 	        }
