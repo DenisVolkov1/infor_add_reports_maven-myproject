@@ -73,7 +73,7 @@ public class MainRunWindow extends JFrame {
 				public void run() {
 					try {
 						MainRunWindow frame = MainRunWindow.getInstance();
-							//TestMain.testMain();
+							TestMain.testMain();
 						frame.setVisible(true);
 					} catch (Exception e) {
 						LOg.logToFile(e);
@@ -105,7 +105,7 @@ public class MainRunWindow extends JFrame {
 		//Report tab
 		tabbedPane.addTab("Add Report", new TabScrollable(TabAddReport.getInstance()));
 		//Update tab
-		tabbedPane.addTab("Update Report", new TabScrollable(TabUpdateRreport.getInstance()));
+		tabbedPane.addTab("Update Report", new TabScrollable(TabUpdateReport.getInstance()));
 		//Delete tab
 		tabbedPane.addTab("Delete Report", new TabScrollable(TabDeleteReport.getInstance()));
 		//Categories tab

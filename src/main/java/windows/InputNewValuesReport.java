@@ -349,8 +349,8 @@ public class InputNewValuesReport extends JDialog {
 				Integer newCategoryId = getCategory();
 				String newNameReport = getNameReport();
 				String newNameFileReport = getNameFileReport();
-					if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) TabUpdateRreport.getInstance().getInputNewValuesButton().setEmptyHover();
-					else TabUpdateRreport.getInstance().getInputNewValuesButton().setStandartHover();
+					if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) TabUpdateReport.getInstance().getInputNewValuesButton().setEmptyHover();
+					else TabUpdateReport.getInstance().getInputNewValuesButton().setStandartHover();
 			}
 		});
 	}

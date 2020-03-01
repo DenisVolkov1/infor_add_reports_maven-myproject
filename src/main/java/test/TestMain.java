@@ -15,6 +15,7 @@ import java.util.Iterator;
 import database.CategoryRelatedData;
 import database.ConnectionMSSQL;
 import database.ReportRelatedData;
+import files_repository.FilesRepository;
 import util.MyProperties;
 import war.WarArchive;
 
@@ -66,6 +67,13 @@ public class TestMain {
 		for(String s : strings) {
 			System.out.println("    "+s);
 		}
+		System.out.println("-----------------------------------------------");
+		System.out.println("List names Folder Project");
+		for (Iterator iterator =FilesRepository.listNamesFolderProject().iterator(); iterator.hasNext();) {
+			System.out.println("  "+(String)iterator.next()); 
+		}
+		
+		FilesRepository.sendFilesToStorage(new File("C:\\UPDATE\\rep\\rep_3_7_otchet_po_rashodam_s_razbivkoi.rptdesign"));
 		
 		
 

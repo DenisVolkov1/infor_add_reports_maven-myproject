@@ -19,6 +19,7 @@ import database.CategoryRelatedData;
 import database.ConnectionMSSQL;
 import database.ReportRelatedData;
 import exception.InfoException;
+import files_repository.FilesRepository;
 import log.LOg;
 import util.DialogWindows;
 import util.MyProperties;
@@ -30,43 +31,30 @@ public class TabSuperClass extends JPanel {
 	protected static Vector<CategoryAndCode> listCategoryAndCodes = new Vector<>();
 	protected static Vector<String> listNamesFoldersProject = new Vector<>();
 	protected static ActionListener refreshService;
-	private ComponentAdapter adapter;
-	private ComponentAdapter adapter2;
+	private ComponentAdapter adapterCategories;
+	private ComponentAdapter adapterListProjectsNames;
 	
 	protected TabSuperClass() {
 		
 		
-		adapter = new ComponentAdapter() {
+		adapterCategories = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
-//				try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC()) {
-//					//
-//				} catch (Exception e1) {
-//					listCategoryAndCodes.clear();
-//					return;
-//				}
 				if(!ConnectionMSSQL.isGoodLastsConnection) return;
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					refreshCategory();
 				setCursor(null);
 			}
 		};
-		adapter2 = new ComponentAdapter() {
+		adapterListProjectsNames = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
-				try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC()){
-					//
-				} catch (Exception e1) {
-					listCategoryAndCodes.clear();
-					return;
-				}
-				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					refreshCategory();
-				setCursor(null);
+				if(!FilesRepository.isOpenRepo()) return;
+				refresListNameProjects();
 			}
 		};
 		
-		this.addComponentListener(adapter);
+		this.addComponentListener(adapterCategories);
 		
 		refreshService = new ActionListener() { 
 			@Override									//BranchCache //Infor SCE Reports Server scprd-reports1
@@ -84,6 +72,18 @@ public class TabSuperClass extends JPanel {
 			}
 		};
 	}
+	protected void refresListNameProjects() {
+		listNamesFoldersProject.clear();
+		Vector<String> listNameProject;
+		try {
+			listNameProject = FilesRepository.listNamesFolderProject();
+			listNamesFoldersProject.addAll(listNameProject);
+		} catch (Exception e) {
+			DialogWindows.dialogWindowError(e);
+				LOg.logToFile(e);
+		}
+		
+	}
 	public void refreshCategory() {
 		listCategoryAndCodes.clear();
 		Vector<CategoryAndCode> categoriesMap;
@@ -95,7 +95,10 @@ public class TabSuperClass extends JPanel {
 				LOg.logToFile(e);
 		}
 	}
-	public ComponentAdapter getAdapter() {
-		return adapter;
+	public ComponentAdapter getCategoriesAdapter() {
+		return adapterCategories;
+	}
+	public ComponentAdapter getListProjectsNamesAdapter() {
+		return adapterListProjectsNames;
 	}
 }

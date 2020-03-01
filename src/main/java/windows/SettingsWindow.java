@@ -25,6 +25,8 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.LineBorder;
 
 class SettingsWindow extends JDialog {
 
@@ -33,6 +35,9 @@ class SettingsWindow extends JDialog {
 	private JTextField schemaField;
 	private JTextField pathArchiveField;
 	private JTextField ipBaseField;
+	private JTextField repPasswordField;
+	private JTextField repUsernameField;
+	private JTextField repPathDirField;
 	/**
 	 * Create the dialog.
 	 */
@@ -41,7 +46,7 @@ class SettingsWindow extends JDialog {
 		 this.setResizable(true);
 		setTitle("Settings");
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setBounds(100, 100, 550, 300);
+		setBounds(100, 100, 550, 350);
 		Point p = MainRunWindow.getInstance().getLocation();
 		p.setLocation(p.getX(), p.getY()+100);
 		
@@ -51,24 +56,27 @@ class SettingsWindow extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		
 		JLabel schemaLabel = new JLabel("Schema");
-		schemaLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		schemaLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
 		schemaField = new JTextField();
 		schemaField.setHorizontalAlignment(SwingConstants.CENTER);
 		schemaField.setColumns(10);
 		
 		JLabel pathArchiveLabel = new JLabel("Path archive war");
-		pathArchiveLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		pathArchiveLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
 		pathArchiveField = new JTextField();
 		pathArchiveField.setColumns(10);
 		
 		JLabel lblIpBaseSqlLabel = new JLabel("IP Base SQL");
-		lblIpBaseSqlLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblIpBaseSqlLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
 		ipBaseField = new JTextField();
 		ipBaseField.setHorizontalAlignment(SwingConstants.CENTER);
 		ipBaseField.setColumns(10);
+		
+		JPanel repSettingsPanel = new JPanel();
+		repSettingsPanel.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Repository files", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		
 		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
 		gl_contentPanel.setHorizontalGroup(
@@ -76,17 +84,18 @@ class SettingsWindow extends JDialog {
 				.addGroup(gl_contentPanel.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
-						.addComponent(pathArchiveField, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+						.addComponent(pathArchiveField, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
 						.addComponent(pathArchiveLabel)
-						.addGroup(gl_contentPanel.createParallelGroup(Alignment.TRAILING, false)
-							.addGroup(Alignment.LEADING, gl_contentPanel.createSequentialGroup()
+						.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING, false)
+							.addGroup(gl_contentPanel.createSequentialGroup()
 								.addComponent(lblIpBaseSqlLabel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
 								.addGap(1)
 								.addComponent(ipBaseField, 0, 0, Short.MAX_VALUE))
-							.addGroup(Alignment.LEADING, gl_contentPanel.createSequentialGroup()
+							.addGroup(gl_contentPanel.createSequentialGroup()
 								.addComponent(schemaLabel)
 								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(schemaField, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE))))
+								.addComponent(schemaField, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)))
+						.addComponent(repSettingsPanel, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_contentPanel.setVerticalGroup(
@@ -104,8 +113,66 @@ class SettingsWindow extends JDialog {
 					.addComponent(pathArchiveLabel)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(pathArchiveField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(107, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(repSettingsPanel, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(34, Short.MAX_VALUE))
 		);
+		
+		repPasswordField = new JTextField();
+		repPasswordField.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("Password");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		
+		JLabel lblNewLabel_1_1 = new JLabel("Username");
+		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		
+		repUsernameField = new JTextField();
+		repUsernameField.setColumns(10);
+		
+		repPathDirField = new JTextField();
+		repPathDirField.setColumns(10);
+		
+		JLabel lblNewLabel_1_1_1 = new JLabel("Path rep");
+		lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		GroupLayout gl_repSettingsPanel = new GroupLayout(repSettingsPanel);
+		gl_repSettingsPanel.setHorizontalGroup(
+			gl_repSettingsPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_repSettingsPanel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_repSettingsPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_repSettingsPanel.createSequentialGroup()
+							.addComponent(lblNewLabel_1)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(repPasswordField, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_repSettingsPanel.createSequentialGroup()
+							.addComponent(lblNewLabel_1_1, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(repUsernameField, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_repSettingsPanel.createSequentialGroup()
+							.addComponent(lblNewLabel_1_1_1, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(repPathDirField, GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)))
+					.addContainerGap())
+		);
+		gl_repSettingsPanel.setVerticalGroup(
+			gl_repSettingsPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_repSettingsPanel.createSequentialGroup()
+					.addGap(8)
+					.addGroup(gl_repSettingsPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(repPasswordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE))
+					.addGap(7)
+					.addGroup(gl_repSettingsPanel.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(lblNewLabel_1_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(repUsernameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_repSettingsPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNewLabel_1_1_1, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(repPathDirField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(29, Short.MAX_VALUE))
+		);
+		repSettingsPanel.setLayout(gl_repSettingsPanel);
 		contentPanel.setLayout(gl_contentPanel);
 		{
 			JPanel buttonPane = new JPanel();
@@ -167,14 +234,19 @@ class SettingsWindow extends JDialog {
 				MyProperties.saveProperties(
 						"schema" , schemaField.getText().trim(),
 						"pathArchiveWar" , pathArchiveField.getText().trim(),
-						"ipDataBase" , ipBaseField.getText().trim()
+						"ipDataBase" , ipBaseField.getText().trim(),
+						"repPassword", repPasswordField.getText().trim(),
+						"repUsername", repUsernameField.getText().trim(),
+						"repPathDir", repPathDirField.getText().trim()
 						);
 				DialogWindows.dialogWindowWarning("Save settings");
 			}
 		});
-		
 		schemaField.setText(MyProperties.getProperty("schema"));
 		pathArchiveField.setText(MyProperties.getProperty("pathArchiveWar"));
 		ipBaseField.setText(MyProperties.getProperty("ipDataBase"));
+		repPasswordField.setText(MyProperties.getProperty("repPassword"));
+		repUsernameField.setText(MyProperties.getProperty("repUsername"));
+		repPathDirField.setText(MyProperties.getProperty("repPathDir"));
 	}
 }

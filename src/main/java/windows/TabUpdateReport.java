@@ -46,8 +46,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Dimension;
 import javax.swing.JToggleButton;
 
-public class TabUpdateRreport extends TabSuperClass {
-	private static TabUpdateRreport TAB_UPDADE_REPORT = null;
+public class TabUpdateReport extends TabSuperClass {
+	private static TabUpdateReport TAB_UPDADE_REPORT = null;
 	private static InputNewValuesReport inputNewValuesReport = null;
 	private JTextField nameReportField;
 	private JComboBox<String> categoriesComboBox;
@@ -67,7 +67,7 @@ public class TabUpdateRreport extends TabSuperClass {
 	/**
 	 * Create the panel.
 	 */
-	private TabUpdateRreport() {
+	private TabUpdateReport() {
 		
 		setPreferredSize(new Dimension(520, 340));
 		setLayout(null);
@@ -409,9 +409,9 @@ public class TabUpdateRreport extends TabSuperClass {
 		else if (newCategoryId != null) ReportRelatedData.updateReport(oldValues[0], newCategoryId, null,Integer.valueOf(oldValues[1]), oldValues[2], oldValues[3]);
 		else ReportRelatedData.updateReport(oldValues[0], newCategoryId, null,Integer.valueOf(oldValues[1]), oldValues[2], oldValues[3]);
 	}
-	public static TabUpdateRreport getInstance() {
+	public static TabUpdateReport getInstance() {
 		if (TAB_UPDADE_REPORT == null) {
-			TAB_UPDADE_REPORT = new TabUpdateRreport();
+			TAB_UPDADE_REPORT = new TabUpdateReport();
 			return TAB_UPDADE_REPORT;
 		} else {
 			return TAB_UPDADE_REPORT;

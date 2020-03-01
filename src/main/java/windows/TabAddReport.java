@@ -274,6 +274,8 @@ public class TabAddReport extends TabSuperClass {
 		
 		final DefaultComboBoxModel<String> model = new DefaultComboBoxModel(listCategoryAndCodes);
 		categoriesComboBox.setModel(model);
+		final DefaultComboBoxModel<String> model2 = new DefaultComboBoxModel(listNamesFoldersProject);
+		folersProjectComboBox.setModel(model2);
 		
 		RPT_IDField.addKeyListener(new KeyAdapter() {
 			@Override
