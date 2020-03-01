@@ -72,8 +72,8 @@ public class TestMain {
 		for (Iterator iterator =FilesRepository.listNamesFolderProject().iterator(); iterator.hasNext();) {
 			System.out.println("  "+(String)iterator.next()); 
 		}
-		
-		FilesRepository.sendFilesToStorage(new File("C:\\UPDATE\\rep\\rep_3_7_otchet_po_rashodam_s_razbivkoi.rptdesign"));
+		System.out.println("-----------------------------------------------");
+		FilesRepository.sendFilesToStorage(new File("C:\\UPDATE\\rep\\rep_3_7_otchet_po_rashodam_s_razbivkoi\\rep_3_7_otchet_po_rashodam_s_razbivkoi.rptdesign"));
 		
 		
 

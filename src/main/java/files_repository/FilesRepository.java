@@ -2,6 +2,7 @@ package files_repository;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,46 +58,42 @@ public class FilesRepository {
 		}
 		return v;
 	}
-	public boolean copyFile(File srcFile, String destPath) {
-	    boolean successful = false;
-	    try{
-	        // Создаем объект аутентификатор
+	public static void copyFileToRepo(File srcFile, String destPath) throws Exception {
+	        // Create the authentication object 
 			String repPathDir = MyProperties.getProperty("repPathDir");
 			String password = MyProperties.getProperty("repPassword"); 
 			String userName = MyProperties.getProperty("repUsername"); 
 			NtlmPasswordAuthentication passwordAuthentication = new NtlmPasswordAuthentication(null,userName,password);
 
-	        // Читаем содержимое исходного файла
+	        // Read src file.
 	        InputStream localFile = new FileInputStream(srcFile);
 
-	        // Создаем объект для потока куда мы будем писать наша файл
-	        SmbFileOutputStream destFileName = new SmbFileOutputStream(new SmbFile(destPath+File.separator+srcFile.getName(), passwordAuthentication));
+	        // Create output file 
+	        SmbFileOutputStream destFileName = new SmbFileOutputStream(new SmbFile("smb:"+destPath+File.separator+srcFile.getName(), passwordAuthentication));
 
-	        // Ну и копируем все из исходного потока в поток назначения.
+	        // Copy from scr to destination 
 	        BufferedReader brl = new BufferedReader(new InputStreamReader(localFile));
 	        String b = null;
 	        while((b=brl.readLine())!=null){
 	            destFileName.write(b.getBytes());
 	        }
 	        destFileName.flush();
-	        successful = true;
-	    } catch (Exception e) {
-	        successful = false;
-	        e.printStackTrace();
-	    }
-	    return successful;
 	}
-	public static void sendFilesToStorage(File selectedFile) throws SmbException, MalformedURLException {
-		File parentFile = selectedFile.getParentFile();
-		SmbFile[] files = new SmbFile("smb:"+parentFile.toString()+"\\").listFiles(new SmbFileFilter() {
+	public static void sendFilesToStorage(File selectedFile) throws Exception {
+		
+		File[] files = selectedFile.getParentFile().listFiles(new FileFilter() {
 			
 			@Override
-			public boolean accept(SmbFile file) throws SmbException {
-				file.getName();
-				return true;
+			public boolean accept(File file) {
+				return file.getName().matches(".+\\.(sql|rptdesign)$");
 			}
 		});
-		for (SmbFile f:files)  System.out.println(f.getName());
+		//10.1.5.66/файловый обмен/_MISHA/UPDATE_SCE10/Отчёты
+		
+		for (File f:files) {
+			copyFileToRepo(f, "//10.1.5.66/файловый обмен/_MISHA/UPDATE_SCE10/Отчёты");
+		}
+		
 		
 	}
 	
