@@ -21,6 +21,8 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Component;
@@ -38,6 +40,7 @@ class SettingsWindow extends JDialog {
 	private JTextField repPasswordField;
 	private JTextField repUsernameField;
 	private JTextField repPathDirField;
+	private JTextField portField;
 	/**
 	 * Create the dialog.
 	 */
@@ -78,23 +81,36 @@ class SettingsWindow extends JDialog {
 		JPanel repSettingsPanel = new JPanel();
 		repSettingsPanel.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Repository files", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		
+		portField = new JTextField();
+		portField.setText((String) null);
+		portField.setHorizontalAlignment(SwingConstants.CENTER);
+		portField.setColumns(10);
+		
+		JLabel lblPort = new JLabel("port");
+		lblPort.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		
 		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
 		gl_contentPanel.setHorizontalGroup(
 			gl_contentPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPanel.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
-						.addComponent(pathArchiveField, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+						.addComponent(pathArchiveField, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
 						.addComponent(pathArchiveLabel)
-						.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING, false)
-							.addGroup(gl_contentPanel.createSequentialGroup()
-								.addComponent(lblIpBaseSqlLabel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-								.addGap(1)
-								.addComponent(ipBaseField, 0, 0, Short.MAX_VALUE))
-							.addGroup(gl_contentPanel.createSequentialGroup()
-								.addComponent(schemaLabel)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(schemaField, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING, false)
+								.addGroup(gl_contentPanel.createSequentialGroup()
+									.addComponent(lblIpBaseSqlLabel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+									.addGap(1)
+									.addComponent(ipBaseField, 0, 0, Short.MAX_VALUE))
+								.addGroup(gl_contentPanel.createSequentialGroup()
+									.addComponent(schemaLabel)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(schemaField, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)))
+							.addGap(18)
+							.addComponent(lblPort)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(portField, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE))
 						.addComponent(repSettingsPanel, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE))
 					.addContainerGap())
 		);
@@ -106,11 +122,16 @@ class SettingsWindow extends JDialog {
 						.addComponent(schemaLabel)
 						.addComponent(schemaField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(6)
-					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblIpBaseSqlLabel)
-						.addComponent(ipBaseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(10)
-					.addComponent(pathArchiveLabel)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(ipBaseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblIpBaseSqlLabel, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE))
+							.addGap(10)
+							.addComponent(pathArchiveLabel))
+						.addGroup(gl_contentPanel.createParallelGroup(Alignment.TRAILING, false)
+							.addComponent(lblPort, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(portField, Alignment.LEADING)))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(pathArchiveField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
@@ -219,6 +240,14 @@ class SettingsWindow extends JDialog {
 	}
 	private void primaryInit() {
 		
+		portField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (portField.getText().length() >= 4) // limit textfield to 4 characters
+		            e.consume(); 
+			}
+		});
+		
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -231,13 +260,16 @@ class SettingsWindow extends JDialog {
 						}
 					}
 				}
+				String repPathDir = repPathDirField.getText().trim();
+				repPathDir = repPathDir.replace('\\', '/');
 				MyProperties.saveProperties(
 						"schema" , schemaField.getText().trim(),
 						"pathArchiveWar" , pathArchiveField.getText().trim(),
 						"ipDataBase" , ipBaseField.getText().trim(),
+						"portDataBase",portField.getText().trim(),
 						"repPassword", repPasswordField.getText().trim(),
 						"repUsername", repUsernameField.getText().trim(),
-						"repPathDir", repPathDirField.getText().trim()
+						"repPathDir", repPathDir
 						);
 				DialogWindows.dialogWindowWarning("Save settings");
 			}
@@ -245,6 +277,7 @@ class SettingsWindow extends JDialog {
 		schemaField.setText(MyProperties.getProperty("schema"));
 		pathArchiveField.setText(MyProperties.getProperty("pathArchiveWar"));
 		ipBaseField.setText(MyProperties.getProperty("ipDataBase"));
+		portField.setText(MyProperties.getProperty("portDataBase"));
 		repPasswordField.setText(MyProperties.getProperty("repPassword"));
 		repUsernameField.setText(MyProperties.getProperty("repUsername"));
 		repPathDirField.setText(MyProperties.getProperty("repPathDir"));

@@ -76,7 +76,7 @@ public class TestMain {
 		System.out.println("-----------------------------------------------");
 		//FilesRepository.sendFilesToStorage("2.4 Простой отчёт","BOYARD/",new File("C:\\UPDATE\\rep\\rep_3_7_otchet_po_rashodam_s_razbivkoi\\rep_3_7_otchet_po_rashodam_s_razbivkoi.rptdesign"));
 		
-		new SmbFile("smb:"+MyProperties.getProperty("repPathDir")+'/'+"BOYARD/Ghbdtn</",FilesRepository.getAuthentication()).mkdir();
+		//new SmbFile("smb:"+MyProperties.getProperty("repPathDir")+'/'+"BOYARD/Ghbdtn</",FilesRepository.getAuthentication()).mkdir();
 		
 		//invalid character <>:"/\|?*
 		

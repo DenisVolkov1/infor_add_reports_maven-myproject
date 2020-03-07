@@ -44,14 +44,27 @@ public class FilesRepository {
 	
 	public static boolean isOpenRepo() {
 		try {
-			
-			return new SmbFile(repoPathDir(),getAuthentication()).exists();
+			 if (new SmbFile(repoPathDir(),getAuthentication()).exists()) return true;
+			 else return false;
 		} catch (Exception e) {
-			DialogWindows.dialogWindowError(e);
 			LOg.logToFile(e);
 			return false;
 		}
 	}
+	/***
+	 * @param nameProgect - example BPYARD/ -valid name
+	 *
+	 */
+	public static boolean isExistProjectFolder(String nameProgect) throws Exception {
+		try {
+			SmbFile folderPrj = new SmbFile(repoPathDir()+ nameProgect);
+			if (folderPrj.exists()) return true;
+			else return false;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
 
 	public static Vector<String> listNamesFolderProject() throws Exception {
 		String repPathDir = MyProperties.getProperty("repPathDir");
@@ -129,7 +142,7 @@ public class FilesRepository {
 		Vector<String> v = new Vector<String>();
 		for (SmbFile fileReport : listOfFoldersReport) {
 		    if (fileReport.isDirectory()) {
-		       if (fileReport.getName().matches(".*"+nameReport+".*")) throw new InfoException("Report folder with name alreary exist.");
+		       if (fileReport.getName().matches(".*"+nameReport+".*")) throw new InfoException("Report folder in storage with this name alreary exist.");
 		    }
 		}
 	}

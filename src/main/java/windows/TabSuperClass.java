@@ -39,7 +39,10 @@ public class TabSuperClass extends JPanel {
 		adapterCategories = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
-				if(!ConnectionMSSQL.isGoodLastsConnection) return;
+				if(!ConnectionMSSQL.isGoodLastsConnection) {
+					listCategoryAndCodes.clear();
+					return;
+				}
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					refreshCategory();
 				setCursor(null);
@@ -48,7 +51,10 @@ public class TabSuperClass extends JPanel {
 		adapterListProjectsNames = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
-				if(!FilesRepository.isOpenRepo()) return;
+				if(!FilesRepository.isOpenRepo()) {
+					listNamesFoldersProject.clear();
+					return;
+				}
 				refresListNameProjects();
 			}
 		};
@@ -78,7 +84,6 @@ public class TabSuperClass extends JPanel {
 			listNameProject = FilesRepository.listNamesFolderProject();
 			listNamesFoldersProject.addAll(listNameProject);
 		} catch (Exception e) {
-			DialogWindows.dialogWindowError(e);
 				LOg.logToFile(e);
 		}
 		

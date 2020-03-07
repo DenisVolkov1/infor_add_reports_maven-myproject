@@ -18,6 +18,7 @@ import log.LOg;
 import util.DialogWindows;
 import util.MyHoverButton;
 import util.ReadXML;
+import util.Verification;
 import war.WarArchive;
 
 import javax.swing.border.EtchedBorder;
@@ -386,10 +387,8 @@ public class TabAddReport extends TabSuperClass {
 				File selectedFile = null;
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {
+					matchCheckingValidInputData();
 					if(addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
-						matchCheckingDataBase();
-						matchCheckingArchive();
-						WarArchive.checkPathArchive();
 						//
 						RPT_ID         = RPT_IDField.getText().trim();
 						nameReport     = nameReportField.getText().trim();
@@ -409,8 +408,6 @@ public class TabAddReport extends TabSuperClass {
 									connectionForCommit.commit();
 										DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addDataBaseToggleButton.isSelected()) {
-						matchCheckingDataBase();
-						matchCheckingFileName();
 						//
 						RPT_ID         = RPT_IDField.getText().trim();
 						nameReport     = nameReportField.getText().trim();
@@ -425,8 +422,6 @@ public class TabAddReport extends TabSuperClass {
 							connectionForCommit.commit();
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addArchiveToggleButton.isSelected()) {
-						matchCheckingArchive();
-						WarArchive.checkPathArchive();
 						//
 						selectedFile = fileChooser.getSelectedFile();
 						nameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
@@ -460,7 +455,7 @@ public class TabAddReport extends TabSuperClass {
 			}	
 		});
 	}
-	private void matchCheckingFileName() throws Exception {
+	private void matchCheckingInputValueFileName() throws Exception {
 		String newFileNameReport = nameReportFileTextField.getText().trim();
 		if (newFileNameReport.isEmpty()) throw new InfoException("Field file name report is empty.");
 		Vector<String> listFileNameReport = null;
@@ -477,15 +472,42 @@ public class TabAddReport extends TabSuperClass {
 			}
 		}
 	}
-	private void matchCheckingDataBase() throws Exception {
+	
+	private void matchCheckingValidInputData() throws Exception {
+
+		if (addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
+			matchCheckingInupValues();
+			matchCheckingDataBase();
+			WarArchive.checkPathArchive();
+				matchCheckingArchive();
+					String nameReport = nameReportField.getText().trim();
+					String nameProgect = (String)folersProjectComboBox.getSelectedItem();
+					FilesRepository.checkExistFolderReport(nameReport, nameProgect);
+		} else if (addDataBaseToggleButton.isSelected()) {
+			matchCheckingInupValues();
+			matchCheckingInputValueFileName();
+			matchCheckingDataBase();
+		} else if (addArchiveToggleButton.isSelected()) {
+			WarArchive.checkPathArchive();
+			matchCheckingArchive();
+		}
+	}
+	private void matchCheckingInupValues() throws Exception {
+		if (FilesRepository.isOpenRepo()) {
+			if (folersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
+		}
+		//
 		if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
-		
+		//
 		String RPT_ID = RPT_IDField.getText().trim();
 		if (RPT_ID.isEmpty()) throw new InfoException("Field RPT_ID is empty.");
-		
+		//
 		String nameNewReport = nameReportField.getText().trim();
 		if (nameNewReport.isEmpty()) throw new InfoException("Field name report is empty.");
-		
+		Verification.checkIvalidFilenamesWindows(nameReportField, nameReportFileTextField);
+	}
+	private void matchCheckingDataBase() throws Exception {
+		String nameNewReport = nameReportField.getText().trim();
 		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 		Vector<String> listReportStrings;
 		listReportStrings = ReportRelatedData.getListOfReportNamesAndTranslation(categoryId);

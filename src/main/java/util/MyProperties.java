@@ -58,6 +58,7 @@ public class MyProperties {
 				prop.setProperty("repPassword", "-None-");
 				prop.setProperty("repUsername", "-None-");
 				prop.setProperty("repPathDir", "-None-");
+				prop.setProperty("portDataBase", "1433");
 			//
 			
 		    try {

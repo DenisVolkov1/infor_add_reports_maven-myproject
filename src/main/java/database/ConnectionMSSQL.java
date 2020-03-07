@@ -15,13 +15,15 @@ public class ConnectionMSSQL {
 private ConnectionMSSQL() {}	
 	
 public static Connection getInstanceConneectionJDBC() throws SQLException, ClassNotFoundException {
+	
 		Connection connection = null;
 		try {
 			String login = TabConnectionMSSQLServer.getLoginField().getText();
 			char[] password = TabConnectionMSSQLServer.getPasswordField().getPassword();
 			String connectionTo = MyProperties.getProperty("ipDataBase");
+			String port = MyProperties.getProperty("portDataBase");
 				 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-				 	connection = DriverManager.getConnection("jdbc:sqlserver://"+connectionTo+":1433;databaseName=;user="+login+";password="+String.valueOf(password));
+				 	connection = DriverManager.getConnection("jdbc:sqlserver://"+connectionTo+":"+port+";databaseName=;user="+login+";password="+String.valueOf(password));
 				 		MyProperties.saveProperties("login", login, "password", String.valueOf(password));
 		} catch (Exception e) {
 				isGoodLastsConnection = false;
