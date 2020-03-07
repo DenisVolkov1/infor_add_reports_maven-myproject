@@ -16,6 +16,7 @@ import database.CategoryRelatedData;
 import database.ConnectionMSSQL;
 import database.ReportRelatedData;
 import files_repository.FilesRepository;
+import jcifs.smb.SmbFile;
 import util.MyProperties;
 import war.WarArchive;
 
@@ -73,12 +74,16 @@ public class TestMain {
 			System.out.println("  "+(String)iterator.next()); 
 		}
 		System.out.println("-----------------------------------------------");
-		FilesRepository.sendFilesToStorage(new File("C:\\UPDATE\\rep\\rep_3_7_otchet_po_rashodam_s_razbivkoi\\rep_3_7_otchet_po_rashodam_s_razbivkoi.rptdesign"));
+		//FilesRepository.sendFilesToStorage("2.4 Простой отчёт","BOYARD/",new File("C:\\UPDATE\\rep\\rep_3_7_otchet_po_rashodam_s_razbivkoi\\rep_3_7_otchet_po_rashodam_s_razbivkoi.rptdesign"));
+		
+		new SmbFile("smb:"+MyProperties.getProperty("repPathDir")+'/'+"BOYARD/Ghbdtn</",FilesRepository.getAuthentication()).mkdir();
+		
+		//invalid character <>:"/\|?*
 		
 		
 
 		
-
+			
 	
 		
 

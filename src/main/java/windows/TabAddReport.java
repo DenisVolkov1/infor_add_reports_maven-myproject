@@ -13,6 +13,7 @@ import database.CategoryAndCode;
 import database.ReportRelatedData;
 import exception.ConfirmException;
 import exception.InfoException;
+import files_repository.FilesRepository;
 import log.LOg;
 import util.DialogWindows;
 import util.MyHoverButton;
@@ -380,7 +381,7 @@ public class TabAddReport extends TabSuperClass {
 		addReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Connection connectionForCommit = null;
-				String RPT_ID , nameReport = null , nameFileReport = null;
+				String RPT_ID , nameReport = null , nameFileReport = null , nameProgect = null;
 				Integer categoryId = null;
 				File selectedFile = null;
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -388,12 +389,14 @@ public class TabAddReport extends TabSuperClass {
 					if(addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
 						matchCheckingDataBase();
 						matchCheckingArchive();
+						WarArchive.checkPathArchive();
 						//
 						RPT_ID         = RPT_IDField.getText().trim();
 						nameReport     = nameReportField.getText().trim();
 						categoryId     = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 						selectedFile   = fileChooser.getSelectedFile();
 						nameFileReport = selectedFile.toPath().getFileName().toString();
+						nameProgect    = (String)folersProjectComboBox.getSelectedItem();
 						
 						if (autoInsertCheckBox.isSelected()) {
 							connectionForCommit = ReportRelatedData.insertReport(null, nameReport, categoryId, nameFileReport);
@@ -402,8 +405,9 @@ public class TabAddReport extends TabSuperClass {
 						}
 						WarArchive.createBackup(selectedFile);
 							WarArchive.addOrUpdateReportFileInArchive(selectedFile);
-								connectionForCommit.commit();
-									DialogWindows.dialogWindowWarning("Report successfully added!");
+								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
+									connectionForCommit.commit();
+										DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addDataBaseToggleButton.isSelected()) {
 						matchCheckingDataBase();
 						matchCheckingFileName();
@@ -422,6 +426,7 @@ public class TabAddReport extends TabSuperClass {
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addArchiveToggleButton.isSelected()) {
 						matchCheckingArchive();
+						WarArchive.checkPathArchive();
 						//
 						selectedFile = fileChooser.getSelectedFile();
 						nameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();

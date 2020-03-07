@@ -12,8 +12,17 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Vector;
+import java.util.logging.FileHandler;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import exception.InfoException;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
@@ -27,49 +36,41 @@ public class FilesRepository {
 	
 	private FilesRepository() {}
 	
+	public static NtlmPasswordAuthentication getAuthentication() {
+		String password = MyProperties.getProperty("repPassword"); 
+		String userName = MyProperties.getProperty("repUsername"); 
+		return new NtlmPasswordAuthentication(null,userName,password);
+	}
+	
 	public static boolean isOpenRepo() {
 		try {
-			String repPathDir = MyProperties.getProperty("repPathDir");
-			String password = MyProperties.getProperty("repPassword"); 
-			String userName = MyProperties.getProperty("repUsername"); 
-			NtlmPasswordAuthentication passwordAuthentication = new NtlmPasswordAuthentication(null,userName,password);
-			return new SmbFile("smb:"+repPathDir+"/",passwordAuthentication).exists();
+			
+			return new SmbFile(repoPathDir(),getAuthentication()).exists();
 		} catch (Exception e) {
 			DialogWindows.dialogWindowError(e);
 			LOg.logToFile(e);
 			return false;
 		}
 	}
-	//smb://10.1.5.66/פאיכמגûי מבלום/_MISHA/UPDATE_SCE10
+
 	public static Vector<String> listNamesFolderProject() throws Exception {
 		String repPathDir = MyProperties.getProperty("repPathDir");
-		String password = MyProperties.getProperty("repPassword"); 
-		String userName = MyProperties.getProperty("repUsername"); 
-		NtlmPasswordAuthentication passwordAuthentication = new NtlmPasswordAuthentication(null,userName,password);
-		
-		SmbFile smbFile = new SmbFile("smb:"+repPathDir+"/",passwordAuthentication);
+		SmbFile smbFile = new SmbFile("smb:"+repPathDir+'/',getAuthentication());
 		SmbFile[] listOfFiles = smbFile.listFiles();
 		Vector<String> v = new Vector<String>();
 		for (SmbFile file : listOfFiles) {
-		    if (file.isDirectory() && (file.getName()).matches("[A-Zְ-ß]\\w+.*")) {
-		    	String name = file.getName();
-		        v.add(name.substring(0, name.length()-1));
+		    if (file.isDirectory() && (file.getName()).matches("[A-Zְ-ß]\\w+/$")) {
+		        v.add(file.getName());
 		    }
 		}
 		return v;
 	}
-	public static void copyFileToRepo(File srcFile, String destPath) throws Exception {
-	        // Create the authentication object 
-			String repPathDir = MyProperties.getProperty("repPathDir");
-			String password = MyProperties.getProperty("repPassword"); 
-			String userName = MyProperties.getProperty("repUsername"); 
-			NtlmPasswordAuthentication passwordAuthentication = new NtlmPasswordAuthentication(null,userName,password);
-
+	private static void copyFileToRepoFolder(File srcFile, SmbFile destPath) throws Exception {
 	        // Read src file.
 	        InputStream localFile = new FileInputStream(srcFile);
 
 	        // Create output file 
-	        SmbFileOutputStream destFileName = new SmbFileOutputStream(new SmbFile("smb:"+destPath+File.separator+srcFile.getName(), passwordAuthentication));
+	        SmbFileOutputStream destFileName = new SmbFileOutputStream(new SmbFile(destPath.toString()+'/'+srcFile.getName(), getAuthentication()));
 
 	        // Copy from scr to destination 
 	        BufferedReader brl = new BufferedReader(new InputStreamReader(localFile));
@@ -77,24 +78,64 @@ public class FilesRepository {
 	        while((b=brl.readLine())!=null){
 	            destFileName.write(b.getBytes());
 	        }
+	        brl.close();
 	        destFileName.flush();
+	        destFileName.close();
 	}
-	public static void sendFilesToStorage(File selectedFile) throws Exception {
-		
+	public static void sendFilesToStorage(String nameReport ,String nameProgect, File selectedFile) throws Exception {
+		String nameFileReport = selectedFile.toPath().getFileName().toString();
+		Matcher m = Pattern.compile("(.+)\\.rptdesign$").matcher(nameFileReport);
+		if (m.find()) nameFileReport = m.group(1);
+		//
+		String folderReportName = '/'+ nameReport +"    "+ nameFileReport+'/';
+		//Create folder for folders with files report version.
+		SmbFile folderReport = new SmbFile(repoPathDir()+ nameProgect + folderReportName, getAuthentication());
+		if (!folderReport.exists()) folderReport.mkdir();
+		//File filter means save only  .rptdesign or .sql files.
 		File[] files = selectedFile.getParentFile().listFiles(new FileFilter() {
-			
 			@Override
 			public boolean accept(File file) {
 				return file.getName().matches(".+\\.(sql|rptdesign)$");
 			}
 		});
-		//10.1.5.66/פאיכמגûי מבלום/_MISHA/UPDATE_SCE10/־עק¸עû
-		
+	    //Create folder for new version report.   		
+		SmbFile folderVersionReport = new SmbFile(folderReport.toString()+nameReport+"    "+nameFileReport+"    "+getNextVersion(folderReport), getAuthentication());
+		folderVersionReport.mkdir();
+		//copy new files in folder report
 		for (File f:files) {
-			copyFileToRepo(f, "//10.1.5.66/פאיכמגûי מבלום/_MISHA/UPDATE_SCE10/־עק¸עû");
+			copyFileToRepoFolder(f, folderVersionReport);
 		}
-		
-		
+	}
+	private static String getNextVersion(SmbFile smbFile) throws SmbException {
+		SmbFile[] listOfFiles = smbFile.listFiles();
+		Vector<Integer> v = new Vector<Integer>();
+		for (SmbFile file : listOfFiles) {
+		    if (file.isDirectory() && (file.getName().matches(".+v[0-9]+/$"))) {
+		    	String name = file.getName();
+		    	Pattern pattern = Pattern.compile(".+v([0-9]+)/$");
+		    	Matcher m = pattern.matcher(name);
+		    	System.out.println(name);
+		       if(m.find()) v.add(Integer.valueOf(m.group(1)));
+		    }
+		}
+		if (v.isEmpty()) return "v0"+'/';
+		Integer maxInteger = Collections.max(new ArrayList<Integer>(v));
+		return "v"+ (maxInteger+1)+'/';
+	}
+	public static void checkExistFolderReport(String nameReport, String nameProgect) throws Exception {
+		nameProgect += '/';
+		SmbFile smbFile = new SmbFile(repoPathDir()+ nameProgect,getAuthentication());
+		SmbFile[] listOfFoldersReport = smbFile.listFiles();
+		Vector<String> v = new Vector<String>();
+		for (SmbFile fileReport : listOfFoldersReport) {
+		    if (fileReport.isDirectory()) {
+		       if (fileReport.getName().matches(".*"+nameReport+".*")) throw new InfoException("Report folder with name alreary exist.");
+		    }
+		}
+	}
+
+	public static String repoPathDir() {
+		return "smb:"+MyProperties.getProperty("repPathDir")+'/';
 	}
 	
 	

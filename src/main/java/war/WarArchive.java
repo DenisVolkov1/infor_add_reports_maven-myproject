@@ -116,13 +116,13 @@ public class WarArchive {
 		        append.write(data);
 		        append.closeEntry();
 		}
-        //Replace existing origin file archive
+          //Replace existing origin file archive
 		  Path originalPathArchiveAfter = Paths.get(selectedFile.getParent() + "\\scprd_scereports.war");
 		  Path destinationPathAfter = Paths.get(warPathOrigin);
 		Files.copy(originalPathArchiveAfter, destinationPathAfter, StandardCopyOption.REPLACE_EXISTING);
-		//delete temp archive.
+		  //delete temp archive.
 		tempWarArchiveFile.delete();
-		//delete target archive.
+		  //delete target archive.
 		targetWarArchiveFile.delete();
 	}
 
@@ -155,7 +155,7 @@ public class WarArchive {
 	            output.write(BUFFER, 0, bytesRead);
 	       }
 	}
-	private static void checkPathArchive() throws Exception {
+	public static void checkPathArchive() throws Exception {
 		String warPathOrigin = MyProperties.getProperty("pathArchiveWar") + "\\scprd_scereports.war";
 		Path originalPathArchive = Paths.get(warPathOrigin);
 		//check archive path

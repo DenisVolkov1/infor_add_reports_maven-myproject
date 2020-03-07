@@ -36,7 +36,6 @@ public class TabSuperClass extends JPanel {
 	
 	protected TabSuperClass() {
 		
-		
 		adapterCategories = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
