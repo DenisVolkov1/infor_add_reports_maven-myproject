@@ -59,6 +59,8 @@ public class MyProperties {
 				prop.setProperty("repUsername", "-None-");
 				prop.setProperty("repPathDir", "-None-");
 				prop.setProperty("portDataBase", "1433");
+				prop.setProperty("reportCatalog", "rpt");
+				prop.setProperty("enableAddToRepositories", "true");
 			//
 			
 		    try {

@@ -17,6 +17,7 @@ import files_repository.FilesRepository;
 import log.LOg;
 import util.DialogWindows;
 import util.MyHoverButton;
+import util.MyProperties;
 import util.ReadXML;
 import util.Verification;
 import war.WarArchive;
@@ -71,7 +72,8 @@ public class TabAddReport extends TabSuperClass {
 	private JLabel rptIdLabel;
 	private JTextField RPT_IDField;
 	private JCheckBox autoInsertCheckBox;
-	private JComboBox<String> folersProjectComboBox;
+	private JComboBox<String> foldersProjectComboBox;
+	private JLabel lblNewLabel;
 
 	/**
 	 * Create the panel.
@@ -83,7 +85,7 @@ public class TabAddReport extends TabSuperClass {
 		//setPreferredSize(new Dimension(520, 390));
 		setLayout(null);
 		JPanel addReportPanel = new JPanel();
-		addReportPanel.setBounds(0, 0, 520, 407);
+		addReportPanel.setBounds(0, 0, 520, 418);
 		add(addReportPanel);
 		setPreferredSize(addReportPanel.getSize());
 
@@ -150,69 +152,66 @@ public class TabAddReport extends TabSuperClass {
 		autoInsertCheckBox.setSelected(true);
 		autoInsertCheckBox.setFont(new Font("Dialog", Font.PLAIN, 14));
 		
-		folersProjectComboBox = new JComboBox<String>();
-		folersProjectComboBox.setMaximumRowCount(10);
-		folersProjectComboBox.setInheritsPopupMenu(true);
-		folersProjectComboBox.setFont(new Font("Dialog", Font.BOLD, 14));
-		folersProjectComboBox.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		foldersProjectComboBox = new JComboBox<String>();
+		foldersProjectComboBox.setMaximumRowCount(10);
+		foldersProjectComboBox.setInheritsPopupMenu(true);
+		foldersProjectComboBox.setFont(new Font("Dialog", Font.BOLD, 14));
+		foldersProjectComboBox.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		
+		lblNewLabel = new JLabel("Project folder in repositories");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		GroupLayout gl_addReportPanel = new GroupLayout(addReportPanel);
 		gl_addReportPanel.setHorizontalGroup(
 			gl_addReportPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_addReportPanel.createSequentialGroup()
 					.addGap(6)
-					.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(Alignment.TRAILING, gl_addReportPanel.createSequentialGroup()
+							.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addGap(212))
 						.addGroup(gl_addReportPanel.createSequentialGroup()
 							.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING, false)
-								.addComponent(addArchiveToggleButton, 0, 0, Short.MAX_VALUE)
-								.addComponent(addDataBaseToggleButton, GroupLayout.PREFERRED_SIZE, 27, Short.MAX_VALUE))
-							.addPreferredGap(ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-							.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_addReportPanel.createSequentialGroup()
-									.addComponent(nameFileReportLabel, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
-									.addContainerGap())
-								.addGroup(gl_addReportPanel.createSequentialGroup()
-									.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
+									.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING, false)
+										.addComponent(addArchiveToggleButton, 0, 0, Short.MAX_VALUE)
+										.addComponent(addDataBaseToggleButton, GroupLayout.PREFERRED_SIZE, 27, Short.MAX_VALUE))
+									.addGap(26)
+									.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING, false)
+										.addComponent(nameFileReportLabel, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
 										.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
 										.addGroup(gl_addReportPanel.createSequentialGroup()
-											.addGroup(gl_addReportPanel.createParallelGroup(Alignment.TRAILING)
-												.addGroup(gl_addReportPanel.createSequentialGroup()
-													.addComponent(fileReportLabel, GroupLayout.PREFERRED_SIZE, 353, GroupLayout.PREFERRED_SIZE)
-													.addPreferredGap(ComponentPlacement.RELATED)
-													.addComponent(fileReportButton, GroupLayout.PREFERRED_SIZE, 68, Short.MAX_VALUE))
-												.addComponent(refreshServiceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addGroup(gl_addReportPanel.createSequentialGroup()
-													.addComponent(ipDataSrcLabel, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE)
-													.addPreferredGap(ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
-													.addComponent(addReportButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-											.addGap(14)))
-									.addGap(22))
-								.addGroup(gl_addReportPanel.createSequentialGroup()
-									.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
+											.addComponent(fileReportLabel, GroupLayout.PREFERRED_SIZE, 353, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(fileReportButton, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE))
+										.addGroup(gl_addReportPanel.createSequentialGroup()
+											.addGap(310)
+											.addComponent(refreshServiceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+										.addGroup(gl_addReportPanel.createSequentialGroup()
+											.addComponent(ipDataSrcLabel, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+											.addComponent(addReportButton, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE))
 										.addComponent(rptIdLabel, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
-										.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE))
-									.addGap(102))
-								.addGroup(gl_addReportPanel.createSequentialGroup()
-									.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
+										.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
 										.addComponent(nameReportFileTextField, GroupLayout.PREFERRED_SIZE, 429, GroupLayout.PREFERRED_SIZE)
 										.addComponent(nameFileReportLabelTF, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
-										.addComponent(nameReportField, GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+										.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 432, GroupLayout.PREFERRED_SIZE)
 										.addGroup(gl_addReportPanel.createSequentialGroup()
 											.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
 												.addComponent(nameReportLabel)
 												.addComponent(RPT_IDField, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
 											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(autoInsertCheckBox)))
-									.addGap(38))))
-						.addGroup(gl_addReportPanel.createSequentialGroup()
-							.addComponent(folersProjectComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap(149, Short.MAX_VALUE))))
+											.addComponent(autoInsertCheckBox))))
+								.addComponent(foldersProjectComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE))
+							.addGap(27))))
 		);
 		gl_addReportPanel.setVerticalGroup(
 			gl_addReportPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_addReportPanel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(folersProjectComboBox, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+					.addGap(6)
+					.addComponent(lblNewLabel)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(foldersProjectComboBox, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_addReportPanel.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_addReportPanel.createSequentialGroup()
@@ -242,11 +241,11 @@ public class TabAddReport extends TabSuperClass {
 							.addGroup(gl_addReportPanel.createParallelGroup(Alignment.TRAILING)
 								.addComponent(fileReportLabel, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 								.addComponent(fileReportButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(addArchiveToggleButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addComponent(addArchiveToggleButton, GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
 					.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_addReportPanel.createSequentialGroup()
 							.addGap(10)
-							.addComponent(addReportButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(addReportButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 						.addGroup(gl_addReportPanel.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(ipDataSrcLabel, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)))
@@ -277,7 +276,7 @@ public class TabAddReport extends TabSuperClass {
 		final DefaultComboBoxModel<String> model = new DefaultComboBoxModel(listCategoryAndCodes);
 		categoriesComboBox.setModel(model);
 		final DefaultComboBoxModel<String> model2 = new DefaultComboBoxModel(listNamesFoldersProject);
-		folersProjectComboBox.setModel(model2);
+		foldersProjectComboBox.setModel(model2);
 		
 		RPT_IDField.addKeyListener(new KeyAdapter() {
 			@Override
@@ -317,6 +316,8 @@ public class TabAddReport extends TabSuperClass {
 		addDataBaseToggleButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(!addDataBaseToggleButton.isSelected()) {
+					foldersProjectComboBox.setEnabled(false);
+						foldersProjectComboBox.setSelectedIndex(-1);
 					categoriesComboBox.setEnabled(false);
 					nameReportField.setEditable(false);
 					nameReportField.setEnabled(false);
@@ -331,6 +332,12 @@ public class TabAddReport extends TabSuperClass {
 					RPT_IDField.setEnabled(false);
 					RPT_IDField.setEditable(false);
 				} else {
+					if (addArchiveToggleButton.isSelected()) {
+						if (SettingsWindow.enableAddToRepositoriesCheckBoxgetSaveSelected()) foldersProjectComboBox.setEnabled(true);
+					} else {
+						foldersProjectComboBox.setEnabled(false);
+						foldersProjectComboBox.setSelectedIndex(-1);
+					}
 					autoInsertCheckBox.setEnabled(true);
 					rptIdLabel.setEnabled(true);
 						if (autoInsertCheckBox.isSelected()) {
@@ -356,6 +363,8 @@ public class TabAddReport extends TabSuperClass {
 		addArchiveToggleButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (!addArchiveToggleButton.isSelected()) {
+					foldersProjectComboBox.setEnabled(false);
+						foldersProjectComboBox.setSelectedIndex(-1);
 					fileReportButton.setEnabled(false);
 					nameFileReportLabel.setEnabled(false);
 					fileReportLabel.setEnabled(false);
@@ -366,6 +375,12 @@ public class TabAddReport extends TabSuperClass {
 						nameFileReportLabelTF.setEnabled(true);
 					}
 				} else {
+					if (addDataBaseToggleButton.isSelected()) {
+						if (SettingsWindow.enableAddToRepositoriesCheckBoxgetSaveSelected()) foldersProjectComboBox.setEnabled(true);
+					} else {
+						foldersProjectComboBox.setEnabled(false);
+						foldersProjectComboBox.setSelectedIndex(-1);
+					}
 					fileReportButton.setEnabled(true);
 					nameFileReportLabel.setEnabled(true);
 					fileReportLabel.setEnabled(true);
@@ -395,7 +410,7 @@ public class TabAddReport extends TabSuperClass {
 						categoryId     = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 						selectedFile   = fileChooser.getSelectedFile();
 						nameFileReport = selectedFile.toPath().getFileName().toString();
-						nameProgect    = (String)folersProjectComboBox.getSelectedItem();
+						nameProgect    = (String)foldersProjectComboBox.getSelectedItem();
 						
 						if (autoInsertCheckBox.isSelected()) {
 							connectionForCommit = ReportRelatedData.insertReport(null, nameReport, categoryId, nameFileReport);
@@ -404,9 +419,11 @@ public class TabAddReport extends TabSuperClass {
 						}
 						WarArchive.createBackup(selectedFile);
 							WarArchive.addOrUpdateReportFileInArchive(selectedFile);
+							if (SettingsWindow.enableAddToRepositoriesCheckBoxgetSaveSelected()) {
 								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
-									connectionForCommit.commit();
-										DialogWindows.dialogWindowWarning("Report successfully added!");
+							}
+							connectionForCommit.commit();
+								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addDataBaseToggleButton.isSelected()) {
 						//
 						RPT_ID         = RPT_IDField.getText().trim();
@@ -455,7 +472,26 @@ public class TabAddReport extends TabSuperClass {
 			}	
 		});
 	}
-	private void matchCheckingInputValueFileName() throws Exception {
+	private void matchCheckingValidInputData() throws Exception {
+		if (addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
+			if (SettingsWindow.enableAddToRepositoriesCheckBoxgetSaveSelected()) matchCheckingProjectComboBox();
+			matchCheckingInputValues();
+			matchCheckingDataBase();
+			WarArchive.checkPathArchive();
+				matchCheckingArchive();
+					String nameReport = nameReportField.getText().trim();
+					String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
+					FilesRepository.isNotExistFolderReport(nameReport, nameProgect);
+		} else if (addDataBaseToggleButton.isSelected()) {
+			matchCheckingInputValues();
+			matchCheckingInputValueFileName();
+			matchCheckingDataBase();
+		} else if (addArchiveToggleButton.isSelected()) {
+			WarArchive.checkPathArchive();
+			matchCheckingArchive();
+		}
+	}
+		private void matchCheckingInputValueFileName() throws Exception {
 		String newFileNameReport = nameReportFileTextField.getText().trim();
 		if (newFileNameReport.isEmpty()) throw new InfoException("Field file name report is empty.");
 		Vector<String> listFileNameReport = null;
@@ -473,30 +509,12 @@ public class TabAddReport extends TabSuperClass {
 		}
 	}
 	
-	private void matchCheckingValidInputData() throws Exception {
-
-		if (addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
-			matchCheckingInupValues();
-			matchCheckingDataBase();
-			WarArchive.checkPathArchive();
-				matchCheckingArchive();
-					String nameReport = nameReportField.getText().trim();
-					String nameProgect = (String)folersProjectComboBox.getSelectedItem();
-					FilesRepository.checkExistFolderReport(nameReport, nameProgect);
-		} else if (addDataBaseToggleButton.isSelected()) {
-			matchCheckingInupValues();
-			matchCheckingInputValueFileName();
-			matchCheckingDataBase();
-		} else if (addArchiveToggleButton.isSelected()) {
-			WarArchive.checkPathArchive();
-			matchCheckingArchive();
+	private void matchCheckingProjectComboBox() throws Exception {
+		if (FilesRepository.isOpenRepo()) {
+			if (foldersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
 		}
 	}
-	private void matchCheckingInupValues() throws Exception {
-		if (FilesRepository.isOpenRepo()) {
-			if (folersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
-		}
-		//
+	private void matchCheckingInputValues() throws Exception {
 		if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
 		//
 		String RPT_ID = RPT_IDField.getText().trim();
@@ -532,5 +550,8 @@ public class TabAddReport extends TabSuperClass {
 		} else {
 			return TAB_ADD_REPORT;
 		}
+	}
+	public JComboBox<String> getFoldersProjectComboBox() {
+		return foldersProjectComboBox;
 	}
 }

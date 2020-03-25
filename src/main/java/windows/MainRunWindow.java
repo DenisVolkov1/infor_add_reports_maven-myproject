@@ -111,9 +111,9 @@ public class MainRunWindow extends JFrame {
 		//Categories tab
 		tabbedPane.addTab("Categories", TabCategories.getInstance());
 		//////////////
-		tabbedPane.setLocation(0, 74);
+		tabbedPane.setLocation(0, 60);
 		contentPane.add(tabbedPane);
-		tabbedPane.setSize(529, 406);
+		tabbedPane.setSize(529, 431);
 		tabbedPane.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
 		final JButton settings = new JButton(ICON_SETTING);

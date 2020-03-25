@@ -16,6 +16,7 @@ import javax.swing.border.EtchedBorder;
 
 import database.CategoryAndCode;
 import database.ReportRelatedData;
+import exception.InfoException;
 import log.LOg;
 
 import java.awt.Dimension;
@@ -26,6 +27,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.Font;
 import util.DialogWindows;
+import util.Verification;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -327,32 +329,35 @@ public class InputNewValuesReport extends JDialog {
 				}
 			}
 		
-		this.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				for (Component c : panel.getComponents()) {
-					if (c instanceof JTextField) {
-						if (fieldAlredyEdit((JTextField)c)) {
-							String field = ((JTextField)c).getText().trim();
-							if (field.isEmpty()) {
-								JTextField textField = (JTextField) c;
-								textField.setBackground(Color.LIGHT_GRAY);
-								textField.setFocusable(false);
-								textField.setFocusTraversalKeysEnabled(false);
-								textField.setHorizontalAlignment(SwingConstants.CENTER);
-								textField.setText("<Old value>");
+		
+			this.addWindowListener(new WindowAdapter() {
+				
+				@Override
+				public void windowClosing(WindowEvent e) {
+					
+					for (Component c : panel.getComponents()) {
+						if (c instanceof JTextField) {
+							if (fieldAlredyEdit((JTextField)c)) {
+								String field = ((JTextField)c).getText().trim();
+								if (field.isEmpty()) {
+									JTextField textField = (JTextField) c;
+									textField.setBackground(Color.LIGHT_GRAY);
+									textField.setFocusable(false);
+									textField.setFocusTraversalKeysEnabled(false);
+									textField.setHorizontalAlignment(SwingConstants.CENTER);
+									textField.setText("<Old value>");
+								}
 							}
 						}
 					}
+					String newRPT_ID = getRPT_ID();
+					Integer newCategoryId = getCategory();
+					String newNameReport = getNameReport();
+					String newNameFileReport = getNameFileReport();
+						if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) TabUpdateReport.getInstance().getInputNewValuesButton().setEmptyHover();
+						else TabUpdateReport.getInstance().getInputNewValuesButton().setStandartHover();
 				}
-				String newRPT_ID = getRPT_ID();
-				Integer newCategoryId = getCategory();
-				String newNameReport = getNameReport();
-				String newNameFileReport = getNameFileReport();
-					if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) TabUpdateReport.getInstance().getInputNewValuesButton().setEmptyHover();
-					else TabUpdateReport.getInstance().getInputNewValuesButton().setStandartHover();
-			}
-		});
+			});
 	}
 	private boolean fieldAlredyEdit(JTextField jTextField) {
 		return jTextField.getBackground() == Color.WHITE && jTextField.getText().trim().isEmpty();
@@ -386,6 +391,15 @@ public class InputNewValuesReport extends JDialog {
 		if (newCategory.getCategoryId() == null) return null;
 		return newCategory.getCategoryId();
 	}
+	public JTextField getFileNameField() {
+		return fileNameField;
+	}
+	public JTextField getNameReportField() {
+		return nameReportField;
+	}
+	
+	
+	
 	
 	
 	

@@ -6,6 +6,7 @@ import database.CategoryAndCode;
 import database.ReportRelatedData;
 import exception.ConfirmException;
 import exception.InfoException;
+import files_repository.FilesRepository;
 import log.LOg;
 
 import javax.swing.border.EtchedBorder;
@@ -33,6 +34,7 @@ import javax.swing.JTextField;
 import util.DialogWindows;
 import util.MyHoverButton;
 import util.ReadXML;
+import util.Verification;
 import war.WarArchive;
 
 import javax.swing.JComboBox;
@@ -63,17 +65,19 @@ public class TabUpdateReport extends TabSuperClass {
 	private MyHoverButton refreshServiceButton;
 	private MyHoverButton inputNewValuesButton;
 	private JLabel ipDataSrcLabel;
+	private JComboBox<String> foldersProjectComboBox;
+	private JLabel lblProjectFolderIn;
 	//
 	/**
 	 * Create the panel.
 	 */
 	private TabUpdateReport() {
 		
-		setPreferredSize(new Dimension(520, 340));
+		setPreferredSize(new Dimension(520, 398));
 		setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(8, 0, 504, 340);
+		panel.setBounds(8, 0, 504, 398);
 		add(panel);
 		
 		categoryLabel = new JLabel("Category");
@@ -124,38 +128,55 @@ public class TabUpdateReport extends TabSuperClass {
 		ipDataSrcLabel.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 13));
 		ipDataSrcLabel.setBorder(null);
 		
+		foldersProjectComboBox = new JComboBox<String>();
+		foldersProjectComboBox.setMaximumRowCount(10);
+		foldersProjectComboBox.setInheritsPopupMenu(true);
+		foldersProjectComboBox.setFont(new Font("Dialog", Font.BOLD, 14));
+		foldersProjectComboBox.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		
+		lblProjectFolderIn = new JLabel("Project folder in repositories");
+		lblProjectFolderIn.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(updateFileArchiveToggleButton, 0, 0, Short.MAX_VALUE)
-						.addComponent(updateDataBaseToggleButton, GroupLayout.PREFERRED_SIZE, 27, Short.MAX_VALUE))
-					.addGap(24)
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addComponent(nameReportLabel, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
-						.addComponent(nameFileReportLabel, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-							.addComponent(refreshServiceButton, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_panel.createSequentialGroup()
 							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
-								.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
-									.addComponent(ipDataSrcLabel, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-									.addComponent(updateReportButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-								.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
-									.addComponent(fileReportLabel, GroupLayout.PREFERRED_SIZE, 353, GroupLayout.PREFERRED_SIZE)
-									.addGap(12)
-									.addComponent(fileReportButton, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE))))
-						.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
-						.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
-						.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 429, GroupLayout.PREFERRED_SIZE)
-						.addComponent(inputNewValuesButton, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addComponent(updateFileArchiveToggleButton, 0, 0, Short.MAX_VALUE)
+								.addComponent(updateDataBaseToggleButton, GroupLayout.PREFERRED_SIZE, 27, Short.MAX_VALUE))
+							.addGap(24)
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addComponent(nameReportLabel, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
+								.addComponent(nameFileReportLabel, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+									.addComponent(refreshServiceButton, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
+									.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
+										.addGroup(gl_panel.createSequentialGroup()
+											.addComponent(ipDataSrcLabel, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+											.addComponent(updateReportButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+										.addGroup(gl_panel.createSequentialGroup()
+											.addComponent(fileReportLabel, GroupLayout.PREFERRED_SIZE, 353, GroupLayout.PREFERRED_SIZE)
+											.addGap(12)
+											.addComponent(fileReportButton, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE))))
+								.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+								.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
+								.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 429, GroupLayout.PREFERRED_SIZE)
+								.addComponent(inputNewValuesButton, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+						.addComponent(foldersProjectComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblProjectFolderIn, GroupLayout.PREFERRED_SIZE, 268, GroupLayout.PREFERRED_SIZE))
 					.addGap(24))
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(6)
+					.addComponent(lblProjectFolderIn, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(foldersProjectComboBox, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
 						.addGroup(gl_panel.createSequentialGroup()
 							.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
@@ -188,7 +209,7 @@ public class TabUpdateReport extends TabSuperClass {
 						.addGroup(gl_panel.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(ipDataSrcLabel, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)))
-					.addGap(19))
+					.addContainerGap(22, Short.MAX_VALUE))
 		);
 		panel.setLayout(gl_panel);
 		//////////////////Code
@@ -203,8 +224,10 @@ public class TabUpdateReport extends TabSuperClass {
 		fileChooser.setFileFilter(filter);
 		refreshServiceButton.addActionListener(refreshService);
 		
-		final DefaultComboBoxModel<String> model2 = new DefaultComboBoxModel(listCategoryAndCodes);
-		categoriesComboBox.setModel(model2);
+		final DefaultComboBoxModel<String> model = new DefaultComboBoxModel(listCategoryAndCodes);
+		categoriesComboBox.setModel(model);
+		final DefaultComboBoxModel<String> model2 = new DefaultComboBoxModel(listNamesFoldersProject);
+		foldersProjectComboBox.setModel(model2);
 		
 		fileReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -225,7 +248,8 @@ public class TabUpdateReport extends TabSuperClass {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					matchCheckingUpdateReport();
+					matchCheckingInputValues1();
+					matchCheckingDataBase();
 					String nameReport = nameReportField.getText().trim();
 				Integer categoryId = ((CategoryAndCode)categoriesComboBox.getSelectedItem()).getCategoryId();
 					if (inputNewValuesReport == null) inputNewValuesReport = new InputNewValuesReport(nameReport, categoryId);
@@ -250,11 +274,9 @@ public class TabUpdateReport extends TabSuperClass {
 				File selectedFile = null;
 					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {
+					matchCheckingValidInputData();
+					//
 					if (updateDataBaseToggleButton.isSelected() && updateFileArchiveToggleButton.isSelected()) {
-						matchCheckingIsNullValues();
-						matchCheckingArchive();
-						matchCheckingNameFile();
-						//
 						nameReport = nameReportField.getText().trim();
 						categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 						oldValues = ReportRelatedData.getReportFields(nameReport,categoryId);
@@ -271,8 +293,6 @@ public class TabUpdateReport extends TabSuperClass {
 								 		connectionForCommit.commit();
 								 			DialogWindows.dialogWindowWarning("Report successfully update!");
 					} else if (updateDataBaseToggleButton.isSelected()) {
-						matchCheckingUpdateReport();
-						//
 						nameReport = nameReportField.getText().trim();
 						categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 						//
@@ -285,8 +305,6 @@ public class TabUpdateReport extends TabSuperClass {
 									inputNewValuesReport = null;
 										DialogWindows.dialogWindowWarning("Report successfully update!");
 					} else if (updateFileArchiveToggleButton.isSelected()) {
-						matchCheckingArchive();
-						//
 						updateNameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
 						Vector<String> reportNames = ReportRelatedData.getListOfReportNames(updateNameFileReport);
 						String names = "";
@@ -323,12 +341,20 @@ public class TabUpdateReport extends TabSuperClass {
 		updateDataBaseToggleButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(!updateDataBaseToggleButton.isSelected()) {
+					foldersProjectComboBox.setEnabled(false);
+						foldersProjectComboBox.setSelectedIndex(-1);
 					categoryLabel.setEnabled(false);
 					categoriesComboBox.setEnabled(false);
 					nameReportLabel.setEnabled(false);
 					nameReportField.setEnabled(false);
 					inputNewValuesButton.setEnabled(false);
 				} else {
+					if (updateFileArchiveToggleButton.isSelected()) {
+						foldersProjectComboBox.setEnabled(true);
+					} else {
+						foldersProjectComboBox.setEnabled(false);
+						foldersProjectComboBox.setSelectedIndex(-1);
+					}
 					categoryLabel.setEnabled(true);
 					categoriesComboBox.setEnabled(true);
 					nameReportLabel.setEnabled(true);
@@ -340,11 +366,19 @@ public class TabUpdateReport extends TabSuperClass {
 		updateFileArchiveToggleButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(!updateFileArchiveToggleButton.isSelected()) {
+					foldersProjectComboBox.setEnabled(false);
+						foldersProjectComboBox.setSelectedIndex(-1);
 					nameFileReportLabel.setEnabled(false);
 					fileReportLabel.setEnabled(false);
 					fileReportButton.setEnabled(false);
 					ipDataSrcLabel.setVisible(false);
 				} else {
+					if (updateDataBaseToggleButton.isSelected()) {
+						foldersProjectComboBox.setEnabled(true);
+					} else {
+						foldersProjectComboBox.setEnabled(false);
+						foldersProjectComboBox.setSelectedIndex(-1);
+					}
 					nameFileReportLabel.setEnabled(true);
 					fileReportLabel.setEnabled(true);
 					fileReportButton.setEnabled(true);
@@ -353,16 +387,56 @@ public class TabUpdateReport extends TabSuperClass {
 			}
 		});
 	}
-	private void matchCheckingIsNullValues() throws InfoException {
-		if (inputNewValuesReport == null) throw new InfoException("Input report for update.");
+	private void matchCheckingValidInputData() throws Exception {
+		if (updateDataBaseToggleButton.isSelected() && updateFileArchiveToggleButton.isSelected()) {
+			matchCheckingProjectComboBox();
+			matchCheckingInputValues1();
+			matchCheckingDataBase();
+			matchCheckingInputValues2();
+			matchCheckingArchive();
+			matchCheckingNameFile();
+			WarArchive.checkPathArchive();
+				matchCheckingArchive();
+					String nameReport = nameReportField.getText().trim();
+					String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
+					FilesRepository.isExistFolderReport(nameReport, nameProgect);
+		} else if (updateDataBaseToggleButton.isSelected()) {
+			matchCheckingInputValues1();
+			matchCheckingDataBase();
+			matchCheckingInputValues2();
+		} else if (updateFileArchiveToggleButton.isSelected()) {
+			matchCheckingProjectComboBox();
+			matchCheckingArchive();
+			WarArchive.checkPathArchive();
+			matchCheckingArchive();
+				String nameReport = nameReportField.getText().trim();
+				String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
+				FilesRepository.isExistFolderReport(nameReport, nameProgect);
+		}
+	}
+	private void matchCheckingProjectComboBox() throws Exception {
+		if (FilesRepository.isOpenRepo()) {
+			if (foldersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
+		}
+	}
+	private void matchCheckingInputValues1() throws Exception {
+		if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
+		String nameReport = nameReportField.getText().trim();
+		if (nameReport.isEmpty()) throw new InfoException("Field name report is empty.");
+	}
+	private void matchCheckingInputValues2() throws Exception {
+		if (inputNewValuesReport == null) throw new InfoException("Change at least one report attribute");
 		String newRPT_ID = inputNewValuesReport.getRPT_ID();
 		Integer newCategoryId = inputNewValuesReport.getCategory();
 		String newNameReport = inputNewValuesReport.getNameReport();
 		String newNameFileReport = inputNewValuesReport.getNameFileReport();
 			if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) throw new InfoException("Change at least one report attribute");
+		//	
+		Verification.checkIvalidFilenamesWindows(
+				inputNewValuesReport.getNameReportField(),
+				inputNewValuesReport.getFileNameField());
 	}
 	private void matchCheckingNameFile() throws Exception {
-		
 		String nameReport = nameReportField.getText().trim();
 		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 		String updateNameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
@@ -375,13 +449,8 @@ public class TabUpdateReport extends TabSuperClass {
 				if (!updateNameFileReport.equals(nameFileReport)) throw new InfoException("The file name of this report does not match the update file");
 		}
 	}
-	private void matchCheckingUpdateReport() throws Exception {
-	
-		if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
-
+	private void matchCheckingDataBase() throws Exception {
 		String nameReport = nameReportField.getText().trim();
-		if (nameReport.isEmpty()) throw new InfoException("Field name report is empty.");
-
 		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 		Vector<String> listReportStrings = ReportRelatedData.getListOfReportNames(categoryId);
 			boolean b = false;
@@ -419,5 +488,8 @@ public class TabUpdateReport extends TabSuperClass {
 	}
 	public MyHoverButton getInputNewValuesButton() {
 		return inputNewValuesButton;
+	}
+	public JComboBox<String> getFoldersProjectComboBox() {
+		return foldersProjectComboBox;
 	}
 }

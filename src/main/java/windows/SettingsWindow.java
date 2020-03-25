@@ -21,6 +21,8 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
@@ -29,6 +31,8 @@ import java.awt.Component;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.JCheckBox;
 
 class SettingsWindow extends JDialog {
 
@@ -41,6 +45,8 @@ class SettingsWindow extends JDialog {
 	private JTextField repUsernameField;
 	private JTextField repPathDirField;
 	private JTextField portField;
+	private JCheckBox enableAddToRepositoriesCheckBox;
+	private JPanel repSettingsPanel;
 	/**
 	 * Create the dialog.
 	 */
@@ -78,8 +84,8 @@ class SettingsWindow extends JDialog {
 		ipBaseField.setHorizontalAlignment(SwingConstants.CENTER);
 		ipBaseField.setColumns(10);
 		
-		JPanel repSettingsPanel = new JPanel();
-		repSettingsPanel.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Repository files", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		repSettingsPanel = new JPanel();
+		repSettingsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Repository files", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		
 		portField = new JTextField();
 		portField.setText((String) null);
@@ -89,15 +95,20 @@ class SettingsWindow extends JDialog {
 		JLabel lblPort = new JLabel("port");
 		lblPort.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
+		enableAddToRepositoriesCheckBox = new JCheckBox("Enable add to Repositories");
+		enableAddToRepositoriesCheckBox.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		
 		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
 		gl_contentPanel.setHorizontalGroup(
 			gl_contentPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPanel.createSequentialGroup()
+				.addGroup(Alignment.TRAILING, gl_contentPanel.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
-						.addComponent(pathArchiveField, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
-						.addComponent(pathArchiveLabel)
-						.addGroup(gl_contentPanel.createSequentialGroup()
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(repSettingsPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+						.addComponent(enableAddToRepositoriesCheckBox, Alignment.LEADING)
+						.addComponent(pathArchiveField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+						.addComponent(pathArchiveLabel, Alignment.LEADING)
+						.addGroup(Alignment.LEADING, gl_contentPanel.createSequentialGroup()
 							.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING, false)
 								.addGroup(gl_contentPanel.createSequentialGroup()
 									.addComponent(lblIpBaseSqlLabel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
@@ -110,8 +121,7 @@ class SettingsWindow extends JDialog {
 							.addGap(18)
 							.addComponent(lblPort)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(portField, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE))
-						.addComponent(repSettingsPanel, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE))
+							.addComponent(portField, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap())
 		);
 		gl_contentPanel.setVerticalGroup(
@@ -131,12 +141,14 @@ class SettingsWindow extends JDialog {
 							.addComponent(pathArchiveLabel))
 						.addGroup(gl_contentPanel.createParallelGroup(Alignment.TRAILING, false)
 							.addComponent(lblPort, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(portField, Alignment.LEADING)))
+							.addComponent(portField, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(pathArchiveField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(enableAddToRepositoriesCheckBox)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(repSettingsPanel, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(34, Short.MAX_VALUE))
+					.addComponent(repSettingsPanel, GroupLayout.PREFERRED_SIZE, 111, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		
 		repPasswordField = new JTextField();
@@ -239,6 +251,20 @@ class SettingsWindow extends JDialog {
 		setVisible(true);
 	}
 	private void primaryInit() {
+		if (enableAddToRepositoriesCheckBoxgetSaveSelected()) {
+			repSettingsPanel.setVisible(true);
+		} else repSettingsPanel.setVisible(false);
+		
+		// Repo selected?
+		enableAddToRepositoriesCheckBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (enableAddToRepositoriesCheckBox.isSelected()) {
+					repSettingsPanel.setVisible(true);
+				} else {
+					repSettingsPanel.setVisible(false);
+				}
+			}
+		});	
 		
 		portField.addKeyListener(new KeyAdapter() {
 			@Override
@@ -250,7 +276,7 @@ class SettingsWindow extends JDialog {
 		
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+			
 				for (Component c : contentPanel.getComponents()) {
 					if (c instanceof JTextField) {
 						String field = ((JTextField)c).getText().trim();
@@ -260,8 +286,18 @@ class SettingsWindow extends JDialog {
 						}
 					}
 				}
+				if (!enableAddToRepositoriesCheckBox.isSelected()) {
+					TabAddReport.getInstance().getFoldersProjectComboBox().setSelectedIndex(-1);
+					TabAddReport.getInstance().getFoldersProjectComboBox().setEnabled(false);
+					TabUpdateReport.getInstance().getFoldersProjectComboBox().setSelectedIndex(-1);
+					TabUpdateReport.getInstance().getFoldersProjectComboBox().setEnabled(false);
+				} else {
+					TabAddReport.getInstance().getFoldersProjectComboBox().setEnabled(true);
+					TabUpdateReport.getInstance().getFoldersProjectComboBox().setEnabled(true);
+				}
 				String repPathDir = repPathDirField.getText().trim();
 				repPathDir = repPathDir.replace('\\', '/');
+				//Save properties
 				MyProperties.saveProperties(
 						"schema" , schemaField.getText().trim(),
 						"pathArchiveWar" , pathArchiveField.getText().trim(),
@@ -269,11 +305,13 @@ class SettingsWindow extends JDialog {
 						"portDataBase",portField.getText().trim(),
 						"repPassword", repPasswordField.getText().trim(),
 						"repUsername", repUsernameField.getText().trim(),
-						"repPathDir", repPathDir
+						"repPathDir", repPathDir,
+						"enableAddToRepositories", enableAddToRepositoriesCheckBoxIsSelectedToText()
 						);
 				DialogWindows.dialogWindowWarning("Save settings");
 			}
 		});
+		//Set saved properties
 		schemaField.setText(MyProperties.getProperty("schema"));
 		pathArchiveField.setText(MyProperties.getProperty("pathArchiveWar"));
 		ipBaseField.setText(MyProperties.getProperty("ipDataBase"));
@@ -281,5 +319,16 @@ class SettingsWindow extends JDialog {
 		repPasswordField.setText(MyProperties.getProperty("repPassword"));
 		repUsernameField.setText(MyProperties.getProperty("repUsername"));
 		repPathDirField.setText(MyProperties.getProperty("repPathDir"));
+		enableAddToRepositoriesCheckBox.setSelected(enableAddToRepositoriesCheckBoxgetSaveSelected());
 	}
+	private String enableAddToRepositoriesCheckBoxIsSelectedToText() {
+		if (enableAddToRepositoriesCheckBox.isSelected()) return "true";
+		else return "false";
+	}
+	public static boolean enableAddToRepositoriesCheckBoxgetSaveSelected() {
+		String saveProp = MyProperties.getProperty("enableAddToRepositories");
+		if (saveProp.equals("true")) return true;
+		else return false;
+	}
+	
 }

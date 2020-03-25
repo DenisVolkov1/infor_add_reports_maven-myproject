@@ -42,30 +42,30 @@ public class FilesRepository {
 		return new NtlmPasswordAuthentication(null,userName,password);
 	}
 	
-	public static boolean isOpenRepo() {
+	public static boolean isOpenRepo() throws Exception {
 		try {
-			 if (new SmbFile(repoPathDir(),getAuthentication()).exists()) return true;
+			 if (new SmbFile(repoPathToProjectsFolder(),getAuthentication()).exists()) return true;
 			 else return false;
 		} catch (Exception e) {
 			LOg.logToFile(e);
-			return false;
+			throw e;
 		}
 	}
 	/***
-	 * @param nameProgect - example BPYARD/ -valid name
+	 * @param nameProgect - example BPYARD/ -example valid name
 	 *
 	 */
 	public static boolean isExistProjectFolder(String nameProgect) throws Exception {
 		try {
-			SmbFile folderPrj = new SmbFile(repoPathDir()+ nameProgect);
+			SmbFile folderPrj = new SmbFile(repoPathToReportsFolder(nameProgect));
 			if (folderPrj.exists()) return true;
 			else return false;
 		} catch (Exception e) {
+			LOg.logToFile(e);
 			throw e;
 		}
 	}
 	
-
 	public static Vector<String> listNamesFolderProject() throws Exception {
 		String repPathDir = MyProperties.getProperty("repPathDir");
 		SmbFile smbFile = new SmbFile("smb:"+repPathDir+'/',getAuthentication());
@@ -95,6 +95,9 @@ public class FilesRepository {
 	        destFileName.flush();
 	        destFileName.close();
 	}
+	/***
+	 * @param nameProgect - example BPYARD/ -example valid name
+	 */
 	public static void sendFilesToStorage(String nameReport ,String nameProgect, File selectedFile) throws Exception {
 		String nameFileReport = selectedFile.toPath().getFileName().toString();
 		Matcher m = Pattern.compile("(.+)\\.rptdesign$").matcher(nameFileReport);
@@ -102,7 +105,7 @@ public class FilesRepository {
 		//
 		String folderReportName = '/'+ nameReport +"    "+ nameFileReport+'/';
 		//Create folder for folders with files report version.
-		SmbFile folderReport = new SmbFile(repoPathDir()+ nameProgect + folderReportName, getAuthentication());
+		SmbFile folderReport = new SmbFile(repoPathToReportsFolder(nameProgect)+ nameProgect + folderReportName, getAuthentication());
 		if (!folderReport.exists()) folderReport.mkdir();
 		//File filter means save only  .rptdesign or .sql files.
 		File[] files = selectedFile.getParentFile().listFiles(new FileFilter() {
@@ -135,9 +138,13 @@ public class FilesRepository {
 		Integer maxInteger = Collections.max(new ArrayList<Integer>(v));
 		return "v"+ (maxInteger+1)+'/';
 	}
-	public static void checkExistFolderReport(String nameReport, String nameProgect) throws Exception {
-		nameProgect += '/';
-		SmbFile smbFile = new SmbFile(repoPathDir()+ nameProgect,getAuthentication());
+	/***
+	 * if folder exist throw Exception 
+	 * ,else -nothing
+	 * @param nameProgect - example BPYARD/ -example valid name
+	 */
+	public static void isNotExistFolderReport(String nameReport, String nameProgect) throws Exception {
+		SmbFile smbFile = new SmbFile(repoPathToReportsFolder(nameProgect),getAuthentication());
 		SmbFile[] listOfFoldersReport = smbFile.listFiles();
 		Vector<String> v = new Vector<String>();
 		for (SmbFile fileReport : listOfFoldersReport) {
@@ -146,10 +153,32 @@ public class FilesRepository {
 		    }
 		}
 	}
+	/***
+	 * if folder exist -nothing
+	 * ,else throw Exception
+	 * @param nameProgect - example BPYARD/ -example valid name
+	 */
+	public static void isExistFolderReport(String nameReport, String nameProgect) throws Exception {
+		SmbFile smbFile = new SmbFile(repoPathToReportsFolder(nameProgect),getAuthentication());
+		SmbFile[] listOfFoldersReport = smbFile.listFiles();
+		Vector<String> v = new Vector<String>();
+		boolean b = false;
+		for (SmbFile fileReport : listOfFoldersReport) {
+		    if (fileReport.isDirectory()) {
+		       if (fileReport.getName().matches(".*"+nameReport+".*")) b = true;
+		    }
+		}
+		if (!b) throw new InfoException("Report folder in storage with this name not exist.");
+	}
 
-	public static String repoPathDir() {
+	public static String repoPathToReportsFolder(String nameProgect) {
+		return "smb:"+MyProperties.getProperty("repPathDir")+'/'+ nameProgect +MyProperties.getProperty("reportCatalog")+'/';
+	}
+	public static String repoPathToProjectsFolder() {
 		return "smb:"+MyProperties.getProperty("repPathDir")+'/';
 	}
+
+	
 	
 	
 }

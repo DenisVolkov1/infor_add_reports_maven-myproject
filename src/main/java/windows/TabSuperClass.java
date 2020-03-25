@@ -51,8 +51,13 @@ public class TabSuperClass extends JPanel {
 		adapterListProjectsNames = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
-				if(!FilesRepository.isOpenRepo()) {
-					listNamesFoldersProject.clear();
+				try {
+					if(!FilesRepository.isOpenRepo()) {
+						listNamesFoldersProject.clear();
+						return;
+					}
+				} catch (Exception e1) {
+					LOg.logToFile(e1);
 					return;
 				}
 				refresListNameProjects();
@@ -86,7 +91,6 @@ public class TabSuperClass extends JPanel {
 		} catch (Exception e) {
 				LOg.logToFile(e);
 		}
-		
 	}
 	public void refreshCategory() {
 		listCategoryAndCodes.clear();
