@@ -39,7 +39,7 @@ public class TabConnectionMSSQLServer extends JPanel {
 	
 	private static JTextField loginField;
 	private static JPasswordField passwordField;
-	private JLabel lblNewLabel;
+	private JLabel lblNewLabel_1;
 	private MyHoverButton testButton;
 	private JPanel panel;
 	/**
@@ -52,7 +52,7 @@ public class TabConnectionMSSQLServer extends JPanel {
 		 panel = new JPanel();
 		panel.setFont(new Font("Dialog", Font.PLAIN, 12));
 		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "MS SQL Server Authentication", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
-		panel.setBounds(10, 11, 480, 183);
+		panel.setBounds(13, 11, 553, 183);
 		add(panel);
 		
 		JLabel loginLable = new JLabel("Login:");
@@ -65,12 +65,11 @@ public class TabConnectionMSSQLServer extends JPanel {
 		loginField.setMargin(new Insets(3, 3, 3, 3));
 		loginField.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		loginField.setColumns(10);
-		lblNewLabel = new JLabel("");
 
 		passwordField = new JPasswordField();
 		passwordField.setMargin(new Insets(3, 3, 3, 3));
 		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblNewLabel = new JLabel("");
+		lblNewLabel_1 = new JLabel("");
 		testButton = new MyHoverButton("Test Connection");
 		testButton.setFont(new Font("Tahoma", Font.PLAIN, 14));	
 
@@ -78,9 +77,8 @@ public class TabConnectionMSSQLServer extends JPanel {
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addGap(47)
+					.addGap(87)
 					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(testButton, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_panel.createSequentialGroup()
 							.addComponent(loginLable, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
@@ -90,17 +88,19 @@ public class TabConnectionMSSQLServer extends JPanel {
 							.addGap(18)
 							.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, 229, GroupLayout.PREFERRED_SIZE)))
 					.addGap(10)
-					.addComponent(lblNewLabel)
-					.addContainerGap(108, Short.MAX_VALUE))
+					.addComponent(lblNewLabel_1)
+					.addContainerGap(178, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+					.addContainerGap(218, Short.MAX_VALUE)
+					.addComponent(testButton, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
+					.addGap(206))
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(36)
 					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
-						.addGroup(gl_panel.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-							.addComponent(lblNewLabel))
+						.addComponent(lblNewLabel_1)
 						.addGroup(gl_panel.createSequentialGroup()
 							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
 								.addComponent(loginLable, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
@@ -113,7 +113,7 @@ public class TabConnectionMSSQLServer extends JPanel {
 									.addComponent(passwordLable)))))
 					.addGap(18)
 					.addComponent(testButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap())
+					.addGap(15))
 		);
 		panel.setLayout(gl_panel);
 		//////////////Code
@@ -123,21 +123,21 @@ public class TabConnectionMSSQLServer extends JPanel {
 	}
 	private void primaryInit() {
 		try {
-			lblNewLabel.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/icon_eye.png"))));
-			lblNewLabel.setVisible(false);
+			lblNewLabel_1.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/icon_eye.png"))));
+			lblNewLabel_1.setVisible(false);
 		} catch (IOException e2) {
-			e2.printStackTrace();
+			LOg.logToFile(e2);
 		}
 		passwordField.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				passwordField.setEchoChar((char)0);
-				lblNewLabel.setVisible(true);
+				lblNewLabel_1.setVisible(true);
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
 				passwordField.setEchoChar('•');
-				lblNewLabel.setVisible(false);
+				lblNewLabel_1.setVisible(false);
 			}
 			//•••••••••••••••••••••
 		});

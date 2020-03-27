@@ -73,11 +73,11 @@ public class TabUpdateReport extends TabSuperClass {
 	 */
 	private TabUpdateReport() {
 		
-		setPreferredSize(new Dimension(520, 398));
+		setPreferredSize(new Dimension(582, 398));
 		setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(8, 0, 504, 398);
+		panel.setBounds(39, 0, 504, 398);
 		add(panel);
 		
 		categoryLabel = new JLabel("Category");
@@ -218,6 +218,8 @@ public class TabUpdateReport extends TabSuperClass {
 		//////
 	}
 	private void primaryInit() {
+		if (!SettingsWindow.enableAddToRepositoriesGetSaveSelected()) foldersProjectComboBox.setEnabled(false);
+		
 		fileChooser = new JFileChooser();
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Birt Report (*.rptdesign)", "rptdesign");
@@ -341,8 +343,12 @@ public class TabUpdateReport extends TabSuperClass {
 		updateDataBaseToggleButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(!updateDataBaseToggleButton.isSelected()) {
-					foldersProjectComboBox.setEnabled(false);
+					if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
+						foldersProjectComboBox.setEnabled(true);
+					} else {
+						foldersProjectComboBox.setEnabled(false);
 						foldersProjectComboBox.setSelectedIndex(-1);
+					}
 					categoryLabel.setEnabled(false);
 					categoriesComboBox.setEnabled(false);
 					nameReportLabel.setEnabled(false);
@@ -350,7 +356,7 @@ public class TabUpdateReport extends TabSuperClass {
 					inputNewValuesButton.setEnabled(false);
 				} else {
 					if (updateFileArchiveToggleButton.isSelected()) {
-						foldersProjectComboBox.setEnabled(true);
+						if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) foldersProjectComboBox.setEnabled(true);
 					} else {
 						foldersProjectComboBox.setEnabled(false);
 						foldersProjectComboBox.setSelectedIndex(-1);
@@ -374,7 +380,7 @@ public class TabUpdateReport extends TabSuperClass {
 					ipDataSrcLabel.setVisible(false);
 				} else {
 					if (updateDataBaseToggleButton.isSelected()) {
-						foldersProjectComboBox.setEnabled(true);
+						if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) foldersProjectComboBox.setEnabled(true);
 					} else {
 						foldersProjectComboBox.setEnabled(false);
 						foldersProjectComboBox.setSelectedIndex(-1);
@@ -491,5 +497,11 @@ public class TabUpdateReport extends TabSuperClass {
 	}
 	public JComboBox<String> getFoldersProjectComboBox() {
 		return foldersProjectComboBox;
+	}
+	public JToggleButton getUpdateDataBaseToggleButton() {
+		return updateDataBaseToggleButton;
+	}
+	public JToggleButton getUpdateFileArchiveToggleButton() {
+		return updateFileArchiveToggleButton;
 	}
 }

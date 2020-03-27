@@ -49,11 +49,11 @@ public class TabCategories extends TabSuperClass {
 		setLayout(null);
 		
 		panel_1 = new JPanel();
-		panel_1.setBounds(8, 0, 504, 321);
+		panel_1.setBounds(39, 0, 504, 237);
 		add(panel_1);
 		panel_1.setLayout(null);
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 504, 321);
+		panel.setBounds(0, 0, 504, 229);
 		panel_1.add(panel);
 		
 		nameCategoryTextField = new JTextField();

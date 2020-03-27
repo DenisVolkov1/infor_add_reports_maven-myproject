@@ -61,6 +61,7 @@ public class MyProperties {
 				prop.setProperty("portDataBase", "1433");
 				prop.setProperty("reportCatalog", "rpt");
 				prop.setProperty("enableAddToRepositories", "true");
+				prop.setProperty("nameServiceReport", "Infor SCE Reports Server scprd-reports1");
 			//
 			
 		    try {

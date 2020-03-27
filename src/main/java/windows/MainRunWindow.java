@@ -89,7 +89,7 @@ public class MainRunWindow extends JFrame {
 		setTitle("Infor add report");
 		setIconImage(ICON_WINDOW);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 534, 520);
+		setBounds(100, 100, 592, 520);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.LIGHT_GRAY);
 		contentPane.setBorder(null);
@@ -110,10 +110,12 @@ public class MainRunWindow extends JFrame {
 		tabbedPane.addTab("Delete Report", new TabScrollable(TabDeleteReport.getInstance()));
 		//Categories tab
 		tabbedPane.addTab("Categories", TabCategories.getInstance());
+		//Repositories tab
+		tabbedPane.addTab("Repositories", TabRepositories.getInstance());
 		//////////////
 		tabbedPane.setLocation(0, 60);
 		contentPane.add(tabbedPane);
-		tabbedPane.setSize(529, 431);
+		tabbedPane.setSize(586, 425);
 		tabbedPane.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
 		final JButton settings = new JButton(ICON_SETTING);
@@ -127,7 +129,7 @@ public class MainRunWindow extends JFrame {
 			}
 		});
 		settings.setFont(new Font("Dialog", Font.BOLD, 11));
-		settings.setBounds(477, 17, 32, 31);
+		settings.setBounds(542, 12, 32, 31);
 		contentPane.add(settings);
 		
 		JLabel lblNewLabel = new JLabel("Server:");

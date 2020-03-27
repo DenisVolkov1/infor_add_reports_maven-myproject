@@ -52,7 +52,7 @@ public class TabSuperClass extends JPanel {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				try {
-					boolean isSetRepo = SettingsWindow.enableAddToRepositoriesCheckBoxGetSaveSelected();
+					boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
 					if(FilesRepository.isOpenRepo() && isSetRepo) {
 						refresListNameProjects();
 					}
@@ -66,12 +66,14 @@ public class TabSuperClass extends JPanel {
 		this.addComponentListener(adapterCategories);
 		
 		refreshService = new ActionListener() { 
-			@Override									//BranchCache //Infor SCE Reports Server scprd-reports1
+			@Override									
 			public void actionPerformed(ActionEvent e) {
+				//Infor SCE Reports Server scprd-reports1 - default
+				String nameServiceReport = MyProperties.getProperty("nameServiceReport"); 
 				try {	
 					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-						ServiceWindow.stopService("Infor SCE Reports Server scprd-reports1");
-						ServiceWindow.startService("Infor SCE Reports Server scprd-reports1");
+						ServiceWindow.stopService(nameServiceReport);
+						ServiceWindow.startService(nameServiceReport);
 				} catch (InfoException e1) {
 					DialogWindows.dialogWindowError(e1);			
 				} catch (Exception e2) {

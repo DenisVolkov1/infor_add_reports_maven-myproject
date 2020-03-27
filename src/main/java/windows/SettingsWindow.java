@@ -251,7 +251,7 @@ class SettingsWindow extends JDialog {
 		setVisible(true);
 	}
 	private void primaryInit() {
-		if (enableAddToRepositoriesCheckBoxGetSaveSelected()) {
+		if (enableAddToRepositoriesGetSaveSelected()) {
 			repSettingsPanel.setVisible(true);
 		} else repSettingsPanel.setVisible(false);
 		
@@ -292,8 +292,15 @@ class SettingsWindow extends JDialog {
 					TabUpdateReport.getInstance().getFoldersProjectComboBox().setSelectedIndex(-1);
 					TabUpdateReport.getInstance().getFoldersProjectComboBox().setEnabled(false);
 				} else {
-					TabAddReport.getInstance().getFoldersProjectComboBox().setEnabled(true);
-					TabUpdateReport.getInstance().getFoldersProjectComboBox().setEnabled(true);
+					boolean isSelectedAddArchiveToggleButton = TabAddReport.getInstance().getAddArchiveToggleButton().isSelected();
+					boolean isSelectedAddDataBaseToggleButton = TabAddReport.getInstance().getAddDataBaseToggleButton().isSelected();
+					if (isSelectedAddArchiveToggleButton && isSelectedAddDataBaseToggleButton) {
+						TabAddReport.getInstance().getFoldersProjectComboBox().setEnabled(true);
+					}
+					boolean isSelectedUpdateDataBaseToggleButton = TabUpdateReport.getInstance().getUpdateDataBaseToggleButton().isSelected();
+					boolean isSelectedUpdateFileArchiveToggleButton = TabUpdateReport.getInstance().getUpdateFileArchiveToggleButton().isSelected();
+					if (isSelectedUpdateDataBaseToggleButton && !isSelectedUpdateFileArchiveToggleButton) TabUpdateReport.getInstance().getFoldersProjectComboBox().setEnabled(false);
+					
 				}
 				String repPathDir = repPathDirField.getText().trim();
 				repPathDir = repPathDir.replace('\\', '/');
@@ -306,7 +313,7 @@ class SettingsWindow extends JDialog {
 						"repPassword", repPasswordField.getText().trim(),
 						"repUsername", repUsernameField.getText().trim(),
 						"repPathDir", repPathDir,
-						"enableAddToRepositories", enableAddToRepositoriesCheckBoxIsSelectedToText()
+						"enableAddToRepositories", enableAddToRepositoriesIsSelectedToText()
 						);
 				DialogWindows.dialogWindowWarning("Save settings");
 			}
@@ -319,13 +326,13 @@ class SettingsWindow extends JDialog {
 		repPasswordField.setText(MyProperties.getProperty("repPassword"));
 		repUsernameField.setText(MyProperties.getProperty("repUsername"));
 		repPathDirField.setText(MyProperties.getProperty("repPathDir"));
-		enableAddToRepositoriesCheckBox.setSelected(enableAddToRepositoriesCheckBoxGetSaveSelected());
+		enableAddToRepositoriesCheckBox.setSelected(enableAddToRepositoriesGetSaveSelected());
 	}
-	private String enableAddToRepositoriesCheckBoxIsSelectedToText() {
+	private String enableAddToRepositoriesIsSelectedToText() {
 		if (enableAddToRepositoriesCheckBox.isSelected()) return "true";
 		else return "false";
 	}
-	public static boolean enableAddToRepositoriesCheckBoxGetSaveSelected() {
+	public static boolean enableAddToRepositoriesGetSaveSelected() {
 		String saveProp = MyProperties.getProperty("enableAddToRepositories");
 		if (saveProp.equals("true")) return true;
 		else return false;

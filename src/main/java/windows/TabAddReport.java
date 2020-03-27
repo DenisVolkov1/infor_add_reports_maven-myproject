@@ -85,7 +85,7 @@ public class TabAddReport extends TabSuperClass {
 		//setPreferredSize(new Dimension(520, 390));
 		setLayout(null);
 		JPanel addReportPanel = new JPanel();
-		addReportPanel.setBounds(0, 0, 520, 418);
+		addReportPanel.setBounds(0, 0, 582, 418);
 		add(addReportPanel);
 		setPreferredSize(addReportPanel.getSize());
 
@@ -165,9 +165,9 @@ public class TabAddReport extends TabSuperClass {
 		gl_addReportPanel.setHorizontalGroup(
 			gl_addReportPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_addReportPanel.createSequentialGroup()
-					.addGap(6)
-					.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING, false)
-						.addGroup(Alignment.TRAILING, gl_addReportPanel.createSequentialGroup()
+					.addGap(38)
+					.addGroup(gl_addReportPanel.createParallelGroup(Alignment.TRAILING, false)
+						.addGroup(gl_addReportPanel.createSequentialGroup()
 							.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 							.addGap(212))
 						.addGroup(gl_addReportPanel.createSequentialGroup()
@@ -266,6 +266,7 @@ public class TabAddReport extends TabSuperClass {
 		nameFileReportLabelTF.setEnabled(false);
 		RPT_IDField.setEnabled(false);
 		RPT_IDField.setEditable(false);
+		if (!SettingsWindow.enableAddToRepositoriesGetSaveSelected()) foldersProjectComboBox.setEnabled(false);
 		
 		fileChooser = new JFileChooser();
 		fileChooser.setAcceptAllFileFilterUsed(false);
@@ -333,7 +334,7 @@ public class TabAddReport extends TabSuperClass {
 					RPT_IDField.setEditable(false);
 				} else {
 					if (addArchiveToggleButton.isSelected()) {
-						if (SettingsWindow.enableAddToRepositoriesCheckBoxGetSaveSelected()) foldersProjectComboBox.setEnabled(true);
+						if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) foldersProjectComboBox.setEnabled(true);
 					} else {
 						foldersProjectComboBox.setEnabled(false);
 						foldersProjectComboBox.setSelectedIndex(-1);
@@ -376,7 +377,7 @@ public class TabAddReport extends TabSuperClass {
 					}
 				} else {
 					if (addDataBaseToggleButton.isSelected()) {
-						if (SettingsWindow.enableAddToRepositoriesCheckBoxGetSaveSelected()) foldersProjectComboBox.setEnabled(true);
+						if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) foldersProjectComboBox.setEnabled(true);
 					} else {
 						foldersProjectComboBox.setEnabled(false);
 						foldersProjectComboBox.setSelectedIndex(-1);
@@ -419,7 +420,7 @@ public class TabAddReport extends TabSuperClass {
 						}
 						WarArchive.createBackup(selectedFile);
 							WarArchive.addOrUpdateReportFileInArchive(selectedFile);
-							if (SettingsWindow.enableAddToRepositoriesCheckBoxGetSaveSelected()) {
+							if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
 							}
 							connectionForCommit.commit();
@@ -474,7 +475,7 @@ public class TabAddReport extends TabSuperClass {
 	}
 	private void matchCheckingValidInputData() throws Exception {
 		if (addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
-			if (SettingsWindow.enableAddToRepositoriesCheckBoxGetSaveSelected()) matchCheckingProjectComboBox();
+			if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) matchCheckingProjectComboBox();
 			matchCheckingInputValues();
 			matchCheckingDataBase();
 			WarArchive.checkPathArchive();
@@ -553,5 +554,11 @@ public class TabAddReport extends TabSuperClass {
 	}
 	public JComboBox<String> getFoldersProjectComboBox() {
 		return foldersProjectComboBox;
+	}
+	public JToggleButton getAddDataBaseToggleButton() {
+		return addDataBaseToggleButton;
+	}
+	public JToggleButton getAddArchiveToggleButton() {
+		return addArchiveToggleButton;
 	}
 }
