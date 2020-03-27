@@ -48,7 +48,8 @@ public class FilesRepository {
 			 else return false;
 		} catch (Exception e) {
 			LOg.logToFile(e);
-			throw e;
+			DialogWindows.dialogWindowError(e);
+			return false;
 		}
 	}
 	/***
@@ -105,7 +106,7 @@ public class FilesRepository {
 		//
 		String folderReportName = '/'+ nameReport +"    "+ nameFileReport+'/';
 		//Create folder for folders with files report version.
-		SmbFile folderReport = new SmbFile(repoPathToReportsFolder(nameProgect)+ nameProgect + folderReportName, getAuthentication());
+		SmbFile folderReport = new SmbFile(repoPathToReportsFolder(nameProgect) + folderReportName, getAuthentication());
 		if (!folderReport.exists()) folderReport.mkdir();
 		//File filter means save only  .rptdesign or .sql files.
 		File[] files = selectedFile.getParentFile().listFiles(new FileFilter() {

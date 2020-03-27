@@ -52,15 +52,14 @@ public class TabSuperClass extends JPanel {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				try {
-					if(!FilesRepository.isOpenRepo()) {
-						listNamesFoldersProject.clear();
-						return;
+					boolean isSetRepo = SettingsWindow.enableAddToRepositoriesCheckBoxGetSaveSelected();
+					if(FilesRepository.isOpenRepo() && isSetRepo) {
+						refresListNameProjects();
 					}
 				} catch (Exception e1) {
 					LOg.logToFile(e1);
 					return;
 				}
-				refresListNameProjects();
 			}
 		};
 		
@@ -89,7 +88,8 @@ public class TabSuperClass extends JPanel {
 			listNameProject = FilesRepository.listNamesFolderProject();
 			listNamesFoldersProject.addAll(listNameProject);
 		} catch (Exception e) {
-				LOg.logToFile(e);
+			LOg.logToFile(e);
+			DialogWindows.dialogWindowError(e);
 		}
 	}
 	public void refreshCategory() {

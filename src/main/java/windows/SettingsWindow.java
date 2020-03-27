@@ -251,7 +251,7 @@ class SettingsWindow extends JDialog {
 		setVisible(true);
 	}
 	private void primaryInit() {
-		if (enableAddToRepositoriesCheckBoxgetSaveSelected()) {
+		if (enableAddToRepositoriesCheckBoxGetSaveSelected()) {
 			repSettingsPanel.setVisible(true);
 		} else repSettingsPanel.setVisible(false);
 		
@@ -319,13 +319,13 @@ class SettingsWindow extends JDialog {
 		repPasswordField.setText(MyProperties.getProperty("repPassword"));
 		repUsernameField.setText(MyProperties.getProperty("repUsername"));
 		repPathDirField.setText(MyProperties.getProperty("repPathDir"));
-		enableAddToRepositoriesCheckBox.setSelected(enableAddToRepositoriesCheckBoxgetSaveSelected());
+		enableAddToRepositoriesCheckBox.setSelected(enableAddToRepositoriesCheckBoxGetSaveSelected());
 	}
 	private String enableAddToRepositoriesCheckBoxIsSelectedToText() {
 		if (enableAddToRepositoriesCheckBox.isSelected()) return "true";
 		else return "false";
 	}
-	public static boolean enableAddToRepositoriesCheckBoxgetSaveSelected() {
+	public static boolean enableAddToRepositoriesCheckBoxGetSaveSelected() {
 		String saveProp = MyProperties.getProperty("enableAddToRepositories");
 		if (saveProp.equals("true")) return true;
 		else return false;

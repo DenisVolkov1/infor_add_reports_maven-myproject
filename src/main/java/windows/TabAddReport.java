@@ -333,7 +333,7 @@ public class TabAddReport extends TabSuperClass {
 					RPT_IDField.setEditable(false);
 				} else {
 					if (addArchiveToggleButton.isSelected()) {
-						if (SettingsWindow.enableAddToRepositoriesCheckBoxgetSaveSelected()) foldersProjectComboBox.setEnabled(true);
+						if (SettingsWindow.enableAddToRepositoriesCheckBoxGetSaveSelected()) foldersProjectComboBox.setEnabled(true);
 					} else {
 						foldersProjectComboBox.setEnabled(false);
 						foldersProjectComboBox.setSelectedIndex(-1);
@@ -376,7 +376,7 @@ public class TabAddReport extends TabSuperClass {
 					}
 				} else {
 					if (addDataBaseToggleButton.isSelected()) {
-						if (SettingsWindow.enableAddToRepositoriesCheckBoxgetSaveSelected()) foldersProjectComboBox.setEnabled(true);
+						if (SettingsWindow.enableAddToRepositoriesCheckBoxGetSaveSelected()) foldersProjectComboBox.setEnabled(true);
 					} else {
 						foldersProjectComboBox.setEnabled(false);
 						foldersProjectComboBox.setSelectedIndex(-1);
@@ -419,7 +419,7 @@ public class TabAddReport extends TabSuperClass {
 						}
 						WarArchive.createBackup(selectedFile);
 							WarArchive.addOrUpdateReportFileInArchive(selectedFile);
-							if (SettingsWindow.enableAddToRepositoriesCheckBoxgetSaveSelected()) {
+							if (SettingsWindow.enableAddToRepositoriesCheckBoxGetSaveSelected()) {
 								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
 							}
 							connectionForCommit.commit();
@@ -474,7 +474,7 @@ public class TabAddReport extends TabSuperClass {
 	}
 	private void matchCheckingValidInputData() throws Exception {
 		if (addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
-			if (SettingsWindow.enableAddToRepositoriesCheckBoxgetSaveSelected()) matchCheckingProjectComboBox();
+			if (SettingsWindow.enableAddToRepositoriesCheckBoxGetSaveSelected()) matchCheckingProjectComboBox();
 			matchCheckingInputValues();
 			matchCheckingDataBase();
 			WarArchive.checkPathArchive();
