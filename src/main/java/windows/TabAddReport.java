@@ -67,7 +67,7 @@ public class TabAddReport extends TabSuperClass {
 	private JLabel nameReportLabel;
 	private JLabel nameFileReportLabel;
 	private JLabel nameFileReportLabelTF;
-	private JTextField nameReportFileTextField;
+	private JTextField nameReportFileField;
 	private JLabel ipDataSrcLabel;
 	private JLabel rptIdLabel;
 	private JTextField RPT_IDField;
@@ -129,9 +129,9 @@ public class TabAddReport extends TabSuperClass {
 		nameFileReportLabelTF = new JLabel("Name file report");
 		nameFileReportLabelTF.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		nameReportFileTextField = new JTextField();
-		nameReportFileTextField.setFont(new Font("Dialog", Font.PLAIN, 14));
-		nameReportFileTextField.setColumns(10);
+		nameReportFileField = new JTextField();
+		nameReportFileField.setFont(new Font("Dialog", Font.PLAIN, 14));
+		nameReportFileField.setColumns(10);
 		
 		ipDataSrcLabel = new JLabel();
 		ipDataSrcLabel.setBorder(null);
@@ -193,7 +193,7 @@ public class TabAddReport extends TabSuperClass {
 											.addComponent(addReportButton, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE))
 										.addComponent(rptIdLabel, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
 										.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
-										.addComponent(nameReportFileTextField, GroupLayout.PREFERRED_SIZE, 429, GroupLayout.PREFERRED_SIZE)
+										.addComponent(nameReportFileField, GroupLayout.PREFERRED_SIZE, 429, GroupLayout.PREFERRED_SIZE)
 										.addComponent(nameFileReportLabelTF, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
 										.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 432, GroupLayout.PREFERRED_SIZE)
 										.addGroup(gl_addReportPanel.createSequentialGroup()
@@ -231,7 +231,7 @@ public class TabAddReport extends TabSuperClass {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(nameFileReportLabelTF, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(nameReportFileTextField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
+							.addComponent(nameReportFileField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
 						.addComponent(addDataBaseToggleButton, GroupLayout.PREFERRED_SIZE, 218, GroupLayout.PREFERRED_SIZE))
 					.addGap(12)
 					.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
@@ -261,8 +261,8 @@ public class TabAddReport extends TabSuperClass {
 	}
 	private void primaryInit() {
 		
-		nameReportFileTextField.setEnabled(false);
-		nameReportFileTextField.setEditable(false);
+		nameReportFileField.setEnabled(false);
+		nameReportFileField.setEditable(false);
 		nameFileReportLabelTF.setEnabled(false);
 		RPT_IDField.setEnabled(false);
 		RPT_IDField.setEditable(false);
@@ -324,8 +324,8 @@ public class TabAddReport extends TabSuperClass {
 					nameReportField.setEnabled(false);
 					categoryLabel.setEnabled(false);
 					nameReportLabel.setEnabled(false);
-					nameReportFileTextField.setEnabled(false);
-					nameReportFileTextField.setEditable(false);
+					nameReportFileField.setEnabled(false);
+					nameReportFileField.setEditable(false);
 					nameFileReportLabelTF.setEnabled(false);
 		
 					autoInsertCheckBox.setEnabled(false);
@@ -354,8 +354,8 @@ public class TabAddReport extends TabSuperClass {
 					categoryLabel.setEnabled(true);
 					nameReportLabel.setEnabled(true);
 					if (!addArchiveToggleButton.isSelected()) {
-						nameReportFileTextField.setEnabled(true);
-						nameReportFileTextField.setEditable(true);
+						nameReportFileField.setEnabled(true);
+						nameReportFileField.setEditable(true);
 						nameFileReportLabelTF.setEnabled(true);
 					}
 				}
@@ -371,8 +371,8 @@ public class TabAddReport extends TabSuperClass {
 					fileReportLabel.setEnabled(false);
 					ipDataSrcLabel.setVisible(false);
 					if (addDataBaseToggleButton.isSelected()) {
-						nameReportFileTextField.setEnabled(true);
-						nameReportFileTextField.setEditable(true);
+						nameReportFileField.setEnabled(true);
+						nameReportFileField.setEditable(true);
 						nameFileReportLabelTF.setEnabled(true);
 					}
 				} else {
@@ -387,8 +387,8 @@ public class TabAddReport extends TabSuperClass {
 					fileReportLabel.setEnabled(true);
 					ipDataSrcLabel.setVisible(true);
 					if (addDataBaseToggleButton.isSelected()) {
-						nameReportFileTextField.setEnabled(false);
-						nameReportFileTextField.setEditable(false);
+						nameReportFileField.setEnabled(false);
+						nameReportFileField.setEditable(false);
 						nameFileReportLabelTF.setEnabled(false);
 					}
 					
@@ -430,7 +430,7 @@ public class TabAddReport extends TabSuperClass {
 						RPT_ID         = RPT_IDField.getText().trim();
 						nameReport     = nameReportField.getText().trim();
 						categoryId     = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
-						nameFileReport = nameReportFileTextField.getText().trim();
+						nameFileReport = nameReportFileField.getText().trim();
 						//
 						if (autoInsertCheckBox.isSelected()) {
 							connectionForCommit = ReportRelatedData.insertReport(null, nameReport, categoryId, nameFileReport);
@@ -475,14 +475,16 @@ public class TabAddReport extends TabSuperClass {
 	}
 	private void matchCheckingValidInputData() throws Exception {
 		if (addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
-			if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) matchCheckingProjectComboBox();
+			if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
+				matchCheckingProjectComboBox();
+				String nameReport = nameReportField.getText().trim();
+				String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
+					FilesRepository.isNotExistFolderReport(nameReport, nameProgect);
+			}
 			matchCheckingInputValues();
 			matchCheckingDataBase();
 			WarArchive.checkPathArchive();
 				matchCheckingArchive();
-					String nameReport = nameReportField.getText().trim();
-					String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
-					FilesRepository.isNotExistFolderReport(nameReport, nameProgect);
 		} else if (addDataBaseToggleButton.isSelected()) {
 			matchCheckingInputValues();
 			matchCheckingInputValueFileName();
@@ -492,8 +494,8 @@ public class TabAddReport extends TabSuperClass {
 			matchCheckingArchive();
 		}
 	}
-		private void matchCheckingInputValueFileName() throws Exception {
-		String newFileNameReport = nameReportFileTextField.getText().trim();
+	private void matchCheckingInputValueFileName() throws Exception {
+		String newFileNameReport = nameReportFileField.getText().trim();
 		if (newFileNameReport.isEmpty()) throw new InfoException("Field file name report is empty.");
 		Vector<String> listFileNameReport = null;
 		try {
@@ -522,8 +524,10 @@ public class TabAddReport extends TabSuperClass {
 		if (RPT_ID.isEmpty()) throw new InfoException("Field RPT_ID is empty.");
 		//
 		String nameNewReport = nameReportField.getText().trim();
+		String newFileNameReport = nameReportFileField.getText().trim();
 		if (nameNewReport.isEmpty()) throw new InfoException("Field name report is empty.");
-		Verification.checkIvalidFilenamesWindows(nameReportField, nameReportFileTextField);
+		//
+		Verification.checkIvalidFilenamesWindows(nameNewReport, newFileNameReport);
 	}
 	private void matchCheckingDataBase() throws Exception {
 		String nameNewReport = nameReportField.getText().trim();

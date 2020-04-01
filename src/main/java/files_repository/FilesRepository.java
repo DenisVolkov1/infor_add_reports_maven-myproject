@@ -41,14 +41,19 @@ public class FilesRepository {
 		String userName = MyProperties.getProperty("repUsername"); 
 		return new NtlmPasswordAuthentication(null,userName,password);
 	}
+	private static SmbFile getSmbFileObject(String url) throws Exception {
+		SmbFile res = new SmbFile(url,getAuthentication());
+		res.setConnectTimeout(10);
+		return res;
+	}
 	
 	public static boolean isOpenRepo() throws Exception {
 		try {
-			 if (new SmbFile(repoPathToProjectsFolder(),getAuthentication()).exists()) return true;
-			 else return false;
+			getSmbFileObject(repoPathToProjectsFolder()).connect();
+			return true;
 		} catch (Exception e) {
 			LOg.logToFile(e);
-			DialogWindows.dialogWindowError(e);
+				DialogWindows.dialogWindowError(e);
 			return false;
 		}
 	}
@@ -58,7 +63,8 @@ public class FilesRepository {
 	 */
 	public static boolean isExistProjectFolder(String nameProgect) throws Exception {
 		try {
-			SmbFile folderPrj = new SmbFile(repoPathToReportsFolder(nameProgect));
+			SmbFile folderPrj = getSmbFileObject(repoPathToReportsFolder(nameProgect));
+			folderPrj.setConnectTimeout(1000);
 			if (folderPrj.exists()) return true;
 			else return false;
 		} catch (Exception e) {
@@ -69,7 +75,7 @@ public class FilesRepository {
 	
 	public static Vector<String> listNamesFolderProject() throws Exception {
 		String repPathDir = MyProperties.getProperty("repPathDir");
-		SmbFile smbFile = new SmbFile("smb:"+repPathDir+'/',getAuthentication());
+		SmbFile smbFile = getSmbFileObject("smb:"+repPathDir+'/');
 		SmbFile[] listOfFiles = smbFile.listFiles();
 		Vector<String> v = new Vector<String>();
 		for (SmbFile file : listOfFiles) {
@@ -84,7 +90,7 @@ public class FilesRepository {
 	        InputStream localFile = new FileInputStream(srcFile);
 
 	        // Create output file 
-	        SmbFileOutputStream destFileName = new SmbFileOutputStream(new SmbFile(destPath.toString()+'/'+srcFile.getName(), getAuthentication()));
+	        SmbFileOutputStream destFileName = new SmbFileOutputStream(getSmbFileObject(destPath.toString()+'/'+srcFile.getName()));
 
 	        // Copy from scr to destination 
 	        BufferedReader brl = new BufferedReader(new InputStreamReader(localFile));
@@ -106,7 +112,7 @@ public class FilesRepository {
 		//
 		String folderReportName = '/'+ nameReport +"    "+ nameFileReport+'/';
 		//Create folder for folders with files report version.
-		SmbFile folderReport = new SmbFile(repoPathToReportsFolder(nameProgect) + folderReportName, getAuthentication());
+		SmbFile folderReport = getSmbFileObject(repoPathToReportsFolder(nameProgect) + folderReportName);
 		if (!folderReport.exists()) folderReport.mkdir();
 		//File filter means save only  .rptdesign or .sql files.
 		File[] files = selectedFile.getParentFile().listFiles(new FileFilter() {
@@ -116,7 +122,7 @@ public class FilesRepository {
 			}
 		});
 	    //Create folder for new version report.   		
-		SmbFile folderVersionReport = new SmbFile(folderReport.toString()+nameReport+"    "+nameFileReport+"    "+getNextVersion(folderReport), getAuthentication());
+		SmbFile folderVersionReport = getSmbFileObject(folderReport.toString()+nameReport+"    "+nameFileReport+"    "+getNextVersion(folderReport));
 		folderVersionReport.mkdir();
 		//copy new files in folder report
 		for (File f:files) {
@@ -131,7 +137,6 @@ public class FilesRepository {
 		    	String name = file.getName();
 		    	Pattern pattern = Pattern.compile(".+v([0-9]+)/$");
 		    	Matcher m = pattern.matcher(name);
-		    	System.out.println(name);
 		       if(m.find()) v.add(Integer.valueOf(m.group(1)));
 		    }
 		}
@@ -145,7 +150,7 @@ public class FilesRepository {
 	 * @param nameProgect - example BPYARD/ -example valid name
 	 */
 	public static void isNotExistFolderReport(String nameReport, String nameProgect) throws Exception {
-		SmbFile smbFile = new SmbFile(repoPathToReportsFolder(nameProgect),getAuthentication());
+		SmbFile smbFile = getSmbFileObject(repoPathToReportsFolder(nameProgect));
 		SmbFile[] listOfFoldersReport = smbFile.listFiles();
 		Vector<String> v = new Vector<String>();
 		for (SmbFile fileReport : listOfFoldersReport) {
@@ -160,7 +165,7 @@ public class FilesRepository {
 	 * @param nameProgect - example BPYARD/ -example valid name
 	 */
 	public static void isExistFolderReport(String nameReport, String nameProgect) throws Exception {
-		SmbFile smbFile = new SmbFile(repoPathToReportsFolder(nameProgect),getAuthentication());
+		SmbFile smbFile = getSmbFileObject(repoPathToReportsFolder(nameProgect));
 		SmbFile[] listOfFoldersReport = smbFile.listFiles();
 		Vector<String> v = new Vector<String>();
 		boolean b = false;
@@ -178,8 +183,4 @@ public class FilesRepository {
 	public static String repoPathToProjectsFolder() {
 		return "smb:"+MyProperties.getProperty("repPathDir")+'/';
 	}
-
-	
-	
-	
 }

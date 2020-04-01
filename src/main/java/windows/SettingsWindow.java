@@ -265,7 +265,6 @@ class SettingsWindow extends JDialog {
 				}
 			}
 		});	
-		
 		portField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -274,6 +273,7 @@ class SettingsWindow extends JDialog {
 			}
 		});
 		
+		//SAVE BUTTON
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
@@ -291,7 +291,12 @@ class SettingsWindow extends JDialog {
 					TabAddReport.getInstance().getFoldersProjectComboBox().setEnabled(false);
 					TabUpdateReport.getInstance().getFoldersProjectComboBox().setSelectedIndex(-1);
 					TabUpdateReport.getInstance().getFoldersProjectComboBox().setEnabled(false);
+					//Remove repositories tab from interface
+					MainRunWindow.getInstance().getTabbedPane().remove(5);
 				} else {
+					//Add repositories tab to interface	
+					MainRunWindow.getInstance().getTabbedPane().addTab("Repositories", TabRepositories.getInstance());
+					//
 					boolean isSelectedAddArchiveToggleButton = TabAddReport.getInstance().getAddArchiveToggleButton().isSelected();
 					boolean isSelectedAddDataBaseToggleButton = TabAddReport.getInstance().getAddDataBaseToggleButton().isSelected();
 					if (isSelectedAddArchiveToggleButton && isSelectedAddDataBaseToggleButton) {
@@ -302,6 +307,8 @@ class SettingsWindow extends JDialog {
 					if (isSelectedUpdateDataBaseToggleButton && !isSelectedUpdateFileArchiveToggleButton) TabUpdateReport.getInstance().getFoldersProjectComboBox().setEnabled(false);
 					
 				}
+				
+				
 				String repPathDir = repPathDirField.getText().trim();
 				repPathDir = repPathDir.replace('\\', '/');
 				//Save properties

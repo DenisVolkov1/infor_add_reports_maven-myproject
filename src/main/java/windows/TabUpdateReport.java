@@ -218,8 +218,21 @@ public class TabUpdateReport extends TabSuperClass {
 		//////
 	}
 	private void primaryInit() {
-		if (!SettingsWindow.enableAddToRepositoriesGetSaveSelected()) foldersProjectComboBox.setEnabled(false);
+		updateDataBaseToggleButton.setSelected(false);
 		
+		if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
+			foldersProjectComboBox.setEnabled(true);
+		} else {
+			foldersProjectComboBox.setEnabled(false);
+			foldersProjectComboBox.setSelectedIndex(-1);
+		}
+		categoryLabel.setEnabled(false);
+		categoriesComboBox.setEnabled(false);
+		nameReportLabel.setEnabled(false);
+		nameReportField.setEnabled(false);
+		inputNewValuesButton.setEnabled(false);
+		//
+
 		fileChooser = new JFileChooser();
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Birt Report (*.rptdesign)", "rptdesign");
@@ -270,31 +283,14 @@ public class TabUpdateReport extends TabSuperClass {
 		updateReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Connection connectionForCommit = null;
-				String nameReport, updateNameFileReport = null;
+				String nameReport, updateNameFileReport = null, nameProgect = null;
 				String[] oldValues = null;
 				Integer categoryId = null;
 				File selectedFile = null;
 					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {
 					matchCheckingValidInputData();
-					//
-					if (updateDataBaseToggleButton.isSelected() && updateFileArchiveToggleButton.isSelected()) {
-						nameReport = nameReportField.getText().trim();
-						categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
-						oldValues = ReportRelatedData.getReportFields(nameReport,categoryId);
-						selectedFile = fileChooser.getSelectedFile();
-						updateNameFileReport = selectedFile.toPath().getFileName().toString();
-						
-						String newRPT_ID         = inputNewValuesReport.getRPT_ID();
-						Integer newCategoryId    = inputNewValuesReport.getCategory();
-						String newNameReport     = inputNewValuesReport.getNameReport();
-						String newNameFileReport = inputNewValuesReport.getNameFileReport();	
-							connectionForCommit = ReportRelatedData.updateReport(nameReport, categoryId, newRPT_ID, newCategoryId, newNameReport, newNameFileReport);
-								 WarArchive.createBackup(selectedFile);
-								 	WarArchive.addOrUpdateReportFileInArchive(selectedFile);
-								 		connectionForCommit.commit();
-								 			DialogWindows.dialogWindowWarning("Report successfully update!");
-					} else if (updateDataBaseToggleButton.isSelected()) {
+					if (updateDataBaseToggleButton.isSelected()) {
 						nameReport = nameReportField.getText().trim();
 						categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 						//
@@ -308,17 +304,18 @@ public class TabUpdateReport extends TabSuperClass {
 										DialogWindows.dialogWindowWarning("Report successfully update!");
 					} else if (updateFileArchiveToggleButton.isSelected()) {
 						updateNameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
-						Vector<String> reportNames = ReportRelatedData.getListOfReportNames(updateNameFileReport);
-						String names = "";
-							for (String name : reportNames) names += name+"\r\n"; 
-							
+						nameProgect    = (String)foldersProjectComboBox.getSelectedItem();
 						selectedFile = fileChooser.getSelectedFile();
 						//
 						 WarArchive.createBackup(selectedFile);
 						 	WarArchive.addOrUpdateReportFileInArchive(selectedFile);
-						 		DialogWindows.dialogWindowWarning("Report file successfully update! For report(s):\r\n\n"+names);
-					} else {
-							DialogWindows.dialogWindowWarning("No one toggle button is pressed!");
+							if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
+								nameReport = getNameReportFromBase();
+								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
+									DialogWindows.dialogWindowWarning("Report file successfully update! For report:\r\n\n"+nameReport);
+									return;
+							}
+						 	DialogWindows.dialogWindowWarning("Report file successfully update!");
 					}
 				} catch (InfoException ie) {
 					 DialogWindows.dialogWindowError(ie); 
@@ -342,87 +339,111 @@ public class TabUpdateReport extends TabSuperClass {
 		});
 		updateDataBaseToggleButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				if(!updateDataBaseToggleButton.isSelected()) {
-					if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
-						foldersProjectComboBox.setEnabled(true);
-					} else {
-						foldersProjectComboBox.setEnabled(false);
-						foldersProjectComboBox.setSelectedIndex(-1);
-					}
-					categoryLabel.setEnabled(false);
-					categoriesComboBox.setEnabled(false);
-					nameReportLabel.setEnabled(false);
-					nameReportField.setEnabled(false);
-					inputNewValuesButton.setEnabled(false);
+				
+				if (updateDataBaseToggleButton.isSelected()) {
+					updateDataBaseToggleButtonSet(true);
+					updateFileArchiveToggleButtonSet(false);
+					updateFileArchiveToggleButton.setSelected(false);
 				} else {
-					if (updateFileArchiveToggleButton.isSelected()) {
-						if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) foldersProjectComboBox.setEnabled(true);
-					} else {
-						foldersProjectComboBox.setEnabled(false);
-						foldersProjectComboBox.setSelectedIndex(-1);
-					}
-					categoryLabel.setEnabled(true);
-					categoriesComboBox.setEnabled(true);
-					nameReportLabel.setEnabled(true);
-					nameReportField.setEnabled(true);
-					inputNewValuesButton.setEnabled(true);
+					updateDataBaseToggleButtonSet(false);
+					updateFileArchiveToggleButtonSet(true);
+					updateFileArchiveToggleButton.setSelected(true);
 				}
+				
 			}
 		});
+		//////////////////////////////////////////////////////////////////////
 		updateFileArchiveToggleButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				if(!updateFileArchiveToggleButton.isSelected()) {
-					foldersProjectComboBox.setEnabled(false);
-						foldersProjectComboBox.setSelectedIndex(-1);
-					nameFileReportLabel.setEnabled(false);
-					fileReportLabel.setEnabled(false);
-					fileReportButton.setEnabled(false);
-					ipDataSrcLabel.setVisible(false);
+				if (updateFileArchiveToggleButton.isSelected()) {
+					updateFileArchiveToggleButtonSet(true);
+					updateDataBaseToggleButtonSet(false);
+					updateDataBaseToggleButton.setSelected(false);
 				} else {
-					if (updateDataBaseToggleButton.isSelected()) {
-						if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) foldersProjectComboBox.setEnabled(true);
-					} else {
-						foldersProjectComboBox.setEnabled(false);
-						foldersProjectComboBox.setSelectedIndex(-1);
-					}
-					nameFileReportLabel.setEnabled(true);
-					fileReportLabel.setEnabled(true);
-					fileReportButton.setEnabled(true);
-					ipDataSrcLabel.setVisible(true);
+					updateFileArchiveToggleButtonSet(false);
+					updateDataBaseToggleButtonSet(true);
+					updateDataBaseToggleButton.setSelected(true);
 				}
-			}
+			}	
 		});
 	}
+
+	protected void updateFileArchiveToggleButtonSet(boolean b) {
+		if (b) {
+			if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
+				foldersProjectComboBox.setEnabled(true);
+			} else {
+				foldersProjectComboBox.setEnabled(false);
+				foldersProjectComboBox.setSelectedIndex(-1);
+			}
+			//
+			nameFileReportLabel.setEnabled(true);
+			fileReportLabel.setEnabled(true);
+			fileReportButton.setEnabled(true);
+			ipDataSrcLabel.setVisible(true);
+		} else {
+			foldersProjectComboBox.setEnabled(false);
+			foldersProjectComboBox.setSelectedIndex(-1);
+			//
+			nameFileReportLabel.setEnabled(false);
+			fileReportLabel.setEnabled(false);
+			fileReportButton.setEnabled(false);
+			ipDataSrcLabel.setVisible(false);
+		}
+	}
+	protected void updateDataBaseToggleButtonSet(boolean b) {
+		if (b) {
+			foldersProjectComboBox.setEnabled(false);
+			foldersProjectComboBox.setSelectedIndex(-1);
+			//
+			categoryLabel.setEnabled(true);
+			categoriesComboBox.setEnabled(true);
+			nameReportLabel.setEnabled(true);
+			nameReportField.setEnabled(true);
+			inputNewValuesButton.setEnabled(true);
+		} else {
+			if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
+				foldersProjectComboBox.setEnabled(true);
+			} else {
+				foldersProjectComboBox.setEnabled(false);
+				foldersProjectComboBox.setSelectedIndex(-1);
+			}
+			
+			categoryLabel.setEnabled(false);
+			categoriesComboBox.setEnabled(false);
+			nameReportLabel.setEnabled(false);
+			nameReportField.setEnabled(false);
+			inputNewValuesButton.setEnabled(false);
+		}
+	}
 	private void matchCheckingValidInputData() throws Exception {
-		if (updateDataBaseToggleButton.isSelected() && updateFileArchiveToggleButton.isSelected()) {
-			matchCheckingProjectComboBox();
-			matchCheckingInputValues1();
-			matchCheckingDataBase();
-			matchCheckingInputValues2();
-			matchCheckingArchive();
-			matchCheckingNameFile();
-			WarArchive.checkPathArchive();
-				matchCheckingArchive();
-					String nameReport = nameReportField.getText().trim();
-					String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
-					FilesRepository.isExistFolderReport(nameReport, nameProgect);
-		} else if (updateDataBaseToggleButton.isSelected()) {
+
+		if (updateDataBaseToggleButton.isSelected()) {
 			matchCheckingInputValues1();
 			matchCheckingDataBase();
 			matchCheckingInputValues2();
 		} else if (updateFileArchiveToggleButton.isSelected()) {
-			matchCheckingProjectComboBox();
-			matchCheckingArchive();
-			WarArchive.checkPathArchive();
-			matchCheckingArchive();
-				String nameReport = nameReportField.getText().trim();
+			if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
+				matchCheckingProjectComboBox();
+				String nameReport = getNameReportFromBase();
 				String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
 				FilesRepository.isExistFolderReport(nameReport, nameProgect);
+			}
+			matchCheckingArchive();
 		}
 	}
 	private void matchCheckingProjectComboBox() throws Exception {
 		if (FilesRepository.isOpenRepo()) {
 			if (foldersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
+		}
+	}
+	private String getNameReportFromBase() throws Exception {
+		String updateNameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
+		Vector<String> reportNames = ReportRelatedData.getListOfReportNames(updateNameFileReport);
+		if (reportNames.size() == 1) {
+			 return reportNames.get(1);
+		} else {
+			throw new InfoException("There is more than one report for this file.");
 		}
 	}
 	private void matchCheckingInputValues1() throws Exception {
@@ -437,10 +458,9 @@ public class TabUpdateReport extends TabSuperClass {
 		String newNameReport = inputNewValuesReport.getNameReport();
 		String newNameFileReport = inputNewValuesReport.getNameFileReport();
 			if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) throw new InfoException("Change at least one report attribute");
-		//	
-		Verification.checkIvalidFilenamesWindows(
-				inputNewValuesReport.getNameReportField(),
-				inputNewValuesReport.getFileNameField());
+		//
+		if  (newNameReport ==null)	
+		Verification.checkIvalidFilenamesWindows(newNameReport,newNameFileReport);
 	}
 	private void matchCheckingNameFile() throws Exception {
 		String nameReport = nameReportField.getText().trim();
@@ -466,6 +486,8 @@ public class TabUpdateReport extends TabSuperClass {
 			if (!b) throw new InfoException("A report with the this name \""+nameReport+"\" absent.");
 	}
 	private void matchCheckingArchive() throws Exception {
+		WarArchive.checkPathArchive();
+		//
 		if (fileChooser.getSelectedFile() == null) throw new InfoException("Select report file.");
 	
 		if (!fileChooser.getSelectedFile().exists()) throw new InfoException("File not found.");

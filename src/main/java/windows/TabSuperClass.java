@@ -51,18 +51,21 @@ public class TabSuperClass extends JPanel {
 		adapterListProjectsNames = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {
 					boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
-					if(FilesRepository.isOpenRepo() && isSetRepo) {
-						refresListNameProjects();
+					if(isSetRepo) {
+						if (FilesRepository.isOpenRepo()) refresListNameProjects();
 					}
 				} catch (Exception e1) {
 					LOg.logToFile(e1);
 					return;
+				} finally {
+					setCursor(null);
 				}
 			}
 		};
-		
+		this.addComponentListener(adapterListProjectsNames);
 		this.addComponentListener(adapterCategories);
 		
 		refreshService = new ActionListener() { 

@@ -44,6 +44,7 @@ public class MainRunWindow extends JFrame {
 	private static MainRunWindow MAIN_RUN_WINDOW = null;
 	private static ImageIcon ICON_SETTING;
 	private static Image ICON_WINDOW;
+	private static JTabbedPane tabbedPane;
 	{
 		try {
 			ICON_SETTING = new ImageIcon(ImageIO.read(getClass().getResource("/icon_settings.gif")));
@@ -73,7 +74,9 @@ public class MainRunWindow extends JFrame {
 				public void run() {
 					try {
 						MainRunWindow frame = MainRunWindow.getInstance();
-							TestMain.testMain();
+						//Test main
+							//TestMain.testMain();
+							////////////////////////////////////////
 						frame.setVisible(true);
 					} catch (Exception e) {
 						LOg.logToFile(e);
@@ -96,7 +99,7 @@ public class MainRunWindow extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		//Tabs
 		//Connection tab
@@ -111,7 +114,10 @@ public class MainRunWindow extends JFrame {
 		//Categories tab
 		tabbedPane.addTab("Categories", TabCategories.getInstance());
 		//Repositories tab
+		if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 		tabbedPane.addTab("Repositories", TabRepositories.getInstance());
+		}
+		
 		//////////////
 		tabbedPane.setLocation(0, 60);
 		contentPane.add(tabbedPane);
@@ -175,5 +181,8 @@ public class MainRunWindow extends JFrame {
 		} else {
 			return MAIN_RUN_WINDOW;
 		}
+	}
+	public static JTabbedPane getTabbedPane() {
+		return tabbedPane;
 	}
 }
