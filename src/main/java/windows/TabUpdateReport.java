@@ -441,9 +441,13 @@ public class TabUpdateReport extends TabSuperClass {
 		String updateNameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
 		Vector<String> reportNames = ReportRelatedData.getListOfReportNames(updateNameFileReport);
 		if (reportNames.size() == 1) {
-			 return reportNames.get(1);
+			 return reportNames.get(0);
 		} else {
-			throw new InfoException("There is more than one report for this file.");
+			String s = "";
+			for (String name : reportNames) {
+				s += name + "\n"; 
+			}
+			throw new InfoException("There is more than one report for this file.\n" + s);
 		}
 	}
 	private void matchCheckingInputValues1() throws Exception {
