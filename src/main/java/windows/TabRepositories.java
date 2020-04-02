@@ -30,6 +30,7 @@ import log.LOg;
 
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileFilter;
 import java.sql.Connection;
 import java.awt.event.ActionEvent;
 
@@ -74,7 +75,7 @@ public class TabRepositories extends TabSuperClass {
 		fileReportLabel.setFont(new Font("Dialog", Font.BOLD, 14));
 		fileReportLabel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
-		JLabel nameFileReportLabel = new JLabel("Name file report");
+		JLabel nameFileReportLabel = new JLabel("Name file");
 		nameFileReportLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		fileReportButton = new MyHoverButton("File ...");
@@ -152,15 +153,17 @@ public class TabRepositories extends TabSuperClass {
 		fileChooser = new JFileChooser();
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Birt Report (*.rptdesign)", "rptdesign");
+		FileNameExtensionFilter filter1 = new FileNameExtensionFilter("SQL file (*.sql)", "sql");
 		fileChooser.setFileFilter(filter);
-		
+		fileChooser.setFileFilter(filter1);
+		//FILE...
 		fileReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					fileChooser.setDialogTitle("Select file");
 					int result = fileChooser.showDialog(MainRunWindow.getInstance(), "Select report");
 					if (result == JFileChooser.APPROVE_OPTION) {
-						fileReportLabel.setText(fileChooser.getSelectedFile().getName().replace(".rptdesign",""));
+						fileReportLabel.setText(fileChooser.getSelectedFile().getName().replaceAll("(\\.sql|\\.rptdesign)", ""));
 					}
 				} catch (Exception e2) {
 					DialogWindows.dialogWindowError(e2);
@@ -184,7 +187,7 @@ public class TabRepositories extends TabSuperClass {
 					//
 					FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
 						foldersProjectComboBox.setSelectedIndex(-1);
-						DialogWindows.dialogWindowWarning("Report files successfully added in repositories");
+						DialogWindows.dialogWindowWarning("Report files successfully added in repositories:\n"+listFilesNameSend());
 				} catch (InfoException ie) {
 					DialogWindows.dialogWindowError(ie);
 				} catch (Exception e) {
@@ -211,7 +214,7 @@ public class TabRepositories extends TabSuperClass {
 					//
 					FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
 						foldersProjectComboBox.setSelectedIndex(-1);
-						DialogWindows.dialogWindowWarning("Report files successfully updated in repositories");
+						DialogWindows.dialogWindowWarning("Report files successfully updated in repositories:\n"+listFilesNameSend());
 				} catch (InfoException ie) {
 					DialogWindows.dialogWindowError(ie);
 				} catch (Exception e) {
@@ -222,6 +225,20 @@ public class TabRepositories extends TabSuperClass {
 				}
 			}
 		});
+	}
+	private String listFilesNameSend() {
+		File selectedFile   = fileChooser.getSelectedFile();
+		File[] files = selectedFile.getParentFile().listFiles(new FileFilter() {
+			@Override
+			public boolean accept(File file) {
+				return file.getName().matches(".+\\.(sql|rptdesign)$");
+			}
+		});
+		String res = "";
+		for (File f : files) {
+			res += f.getName() + "\n";
+		}
+		return res;
 	}
 	private void matchCheckingValidInputData() throws Exception {
 		String nameReport = nameReportField.getText().trim();

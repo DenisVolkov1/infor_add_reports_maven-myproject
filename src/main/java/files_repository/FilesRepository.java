@@ -91,13 +91,22 @@ public class FilesRepository {
 
 	        // Create output file 
 	        SmbFileOutputStream destFileName = new SmbFileOutputStream(getSmbFileObject(destPath.toString()+'/'+srcFile.getName()));
-
-	        // Copy from scr to destination 
-	        BufferedReader brl = new BufferedReader(new InputStreamReader(localFile));
+	        
+	        BufferedReader brl = null;
+	        if (srcFile.getName().endsWith(".sql")) {
+	        	brl = new BufferedReader(new InputStreamReader(localFile, "UTF-16"));
+	        } else if (srcFile.getName().endsWith(".rptdesign")) {
+	        	brl = new BufferedReader(new InputStreamReader(localFile, "UTF-8"));
+	        }
+	        // Copy from scr to destination
+	        //brl = new BufferedReader(new InputStreamReader(localFile));
+	        
 	        String b = null;
-	        while((b=brl.readLine())!=null){
+	        while((b=brl.readLine())!=null) {
+	        	b = b + (char)13 + (char)10;
 	            destFileName.write(b.getBytes());
 	        }
+	        //
 	        brl.close();
 	        destFileName.flush();
 	        destFileName.close();
@@ -129,6 +138,7 @@ public class FilesRepository {
 			copyFileToRepoFolder(f, folderVersionReport);
 		}
 	}
+	
 	private static String getNextVersion(SmbFile smbFile) throws SmbException {
 		SmbFile[] listOfFiles = smbFile.listFiles();
 		Vector<Integer> v = new Vector<Integer>();
@@ -155,7 +165,7 @@ public class FilesRepository {
 		Vector<String> v = new Vector<String>();
 		for (SmbFile fileReport : listOfFoldersReport) {
 		    if (fileReport.isDirectory()) {
-		       if (fileReport.getName().matches(".*"+nameReport+".*")) throw new InfoException("Report folder in storage with this name alreary exist.");
+		       if (fileReport.getName().matches(nameReport+".*")) throw new InfoException("Report folder in storage with this name alreary exist.");
 		    }
 		}
 	}
@@ -171,7 +181,7 @@ public class FilesRepository {
 		boolean b = false;
 		for (SmbFile fileReport : listOfFoldersReport) {
 		    if (fileReport.isDirectory()) {
-		       if (fileReport.getName().matches(".*"+nameReport+".*")) b = true;
+		       if (fileReport.getName().matches(nameReport+".*")) b = true;
 		    }
 		}
 		if (!b) throw new InfoException("Report folder in storage with this name not exist.");
