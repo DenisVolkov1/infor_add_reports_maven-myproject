@@ -85,9 +85,9 @@ public class TabAddReport extends TabSuperClass {
 		//setPreferredSize(new Dimension(520, 390));
 		setLayout(null);
 		JPanel addReportPanel = new JPanel();
-		addReportPanel.setBounds(0, 0, 582, 418);
+		addReportPanel.setBounds(0, 0, 560, 418);
 		add(addReportPanel);
-		setPreferredSize(addReportPanel.getSize());
+		setPreferredSize(new Dimension(560, 418));
 
 		nameReportField = new JTextField();
 		nameReportField.setFont(new Font("Dialog", Font.PLAIN, 14));

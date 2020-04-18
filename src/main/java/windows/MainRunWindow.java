@@ -92,7 +92,7 @@ public class MainRunWindow extends JFrame {
 		setTitle("Infor add report");
 		setIconImage(ICON_WINDOW);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 592, 520);
+		setBounds(100, 100, 601, 527);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.LIGHT_GRAY);
 		contentPane.setBorder(null);

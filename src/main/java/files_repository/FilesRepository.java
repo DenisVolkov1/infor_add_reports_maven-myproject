@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -86,30 +87,13 @@ public class FilesRepository {
 		return v;
 	}
 	private static void copyFileToRepoFolder(File srcFile, SmbFile destPath) throws Exception {
-	        // Read src file.
-	        InputStream localFile = new FileInputStream(srcFile);
-
-	        // Create output file 
-	        SmbFileOutputStream destFileName = new SmbFileOutputStream(getSmbFileObject(destPath.toString()+'/'+srcFile.getName()));
-	        
-	        BufferedReader brl = null;
-	        if (srcFile.getName().endsWith(".sql")) {
-	        	brl = new BufferedReader(new InputStreamReader(localFile, "UTF-16"));
-	        } else if (srcFile.getName().endsWith(".rptdesign")) {
-	        	brl = new BufferedReader(new InputStreamReader(localFile, "UTF-8"));
-	        }
-	        // Copy from scr to destination
-	        //brl = new BufferedReader(new InputStreamReader(localFile));
-	        
-	        String b = null;
-	        while((b=brl.readLine())!=null) {
-	        	b = b + (char)13 + (char)10;
-	            destFileName.write(b.getBytes());
-	        }
-	        //
-	        brl.close();
-	        destFileName.flush();
-	        destFileName.close();
+		// get data from file 
+		byte[] dataFromFile = Files.readAllBytes(srcFile.toPath());
+		 // Create output file 
+        SmbFileOutputStream destFileName = new SmbFileOutputStream(getSmbFileObject(destPath.toString()+'/'+srcFile.getName()));
+        destFileName.write(dataFromFile);
+        destFileName.flush();
+        destFileName.close();
 	}
 	/***
 	 * @param nameProgect - example BPYARD/ -example valid name
