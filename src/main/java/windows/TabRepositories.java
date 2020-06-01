@@ -153,9 +153,7 @@ public class TabRepositories extends TabSuperClass {
 		fileChooser = new JFileChooser();
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Birt Report (*.rptdesign)", "rptdesign");
-		FileNameExtensionFilter filter1 = new FileNameExtensionFilter("SQL file (*.sql)", "sql");
 		fileChooser.setFileFilter(filter);
-		fileChooser.setFileFilter(filter1);
 		//FILE...
 		fileReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -163,7 +161,7 @@ public class TabRepositories extends TabSuperClass {
 					fileChooser.setDialogTitle("Select file");
 					int result = fileChooser.showDialog(MainRunWindow.getInstance(), "Select report");
 					if (result == JFileChooser.APPROVE_OPTION) {
-						fileReportLabel.setText(fileChooser.getSelectedFile().getName().replaceAll("(\\.sql|\\.rptdesign)", ""));
+						fileReportLabel.setText(fileChooser.getSelectedFile().getName().replaceAll("\\.rptdesign", ""));
 					}
 				} catch (Exception e2) {
 					DialogWindows.dialogWindowError(e2);

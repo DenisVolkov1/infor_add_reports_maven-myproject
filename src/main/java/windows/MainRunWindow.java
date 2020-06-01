@@ -75,7 +75,7 @@ public class MainRunWindow extends JFrame {
 					try {
 						MainRunWindow frame = MainRunWindow.getInstance();
 						//Test main
-							//TestMain.testMain();
+							TestMain.testMain();
 							////////////////////////////////////////
 						frame.setVisible(true);
 					} catch (Exception e) {
