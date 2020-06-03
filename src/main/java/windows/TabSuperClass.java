@@ -14,10 +14,10 @@ import javax.swing.JPanel;
 
 import org.omg.PortableServer.AdapterActivator;
 
-import database.CategoryAndCode;
 import database.CategoryRelatedData;
 import database.ConnectionMSSQL;
 import database.ReportRelatedData;
+import database.model.CategoryAndCode;
 import exception.InfoException;
 import files_repository.FilesRepository;
 import log.LOg;

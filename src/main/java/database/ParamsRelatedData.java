@@ -24,7 +24,7 @@ public class ParamsRelatedData {
 			}
 	}
 	/**
-	 * Close object connection after commit.
+	 * !!!Close object connection after commit.!!!
 	 * 
 	 * @param PARAM_TYPE - CONST 'Date' or  'Dropdown' or 'MultiSelect' or 'Number' or 'Text'
 	 * @param PARAM_CONTENTS -  null acceptable

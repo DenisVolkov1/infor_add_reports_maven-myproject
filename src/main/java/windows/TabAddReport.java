@@ -9,8 +9,8 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import database.CategoryAndCode;
 import database.ReportRelatedData;
+import database.model.CategoryAndCode;
 import exception.ConfirmException;
 import exception.InfoException;
 import files_repository.FilesRepository;
