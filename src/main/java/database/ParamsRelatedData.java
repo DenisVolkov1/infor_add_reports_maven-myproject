@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 
 import util.MyProperties;
 
@@ -82,6 +83,26 @@ public class ParamsRelatedData {
 		}
 		return connection;
 	}
+	
+	public static Vector<String> getListOfParamName(String RPT_ID) throws ClassNotFoundException, SQLException {
+		String schema = MyProperties.getProperty("schema"); 
+		Vector<String> resultVector = new Vector<String>();
+		
+		String sql = "USE [SCPRD] "
+					  + "SELECT [PARAM_NAME] "
+					  + "FROM ["+schema+"].[PBSRPT_REPORTS_PARAMS]  "
+					  + "WHERE [RPT_ID] = "+RPT_ID;
+		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
+				Statement statement = connection.createStatement();
+						ResultSet rs = statement.executeQuery(sql)) {
+			while(rs.next()) {
+				resultVector.add(rs.getString(1));
+			}
+		} 
+		return resultVector;
+	}
+	
+
 	
 
 }

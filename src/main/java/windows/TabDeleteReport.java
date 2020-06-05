@@ -3,8 +3,8 @@ package windows;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
+import database.CategoryAndCode;
 import database.ReportRelatedData;
-import database.model.CategoryAndCode;
 import exception.ConfirmException;
 import exception.InfoException;
 import log.LOg;

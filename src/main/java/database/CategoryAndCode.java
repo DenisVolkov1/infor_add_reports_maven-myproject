@@ -1,4 +1,4 @@
-package database.model;
+package database;
 
 public class CategoryAndCode {
 	private Integer categoryId;

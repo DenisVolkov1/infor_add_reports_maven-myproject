@@ -9,8 +9,8 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import database.CategoryAndCode;
 import database.ReportRelatedData;
-import database.model.CategoryAndCode;
 import exception.ConfirmException;
 import exception.InfoException;
 import files_repository.FilesRepository;
@@ -18,8 +18,8 @@ import log.LOg;
 import util.DialogWindows;
 import util.MyHoverButton;
 import util.MyProperties;
-import util.ReadXML;
 import util.Verification;
+import util.parce_rptdesign.ReadXML;
 import war.WarArchive;
 
 import javax.swing.border.EtchedBorder;
@@ -74,6 +74,7 @@ public class TabAddReport extends TabSuperClass {
 	private JCheckBox autoInsertCheckBox;
 	private JComboBox<String> foldersProjectComboBox;
 	private JLabel lblNewLabel;
+	private JButton newParamButton;
 
 	/**
 	 * Create the panel.
@@ -161,6 +162,8 @@ public class TabAddReport extends TabSuperClass {
 		lblNewLabel = new JLabel("Project folder in repositories");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
+		newParamButton = new JButton("New Param");
+		
 		GroupLayout gl_addReportPanel = new GroupLayout(addReportPanel);
 		gl_addReportPanel.setHorizontalGroup(
 			gl_addReportPanel.createParallelGroup(Alignment.LEADING)
@@ -195,13 +198,16 @@ public class TabAddReport extends TabSuperClass {
 										.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
 										.addComponent(nameReportFileField, GroupLayout.PREFERRED_SIZE, 429, GroupLayout.PREFERRED_SIZE)
 										.addComponent(nameFileReportLabelTF, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
-										.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 432, GroupLayout.PREFERRED_SIZE)
-										.addGroup(gl_addReportPanel.createSequentialGroup()
-											.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
-												.addComponent(nameReportLabel)
-												.addComponent(RPT_IDField, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(autoInsertCheckBox))))
+										.addGroup(gl_addReportPanel.createParallelGroup(Alignment.TRAILING, false)
+											.addGroup(gl_addReportPanel.createSequentialGroup()
+												.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
+													.addComponent(nameReportLabel)
+													.addComponent(RPT_IDField, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(autoInsertCheckBox)
+												.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(newParamButton))
+											.addComponent(nameReportField, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 432, GroupLayout.PREFERRED_SIZE))))
 								.addComponent(foldersProjectComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE))
 							.addGap(27))))
 		);
@@ -219,14 +225,19 @@ public class TabAddReport extends TabSuperClass {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(rptIdLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_addReportPanel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(RPT_IDField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-								.addComponent(autoInsertCheckBox))
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(nameReportLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_addReportPanel.createSequentialGroup()
+									.addComponent(rptIdLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(gl_addReportPanel.createParallelGroup(Alignment.BASELINE)
+										.addComponent(RPT_IDField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+										.addComponent(autoInsertCheckBox))
+									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(nameReportLabel)
+									.addPreferredGap(ComponentPlacement.RELATED))
+								.addGroup(Alignment.TRAILING, gl_addReportPanel.createSequentialGroup()
+									.addComponent(newParamButton)
+									.addGap(10)))
 							.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(nameFileReportLabelTF, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)

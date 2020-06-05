@@ -6,9 +6,9 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.TitledBorder;
 
+import database.CategoryAndCode;
 import database.CategoryRelatedData;
 import database.ReportRelatedData;
-import database.model.CategoryAndCode;
 import exception.InfoException;
 import log.LOg;
 import util.DialogWindows;

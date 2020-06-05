@@ -19,15 +19,14 @@ import database.ReportRelatedData;
 import files_repository.FilesRepository;
 import jcifs.smb.SmbFile;
 import util.MyProperties;
+import util.parce_rptdesign.ParamFromRptDesign;
+import util.parce_rptdesign.ReadXML;
 import war.WarArchive;
 
 public class TestMain {
 	
-	public static void main(String[] args) {
-		
-		
-		
-	}
+	public static void main(String[] args) {}
+	
 	public static final void testMain() throws Exception {
 		System.out.println("Category :");
 		for (Iterator iterator = CategoryRelatedData.getCategories().iterator(); iterator.hasNext();) {
@@ -69,6 +68,9 @@ public class TestMain {
 		for(String s : strings) {
 			System.out.println("    "+s);
 		}
+		System.out.println("-----------------------------------------------");
+		System.out.println("List param nam s (RPT_ID 11111111)");
+		System.out.println(ParamsRelatedData.getListOfParamName("11111111"));
 		/*
 		 * System.out.println("-----------------------------------------------");
 		 * System.out.println("List names Folder Project"); for (Iterator iterator
@@ -90,11 +92,14 @@ public class TestMain {
 		System.out.println("-----------------------------------------------");
 		System.out.println("Exist table PBSRPT_REPORTS_PARAMS : " + ParamsRelatedData.isExistTableParams());
 		
-		ParamsRelatedData.insertParam("11111111", "p_OrderID2", "Номер заказа", "Text", "select DISTINCT STORERKEY as OWNERKEY from STORER where TYPE != '3'").commit();
-		
-			
+		//ParamsRelatedData.insertParam("11111111", "p_OrderID2", "Номер заказа", "Text", "select DISTINCT STORERKEY as OWNERKEY from STORER where TYPE != '3'").commit();
 	
-		
+	
+//		  for (ParamFromRptDesign p : ReadXML.getListOfParamsFromRptDesign(new File("C:\\FacilityUserActivity.rptdesign"))) {
+//			 if (p.getPARAM_TYPE() != null && p.getPARAM_LABEL() != null && p.getPARAM_NAME() != null) ParamsRelatedData.insertParam("27130616", p.getPARAM_NAME(), p.getPARAM_LABEL(), p.getPARAM_TYPE(), p.getPARAM_CONTENTS()).commit(); 
+//			 
+//			  
+//		  }
 
 		
 		

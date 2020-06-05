@@ -18,12 +18,12 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import util.DialogWindows;
 import util.MyHoverButton;
-import util.ReadXML;
+import util.parce_rptdesign.ReadXML;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import database.model.CategoryAndCode;
+import database.CategoryAndCode;
 import exception.InfoException;
 import files_repository.FilesRepository;
 import log.LOg;

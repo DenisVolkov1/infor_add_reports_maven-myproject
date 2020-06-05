@@ -9,7 +9,6 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import database.model.CategoryAndCode;
 import util.MyProperties;
 import windows.MainRunWindow;
 

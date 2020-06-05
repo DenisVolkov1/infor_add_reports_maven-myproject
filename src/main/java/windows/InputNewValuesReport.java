@@ -14,8 +14,8 @@ import java.awt.Dialog.ModalityType;
 
 import javax.swing.border.EtchedBorder;
 
+import database.CategoryAndCode;
 import database.ReportRelatedData;
-import database.model.CategoryAndCode;
 import exception.InfoException;
 import log.LOg;
 

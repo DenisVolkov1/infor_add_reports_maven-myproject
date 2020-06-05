@@ -2,8 +2,8 @@ package windows;
 
 import javax.swing.JPanel;
 
+import database.CategoryAndCode;
 import database.ReportRelatedData;
-import database.model.CategoryAndCode;
 import exception.ConfirmException;
 import exception.InfoException;
 import files_repository.FilesRepository;
@@ -33,8 +33,8 @@ import javax.swing.JTextField;
 
 import util.DialogWindows;
 import util.MyHoverButton;
-import util.ReadXML;
 import util.Verification;
+import util.parce_rptdesign.ReadXML;
 import war.WarArchive;
 
 import javax.swing.JComboBox;
