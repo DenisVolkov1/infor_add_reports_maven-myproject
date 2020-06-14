@@ -5,10 +5,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import org.joda.time.DateTime;
 
 public class LOg {
 	
@@ -20,10 +20,9 @@ public class LOg {
 		  
 		Logger logger = Logger.getLogger("MyLog");
 		   FileHandler fh = null;
-		        SimpleDateFormat format = new SimpleDateFormat("dd-MM-YYYY HH_mm_ss");
-		
+		   
 		        try {
-		            fh = new FileHandler("log/"+format.format(Calendar.getInstance().getTime()) + ".log");
+		            fh = new FileHandler("log/"+new DateTime().toString("dd-MM-YYYY HH_mm_ss") + ".log");
 		        } catch (Exception e2) {
 		            e2.printStackTrace();
 		        }

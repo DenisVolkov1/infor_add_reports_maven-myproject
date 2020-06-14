@@ -1,4 +1,4 @@
-package windows;
+package windows.tabs.update;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -28,6 +28,8 @@ import javax.swing.JButton;
 import java.awt.Font;
 import util.DialogWindows;
 import util.Verification;
+import windows.MainRunWindow;
+import windows.tabs.TabSuperClass;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -75,6 +77,7 @@ public class InputNewValuesReport extends JDialog {
 		
 		getContentPane().setLayout(null);
 		panel = new JPanel();
+		panel.setAutoscrolls(true);
 		panel.setAlignmentX(0.0f);
 		panel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		panel.setBounds(13, 10, 727, 171);
@@ -98,8 +101,8 @@ public class InputNewValuesReport extends JDialog {
 		panel.add(lblDescr, gbc_lblDescr);
 		
 		JLabel lblNewLabel_4 = new JLabel("<Old values>");
+		lblNewLabel_4.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		lblNewLabel_4.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_4.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_lblNewLabel_4 = new GridBagConstraints();
 		gbc_lblNewLabel_4.fill = GridBagConstraints.BOTH;

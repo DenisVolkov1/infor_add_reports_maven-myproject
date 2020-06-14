@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Iterator;
+import java.util.List;
 
 import database.CategoryRelatedData;
 import database.ConnectionMSSQL;
@@ -89,10 +90,10 @@ public class TestMain {
 		//new SmbFile("smb:"+MyProperties.getProperty("repPathDir")+'/'+"BOYARD/Ghbdtn</",FilesRepository.getAuthentication()).mkdir();
 		
 		//invalid character <>:"/\|?*
-		System.out.println("-----------------------------------------------");
-		System.out.println("Exist table PBSRPT_REPORTS_PARAMS : " + ParamsRelatedData.isExistTableParams());
+//		System.out.println("-----------------------------------------------");
+//		System.out.println("Exist table PBSRPT_REPORTS_PARAMS : " + ParamsRelatedData.isExistTableParams());
 		
-		//ParamsRelatedData.insertParam("11111111", "p_OrderID2", "Номер заказа", "Text", "select DISTINCT STORERKEY as OWNERKEY from STORER where TYPE != '3'").commit();
+		//ParamsRelatedData.insertParam("11111111", "p_OrderID3", "Номер 3", "Text", "").commit();
 	
 	
 //		  for (ParamFromRptDesign p : ReadXML.getListOfParamsFromRptDesign(new File("C:\\FacilityUserActivity.rptdesign"))) {
@@ -100,6 +101,10 @@ public class TestMain {
 //			 
 //			  
 //		  }
+		
+		
+		//List<ParamFromRptDesign> params = ReadXML.getListOfParamsFromRptDesign(new File("C:\\reports\\rep_22\\rep_2_2_monitoring_operacii.rptdesign"));
+		//ParamsRelatedData.insertParam(params, "Zepoiuyd");
 
 		
 		

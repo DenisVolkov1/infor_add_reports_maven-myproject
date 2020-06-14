@@ -1,5 +1,6 @@
 package database;
 
+import java.awt.Cursor;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,7 +8,7 @@ import java.sql.SQLException;
 import log.LOg;
 import util.DialogWindows;
 import util.MyProperties;
-import windows.TabConnectionMSSQLServer;
+import windows.tabs.TabConnectionMSSQLServer;
 
 public class ConnectionMSSQL {
 	public static boolean isGoodLastsConnection = true;
@@ -27,7 +28,7 @@ public static Connection getInstanceConneectionJDBC() throws SQLException, Class
 				 		MyProperties.saveProperties("login", login, "password", String.valueOf(password));
 		} catch (Exception e) {
 				isGoodLastsConnection = false;
-				throw e;
+					throw e;
 		}
 		isGoodLastsConnection = connection != null ? true : false;
 		return connection;

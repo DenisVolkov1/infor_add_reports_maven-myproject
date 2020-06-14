@@ -1,4 +1,4 @@
-package windows;
+package windows.tabs;
 
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;

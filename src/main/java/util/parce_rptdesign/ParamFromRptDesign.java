@@ -59,7 +59,7 @@ public class ParamFromRptDesign {
 	}
 
 	public String getPARAM_LABEL() {
-		return promptText;
+		return (promptText == null) ? "" : promptText;
 	}
 	/**
 	 * @return  PARAM_TYPE - CONST 'Date' or 'Dropdown' or 'MultiSelect' or 'Number' or 'Text' or 'Boolean' or 'Time'

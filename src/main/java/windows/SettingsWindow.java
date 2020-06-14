@@ -9,6 +9,9 @@ import javax.swing.border.EmptyBorder;
 import util.DialogWindows;
 import util.MyHoverButton;
 import util.MyProperties;
+import windows.tabs.TabRepositories;
+import windows.tabs.add.TabAddReport;
+import windows.tabs.update.TabUpdateReport;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -34,7 +37,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JCheckBox;
 
-class SettingsWindow extends JDialog {
+public class SettingsWindow extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JButton saveButton;
@@ -50,7 +53,7 @@ class SettingsWindow extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	 SettingsWindow() {
+	 public SettingsWindow() {
 		 super(MainRunWindow.getInstance(), "Settings");
 		 this.setResizable(true);
 		setTitle("Settings");
@@ -291,11 +294,16 @@ class SettingsWindow extends JDialog {
 					TabAddReport.getInstance().getFoldersProjectComboBox().setEnabled(false);
 					TabUpdateReport.getInstance().getFoldersProjectComboBox().setSelectedIndex(-1);
 					TabUpdateReport.getInstance().getFoldersProjectComboBox().setEnabled(false);
+					MainRunWindow.getInstance();
 					//Remove repositories tab from interface
-					MainRunWindow.getInstance().getTabbedPane().remove(5);
+					if (MainRunWindow.getTabbedPane().getTabCount() == 6) {
+						MainRunWindow.getInstance();
+						MainRunWindow.getTabbedPane().remove(5);
+					}
 				} else {
+					MainRunWindow.getInstance();
 					//Add repositories tab to interface	
-					MainRunWindow.getInstance().getTabbedPane().addTab("Repositories", TabRepositories.getInstance());
+					MainRunWindow.getTabbedPane().addTab("Repositories", TabRepositories.getInstance());
 					//
 					boolean isSelectedAddArchiveToggleButton = TabAddReport.getInstance().getAddArchiveToggleButton().isSelected();
 					boolean isSelectedAddDataBaseToggleButton = TabAddReport.getInstance().getAddDataBaseToggleButton().isSelected();

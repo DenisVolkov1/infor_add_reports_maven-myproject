@@ -59,7 +59,7 @@ public class ReadXML {
 	 * @throws SAXException 
 	 * @throws Exception
 	 */
-	public static Map<String, String> getQueryText(File file) throws ParserConfigurationException, SAXException, IOException  {
+	private static Map<String, String> getQueryText(File file) throws ParserConfigurationException, SAXException, IOException  {
 		
 		Map<String, String> res = new HashMap<String, String>();
 		String valueQueryText = null;
@@ -105,6 +105,7 @@ public class ReadXML {
 		String controlType = null;
 		String dataSetName = null;
 		String queryText = null;
+		String hidden = null;
 		ParamFromRptDesign param = null;
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();  
@@ -116,7 +117,7 @@ public class ReadXML {
 		
 		NEXT_PARAMETR :
 			for (int itr = 0; itr < nodeList.getLength(); itr++) {  
-				 name = null; promptText = null; dataType = null; paramType = null; controlType = null; dataSetName = null; queryText = null;
+				 name = null; promptText = null; dataType = null; paramType = null; controlType = null; dataSetName = null; queryText = null;hidden = null;
 				 
 				Node node = nodeList.item(itr);  
 				if (node.getNodeType() == Node.ELEMENT_NODE) {  
@@ -129,8 +130,9 @@ public class ReadXML {
 								Node node2 = nodeListProperty.item(itr2); 
 									Element eElement2 = (Element) node2;
 									if ((eElement2.getAttribute("name")).equals("hidden")) {
-										
-										continue NEXT_PARAMETR;
+										if (eElement2.getTextContent().equals("true")) {
+											continue NEXT_PARAMETR;
+										}
 									} else {
 										switch (eElement2.getAttribute("name")) {
 											case "dataType": 

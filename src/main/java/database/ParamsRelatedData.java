@@ -5,9 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Vector;
 
 import util.MyProperties;
+import util.parce_rptdesign.ParamFromRptDesign;
+import windows.param.ParamFromParamsPanel;
 
 public class ParamsRelatedData {
 	
@@ -27,12 +30,12 @@ public class ParamsRelatedData {
 	/**
 	 * !!!Close object connection after commit.!!!
 	 * 
-	 * @param PARAM_TYPE - CONST 'Date' or  'Dropdown' or 'MultiSelect' or 'Number' or 'Text'
+	 * @param PARAM_TYPE - CONST 'Date' or 'Dropdown' or 'MultiSelect' or 'Number' or 'Text' or 'Boolean' or 'Time'
 	 * @param PARAM_CONTENTS -  null acceptable
 	 * @param PARAM_LABEL - Rus name
 	 * @return - Connection object return for commit transaction. -connection.commit();
 	 * */
-	public static Connection insertParam(String RPT_ID, String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS ) throws ClassNotFoundException, SQLException {
+	public static void insertParam(String RPT_ID, String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS) throws ClassNotFoundException, SQLException {
 		String schema = MyProperties.getProperty("schema");
 		String PARAM_CONTENTS_TYPE = "NULL";
 		if(PARAM_CONTENTS == null) PARAM_CONTENTS = "NULL";
@@ -79,9 +82,10 @@ public class ParamsRelatedData {
 			
 			connection.setAutoCommit(false);	
 			insertPar.execute();
+			connection.commit();
 			
 		}
-		return connection;
+		
 	}
 	
 	public static Vector<String> getListOfParamName(String RPT_ID) throws ClassNotFoundException, SQLException {
@@ -91,7 +95,7 @@ public class ParamsRelatedData {
 		String sql = "USE [SCPRD] "
 					  + "SELECT [PARAM_NAME] "
 					  + "FROM ["+schema+"].[PBSRPT_REPORTS_PARAMS]  "
-					  + "WHERE [RPT_ID] = "+RPT_ID;
+					  + "WHERE [RPT_ID] = '"+RPT_ID+"'";
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();
 						ResultSet rs = statement.executeQuery(sql)) {
@@ -102,7 +106,101 @@ public class ParamsRelatedData {
 		return resultVector;
 	}
 	
-
+	public static void insertParam(List<?> listParams, String RPT_ID) throws Exception {
+		
+		
+		String schema = MyProperties.getProperty("schema");
+		String PARAM_CONTENTS_TYPE = "NULL";
+		
+		 String PARAM_NAME   	= null;
+		 String PARAM_LABEL  	= null;
+		 String PARAM_TYPE   	= null;
+		 String PARAM_CONTENTS  = null;
+			
+			String insertPBSRPT_REPORTS_PARAMS = ""
+					+ "USE [SCPRD] "
+					+ "INSERT INTO ["+schema+"].[PBSRPT_REPORTS_PARAMS](" + 
+					" [RPT_ID] "+
+			        ",[PARAM_NAME] "+
+			        ",[PARAM_TYPE] "+
+			        ",[PARAM_LABEL] "+
+			        ",[PARAM_CONTENTS] "+
+			        ",[SQL_PARAMS] "+
+			        ",[SQL_SCHEMA] "+
+			        ",[PARAM_CONTENTS_TYPE] "+
+			        ",[PARAM_DEFAULT] "+
+			        ",[SEQ_NO] "+
+			        ",[PARAM_GROUP] "+
+			        ",[PARAM_GROUP_LABEL] "+
+			        ",[IS_REQUIRED] "+
+			        ") "+
+			        "VALUES ";
+			StringBuilder values = new StringBuilder();
+			
+			List<Object> listCheck = (List<Object>)(Object) listParams;
+		    if (!listCheck.isEmpty()) {
+		    
+				for(int i = 0; listParams.size() > i; i++) {
+					
+					
+					if (listCheck.get(0) instanceof ParamFromParamsPanel) {
+						List<ParamFromParamsPanel> listParamsPanel = (List<ParamFromParamsPanel>) listParams;
+					
+						PARAM_NAME 	 = listParamsPanel.get(i).getPARAM_NAME();
+					    PARAM_LABEL	 = listParamsPanel.get(i).getPARAM_LABEL();
+					    PARAM_TYPE 	 = listParamsPanel.get(i).getPARAM_TYPE();
+					    PARAM_CONTENTS = listParamsPanel.get(i).getPARAM_CONTENTS();
+					}
+					if (listCheck.get(0) instanceof ParamFromRptDesign) {
+						List<ParamFromRptDesign> listParamsDesign = (List<ParamFromRptDesign>) listParams;
+					
+						PARAM_NAME 	 = listParamsDesign.get(i).getPARAM_NAME();
+					    PARAM_LABEL	 = listParamsDesign.get(i).getPARAM_LABEL();
+					    PARAM_TYPE 	 = listParamsDesign.get(i).getPARAM_TYPE();
+					    PARAM_CONTENTS = listParamsDesign.get(i).getPARAM_CONTENTS();
+					} else {
+						throw new Exception("Wrong argument type for this list!!!");
+					}
+					
+					  if(PARAM_CONTENTS == null) {
+						  PARAM_CONTENTS = "NULL";
+						  PARAM_CONTENTS_TYPE = "NULL";
+					  }
+					  else {
+						  PARAM_CONTENTS_TYPE = "'SQL'";
+						  PARAM_CONTENTS = "'" +PARAM_CONTENTS.replace("'", "''")+ "'";
+					 }
+				      
+				     values.append("("+
+				        "  '"+RPT_ID+"',         "+
+				        "  '"+PARAM_NAME+"',     "+
+				        "   '"+PARAM_TYPE+"',    "+
+				        "   '"+PARAM_LABEL+"',   "+
+				        "   "+PARAM_CONTENTS+",  "+
+				        "   '',                  "+
+				        "   NULL,                "+
+				        "   "+PARAM_CONTENTS_TYPE+","+
+				        "   NULL,                "+
+				        "   1,                   "+
+				        "   NULL,                "+
+				        "   NULL,                "+
+				        "   '1'                  "+
+						"),"
+				        );
+				}
+				values.deleteCharAt(values.length()-1);	
+				insertPBSRPT_REPORTS_PARAMS = insertPBSRPT_REPORTS_PARAMS + values.toString();
+			
+			
+				try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
+						Statement statement = connection.createStatement();
+						PreparedStatement insertPar = connection.prepareStatement(insertPBSRPT_REPORTS_PARAMS)) {
+						
+						connection.setAutoCommit(false);	
+						insertPar.execute();
+						connection.commit();
+				}	
+		    }
 	
-
+	}
 }

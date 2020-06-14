@@ -1,4 +1,4 @@
-package windows;
+package windows.tabs;
 
 import javax.swing.JPanel;
 import java.awt.Color;
@@ -40,12 +40,12 @@ public class TabConnectionMSSQLServer extends JPanel {
 	private static JTextField loginField;
 	private static JPasswordField passwordField;
 	private JLabel lblNewLabel_1;
-	private MyHoverButton testButton;
+	private MyHoverButton connectionButton;
 	private JPanel panel;
 	/**
 	 * Create the panel.
 	 */
-	TabConnectionMSSQLServer() {
+	public TabConnectionMSSQLServer() {
 		setBackground(UIManager.getColor("Button.background"));
 		setLayout(null);
 		
@@ -70,8 +70,8 @@ public class TabConnectionMSSQLServer extends JPanel {
 		passwordField.setMargin(new Insets(3, 3, 3, 3));
 		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblNewLabel_1 = new JLabel("");
-		testButton = new MyHoverButton("Test Connection");
-		testButton.setFont(new Font("Tahoma", Font.PLAIN, 14));	
+		connectionButton = new MyHoverButton("Connection");
+		connectionButton.setFont(new Font("Tahoma", Font.PLAIN, 14));	
 
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
@@ -80,20 +80,20 @@ public class TabConnectionMSSQLServer extends JPanel {
 					.addGap(87)
 					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(loginLable, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(loginField, GroupLayout.PREFERRED_SIZE, 251, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_panel.createSequentialGroup()
 							.addComponent(passwordLable)
-							.addGap(18)
-							.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, 229, GroupLayout.PREFERRED_SIZE)))
-					.addGap(10)
-					.addComponent(lblNewLabel_1)
-					.addContainerGap(178, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
-					.addContainerGap(218, Short.MAX_VALUE)
-					.addComponent(testButton, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
-					.addGap(206))
+							.addGap(18))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addComponent(loginLable, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
+							.addGap(34)))
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addComponent(connectionButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
+								.addComponent(loginField, Alignment.LEADING)
+								.addComponent(passwordField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE))
+							.addGap(10)
+							.addComponent(lblNewLabel_1)))
+					.addContainerGap(114, Short.MAX_VALUE))
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.TRAILING)
@@ -112,7 +112,7 @@ public class TabConnectionMSSQLServer extends JPanel {
 									.addGap(8)
 									.addComponent(passwordLable)))))
 					.addGap(18)
-					.addComponent(testButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+					.addComponent(connectionButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 					.addGap(15))
 		);
 		panel.setLayout(gl_panel);
@@ -141,7 +141,7 @@ public class TabConnectionMSSQLServer extends JPanel {
 			}
 			//•••••••••••••••••••••
 		});
-		testButton.addActionListener(new ActionListener() {
+		connectionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		        try (Connection con = ConnectionMSSQL.getInstanceConneectionJDBC()) {
@@ -153,15 +153,15 @@ public class TabConnectionMSSQLServer extends JPanel {
 				} finally {setCursor(null);}
 		    }
 		});
-		testButton.addMouseListener(new MouseAdapter() {
+		connectionButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				testButton.setBackground(new Color(174,197,219));
-				testButton.setToolTipText("Connection to: "+MyProperties.getProperty("ipDataBase"));
+				connectionButton.setBackground(new Color(174,197,219));
+				connectionButton.setToolTipText("Connection to: "+MyProperties.getProperty("ipDataBase"));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				testButton.setBackground(new Color(204,227,249));
+				connectionButton.setBackground(new Color(204,227,249));
 			}
 		});
 		String saveLogin = MyProperties.getProperty("login");

@@ -88,7 +88,7 @@ public class ReportRelatedData {
 	 * @param RPT_ID - If null auto insert rpt_id
 	 * @return - Connection object return for commit transaction. -connection.commit(); 
 	 */
-	public static Connection insertReport(String RPT_ID, String nameReport, int categoryId, String nameFileReport) throws ClassNotFoundException, SQLException {
+	public static void insertReport(String RPT_ID, String nameReport, int categoryId, String nameFileReport) throws ClassNotFoundException, SQLException {
 		String schema = MyProperties.getProperty("schema");
 		if (!nameFileReport.matches(".*.rptdesign")) {
 			nameFileReport = nameFileReport+".rptdesign";
@@ -191,16 +191,17 @@ public class ReportRelatedData {
 				"           '"+RPT_ID+"',   " + 
 				"           '"+nameReport+"'" + 
 				"		   )";
-		Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
-		try (Statement statement = connection.createStatement();
-				PreparedStatement insertRep = connection.prepareStatement(insertPBSRPT_REPORTS);
+		
+		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
+				Statement statement = connection.createStatement();
+					PreparedStatement insertRep = connection.prepareStatement(insertPBSRPT_REPORTS);
 				PreparedStatement insertTranslate = connection.prepareStatement(insertTRANSLATIONLIST)) {
-			
 			connection.setAutoCommit(false);	
 			insertRep.execute();
 			insertTranslate.execute();
+			connection.commit();
+			connection.setAutoCommit(true);
 		}
-		return connection; 	
 	}
 	public static String getRPT_ID (String nameReport, int categoryId) throws Exception {
 		String schema = MyProperties.getProperty("schema");
@@ -241,7 +242,7 @@ public class ReportRelatedData {
 	 * 
 	 * @return - Connection object return for commit transaction. -connection.commit(); 
 	 */
-	public static Connection updateReport(String nameReport, Integer categoryId, String newRPT_ID, Integer newCategoryId, String newNameReport, String newNameFileReport) throws Exception {
+	public static void updateReport(String nameReport, Integer categoryId, String newRPT_ID, Integer newCategoryId, String newNameReport, String newNameFileReport) throws Exception {
 		String schema = MyProperties.getProperty("schema");
 		String RPT_ID = getRPT_ID(nameReport, categoryId);
 		//
@@ -299,16 +300,17 @@ public class ReportRelatedData {
 					
 					updateRep.execute();
 					updateTranslate.execute();
-				//connection.commit();
-				//connection.setAutoCommit(true);
+					connection.commit();
+					connection.setAutoCommit(true);
 			}
 		} else {
 			try (Statement statement = connection.createStatement();
 					PreparedStatement updateRep = connection.prepareStatement(updatePBSRPT_REPORTS)) {
 					updateRep.execute();
+					connection.commit();
+					connection.setAutoCommit(true);
 			}
 		}
-		return connection;
 	}
 	public static void deleteReport(String nameReport, int categoryId) throws Exception {
 		String schema = MyProperties.getProperty("schema");

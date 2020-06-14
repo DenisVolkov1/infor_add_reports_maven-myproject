@@ -1,4 +1,4 @@
-package windows;
+package windows.tabs.update;
 
 import javax.swing.JPanel;
 
@@ -33,9 +33,13 @@ import javax.swing.JTextField;
 
 import util.DialogWindows;
 import util.MyHoverButton;
+import util.Util;
 import util.Verification;
 import util.parce_rptdesign.ReadXML;
 import war.WarArchive;
+import windows.MainRunWindow;
+import windows.SettingsWindow;
+import windows.tabs.TabSuperClass;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -252,6 +256,7 @@ public class TabUpdateReport extends TabSuperClass {
 					if (result == JFileChooser.APPROVE_OPTION) {
 						fileReportLabel.setText(fileChooser.getSelectedFile().getName().replace(".rptdesign",""));
 						ipDataSrcLabel.setText(ReadXML.getIpDataSource(fileChooser.getSelectedFile()));
+						Util.changeColorErrDataSource(ReadXML.getIpDataSource(fileChooser.getSelectedFile()), ipDataSrcLabel);
 					}
 				} catch (Exception e2) {
 					DialogWindows.dialogWindowError(e2);
@@ -282,7 +287,6 @@ public class TabUpdateReport extends TabSuperClass {
 		});
 		updateReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Connection connectionForCommit = null;
 				String nameReport, updateNameFileReport = null, nameProgect = null;
 				String[] oldValues = null;
 				Integer categoryId = null;
@@ -298,8 +302,7 @@ public class TabUpdateReport extends TabSuperClass {
 						Integer newCategoryId    = inputNewValuesReport.getCategory();
 						String newNameReport     = inputNewValuesReport.getNameReport();
 						String newNameFileReport = inputNewValuesReport.getNameFileReport();
-							connectionForCommit = ReportRelatedData.updateReport(nameReport, categoryId, newRPT_ID, newCategoryId, newNameReport, newNameFileReport);
-								connectionForCommit.commit();
+							ReportRelatedData.updateReport(nameReport, categoryId, newRPT_ID, newCategoryId, newNameReport, newNameFileReport);
 									inputNewValuesReport = null;
 										DialogWindows.dialogWindowWarning("Report successfully update!");
 					} else if (updateFileArchiveToggleButton.isSelected()) {
@@ -326,14 +329,6 @@ public class TabUpdateReport extends TabSuperClass {
 					 	LOg.logToFile(e1);
 				} finally {
 					 setCursor(null);
-						if (connectionForCommit != null) {
-							try {
-								connectionForCommit.close();
-							} catch (SQLException e1) {
-								DialogWindows.dialogWindowError(e1);
-									LOg.logToFile(e1);
-							}
-						}
 				}	
 			}
 		});
@@ -352,7 +347,6 @@ public class TabUpdateReport extends TabSuperClass {
 				
 			}
 		});
-		//////////////////////////////////////////////////////////////////////
 		updateFileArchiveToggleButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (updateFileArchiveToggleButton.isSelected()) {

@@ -1,4 +1,4 @@
-package windows;
+package windows.tabs;
 
 import java.awt.ComponentOrientation;
 import java.awt.Cursor;
@@ -19,6 +19,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import util.DialogWindows;
 import util.MyHoverButton;
 import util.parce_rptdesign.ReadXML;
+import windows.MainRunWindow;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
