@@ -85,19 +85,12 @@ public class ReportRelatedData {
 	/**
 	 * Close object connection after commit.
 	 * 
-	 * @param RPT_ID - If null auto insert rpt_id
-	 * @return - Connection object return for commit transaction. -connection.commit(); 
 	 */
 	public static void insertReport(String RPT_ID, String nameReport, int categoryId, String nameFileReport) throws ClassNotFoundException, SQLException {
 		String schema = MyProperties.getProperty("schema");
 		if (!nameFileReport.matches(".*.rptdesign")) {
 			nameFileReport = nameFileReport+".rptdesign";
 		}
-		if (RPT_ID == null) {
-			String pattern = "ddHHmmss";
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-			RPT_ID = simpleDateFormat.format(new Date());
-		} 
 		
 		String insertPBSRPT_REPORTS = ""
 				+ "USE [SCPRD] "
