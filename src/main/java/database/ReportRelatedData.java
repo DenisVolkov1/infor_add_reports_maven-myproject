@@ -196,6 +196,7 @@ public class ReportRelatedData {
 			connection.setAutoCommit(true);
 		}
 	}
+
 	public static String getRPT_ID (String nameReport, int categoryId) throws Exception {
 		String schema = MyProperties.getProperty("schema");
 		String getRptId = "USE [SCPRD] "

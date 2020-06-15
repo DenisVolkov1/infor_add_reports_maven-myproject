@@ -72,6 +72,9 @@ public class TestMain {
 		System.out.println("-----------------------------------------------");
 		System.out.println("List param nam s (RPT_ID 11111111)");
 		System.out.println(ParamsRelatedData.getListOfParamName("11111111"));
+		System.out.println("-----------------------------------------------");
+		
+		
 		/*
 		 * System.out.println("-----------------------------------------------");
 		 * System.out.println("List names Folder Project"); for (Iterator iterator

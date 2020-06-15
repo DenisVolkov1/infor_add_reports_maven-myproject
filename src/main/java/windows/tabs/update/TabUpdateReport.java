@@ -458,7 +458,7 @@ public class TabUpdateReport extends TabSuperClass {
 			if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) throw new InfoException("Change at least one report attribute");
 		//
 		if  (newNameReport ==null)	
-		Verification.checkIvalidFilenamesWindows(newNameReport,newNameFileReport);
+		Verification.checkInvalidFilenamesWindows(newNameReport,newNameFileReport);
 	}
 	private void matchCheckingNameFile() throws Exception {
 		String nameReport = nameReportField.getText().trim();

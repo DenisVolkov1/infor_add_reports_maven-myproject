@@ -168,6 +168,8 @@ public class SettingParamsPanel extends JPanel {
 		panelGrid.setBounds(7, 47, 515, panelGrid.getHeight()+34);
 			
 		JTextField nameField = new JTextField();
+		nameField.setHorizontalAlignment(SwingConstants.CENTER);
+		nameField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameField.setText(PARAM_NAME == null ? "" : PARAM_NAME);
 		paramNameField.add(nameField);
 		GridBagConstraints gbc_paramNameField = new GridBagConstraints();
@@ -180,6 +182,8 @@ public class SettingParamsPanel extends JPanel {
 		nameField.setColumns(10);
 		
 		JTextField labelField = new JTextField();
+		labelField.setHorizontalAlignment(SwingConstants.CENTER);
+		labelField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		labelField.setText(PARAM_LABEL == null ? "" : PARAM_LABEL);
 		paramLabelField.add(labelField);
 		GridBagConstraints gbc_paramLabelField = new GridBagConstraints();

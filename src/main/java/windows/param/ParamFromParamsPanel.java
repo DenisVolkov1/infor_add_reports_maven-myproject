@@ -37,6 +37,8 @@ public class ParamFromParamsPanel {
 	}
 
 	public String getPARAM_CONTENTS() {
+		
+		
 		return (PARAM_CONTENTS.length() != 0) ? PARAM_CONTENTS : null;
 	}
 

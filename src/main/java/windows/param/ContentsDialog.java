@@ -27,20 +27,22 @@ public class ContentsDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public ContentsDialog() {
+		setResizable(false);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 		setLocationRelativeTo(null);
-		setBounds(100, 100, 403, 270);
+		setBounds(100, 100, 465, 348);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 367, 209);
+		scrollPane.setBounds(10, 11, 437, 296);
 		contentPanel.add(scrollPane);
 		
 		textArea = new JTextArea();
+		textArea.setFont(new Font("Dialog", Font.PLAIN, 14));
 		scrollPane.setViewportView(textArea);
 	}
 
