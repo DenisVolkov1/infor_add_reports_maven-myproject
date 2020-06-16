@@ -98,15 +98,15 @@ public class ReadXML {
 	public static List<ParamFromRptDesign> getListOfParamsFromRptDesign(File file) throws ParserConfigurationException, SAXException, IOException  {
 		
 		Vector<ParamFromRptDesign> listParams = new Vector<ParamFromRptDesign>();
-		String name = null;
-		String promptText = null;
-		String dataType = null;
-		String paramType = null;
-		String controlType = null;
-		String dataSetName = null;
-		String queryText = null;
-		String hidden = null;
-		ParamFromRptDesign param = null;
+			String name = null;
+			String promptText = null;
+			String dataType = null;
+			String paramType = null;
+			String controlType = null;
+			String dataSetName = null;
+			String queryText = null;
+			String hidden = null;
+			ParamFromRptDesign param = null;
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();  
 		DocumentBuilder db= dbf.newDocumentBuilder();

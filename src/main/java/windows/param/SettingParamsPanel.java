@@ -13,6 +13,7 @@ import java.awt.Font;
 import javax.swing.border.EtchedBorder;
 
 import util.MyHoverButton;
+import util.Params;
 
 import java.awt.Rectangle;
 import javax.swing.SwingConstants;
@@ -288,5 +289,10 @@ public class SettingParamsPanel extends JPanel {
 			res.add(p);
 		}
 		return res;
+	}
+	public void addlistParams(List<? extends Params> listParams) {
+		for (Params p : listParams) {
+			addParam(p.getPARAM_NAME() , p.getPARAM_LABEL(), p.getPARAM_TYPE(), p.getPARAM_CONTENTS());
+		}
 	}
 }

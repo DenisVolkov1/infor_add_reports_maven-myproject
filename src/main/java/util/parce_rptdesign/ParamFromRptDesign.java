@@ -1,6 +1,8 @@
 package util.parce_rptdesign;
 
-public class ParamFromRptDesign {
+import util.Params;
+
+public class ParamFromRptDesign implements Params {
 	
 	private String name;
 	private String promptText;
@@ -51,7 +53,6 @@ public class ParamFromRptDesign {
 
 	public String getPARAM_CONTENTS() {
 		return (queryText != null) ? queryText.trim() : null;
-		//return (queryText != null) ? queryText.replace("<![CDATA[", "").replace("]]>", "") : null;
 	}
 
 	public String getPARAM_NAME() {
@@ -61,9 +62,7 @@ public class ParamFromRptDesign {
 	public String getPARAM_LABEL() {
 		return (promptText == null) ? "" : promptText;
 	}
-	/**
-	 * @return  PARAM_TYPE - CONST 'Date' or 'Dropdown' or 'MultiSelect' or 'Number' or 'Text' or 'Boolean' or 'Time'
-	 */
+
 	public String getPARAM_TYPE() {
 		if (controlType == null) return null;
 		if (controlType.equals("list-box")) {

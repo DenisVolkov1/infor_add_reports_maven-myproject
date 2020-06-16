@@ -1,6 +1,8 @@
 package windows.param;
 
-public class ParamFromParamsPanel {
+import util.Params;
+
+public class ParamFromParamsPanel implements Params {
 	
 	private String PARAM_NAME, PARAM_LABEL, PARAM_TYPE, PARAM_CONTENTS;
 
@@ -11,7 +13,7 @@ public class ParamFromParamsPanel {
 		PARAM_TYPE = pARAM_TYPE;
 		PARAM_CONTENTS = pARAM_CONTENTS;
 	}
-
+	@Override
 	public String getPARAM_NAME() {
 		return PARAM_NAME;
 	}
@@ -37,8 +39,7 @@ public class ParamFromParamsPanel {
 	}
 
 	public String getPARAM_CONTENTS() {
-		
-		
+		if(PARAM_CONTENTS == null) return null;
 		return (PARAM_CONTENTS.length() != 0) ? PARAM_CONTENTS : null;
 	}
 
@@ -51,6 +52,29 @@ public class ParamFromParamsPanel {
 			   "PARAM_LABEL = "+ getPARAM_LABEL() + "\n"+
 			   "PARAM_TYPE = "+ getPARAM_TYPE()+ "\n"+
 			   "PARAM_CONTENTS = "+ getPARAM_CONTENTS()+ "\n";
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((PARAM_NAME == null) ? 0 : PARAM_NAME.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ParamFromParamsPanel other = (ParamFromParamsPanel) obj;
+		if (PARAM_NAME == null) {
+			if (other.PARAM_NAME != null)
+				return false;
+		} else if (!PARAM_NAME.equals(other.PARAM_NAME))
+			return false;
+		return true;
 	}
 	
 	

@@ -575,7 +575,7 @@ public class TabAddReport extends TabSuperClass {
 	private void matchCheckingInputValueFileName() throws Exception {
 		String newFileNameReport = nameReportFileField.getText().trim();
 		if (newFileNameReport.isEmpty()) throw new InfoException("Field file name report is empty.");
-		if (newFileNameReport.matches(".*'*.")) throw new InfoException("Incorrect character \" ' \"");
+		if (newFileNameReport.matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
 		//
 		Vector<String> listFileNameReport = null;
 		try {
@@ -603,19 +603,19 @@ public class TabAddReport extends TabSuperClass {
 		//
 		String RPT_ID = RPT_IDField.getText().trim();
 		if (RPT_ID.isEmpty()) throw new InfoException("Field RPT_ID is empty.");
-		if (RPT_ID.matches(".*'*.")) throw new InfoException("Incorrect character \" ' \"");
+		if (RPT_ID.matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
 		//
 		String nameNewReport = nameReportField.getText().trim();
 		if (nameNewReport.isEmpty()) throw new InfoException("Field name report is empty.");
-		if (nameNewReport.matches(".*'*.")) throw new InfoException("Incorrect character \" ' \"");
+		if (nameNewReport.matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
 		if (newParam!= null) {
 			List<ParamFromParamsPanel> params = newParam.getSettingParamsPanel().getlistOfParams();
 			if (params.size() != 0) {
 				for (ParamFromParamsPanel pfpp : params) {
 					if (pfpp.getPARAM_NAME().trim().length() == 0) throw new InfoException("One or more field 'Param name' empty.");
-					if (pfpp.getPARAM_NAME().matches(".*'*.")) throw new InfoException("Incorrect character \" ' \"");
+					if (pfpp.getPARAM_NAME().matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
 					if (pfpp.getPARAM_LABEL().trim().length() == 0) throw new InfoException("One or more field 'Param label' empty.");
-					if (pfpp.getPARAM_LABEL().matches(".*'*.")) throw new InfoException("Incorrect character \" ' \"");
+					if (pfpp.getPARAM_LABEL().matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
 				}
 			}
 		}

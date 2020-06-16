@@ -15,6 +15,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import database.ParamsRelatedData;
+import exception.InfoException;
 import util.parce_rptdesign.ParamFromRptDesign;
 import util.parce_rptdesign.ReadXML;
 import windows.param.ParamFromParamsPanel;
@@ -25,11 +26,7 @@ public class MT {
 		
 		
 		  
-			
-		for(ParamFromRptDesign pfrd : ReadXML.getListOfParamsFromRptDesign(new File("C:\\reports\\rep_22\\rep_2_2_monitoring_operacii.rptdesign"))) {
-			System.out.println(pfrd);
-			System.out.println("-----------");
-		}
+		if ("  ".matches(".*'.*")) System.out.println("wert");
 		 
 
 	}

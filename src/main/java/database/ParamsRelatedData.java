@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Vector;
 
 import util.MyProperties;
+import util.Params;
 import util.parce_rptdesign.ParamFromRptDesign;
 import windows.param.ParamFromParamsPanel;
 
@@ -105,9 +106,26 @@ public class ParamsRelatedData {
 		} 
 		return resultVector;
 	}
-	
-	public static void insertParam(List<?> listParams, String RPT_ID) throws Exception {
+	public static Vector<ParamFromDataBase> getListOfParam(String RPT_ID) throws ClassNotFoundException, SQLException {
+		String schema = MyProperties.getProperty("schema"); 
+		Vector<ParamFromDataBase> resultVector = new Vector<ParamFromDataBase>();
 		
+		String sql = "USE [SCPRD] "
+					  + "SELECT PARAM_NAME, PARAM_LABEL, PARAM_TYPE, PARAM_CONTENTS "
+					  + "FROM ["+schema+"].[PBSRPT_REPORTS_PARAMS]  "
+					  + "WHERE [RPT_ID] = '"+RPT_ID+"'";
+		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
+				Statement statement = connection.createStatement();
+						ResultSet rs = statement.executeQuery(sql)) {
+			
+			while(rs.next()) {
+				resultVector.add(new ParamFromDataBase(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)));
+			}
+		} 
+		return resultVector;
+	}
+	
+	public static void insertParam(List<? extends Params> listParams, String RPT_ID) throws Exception {
 		
 		String schema = MyProperties.getProperty("schema");
 		String PARAM_CONTENTS_TYPE = "NULL";
@@ -137,56 +155,37 @@ public class ParamsRelatedData {
 			        "VALUES ";
 			StringBuilder values = new StringBuilder();
 			
-			List<Object> listCheck = (List<Object>)(Object) listParams;
-		    if (!listCheck.isEmpty()) {
-		    
 				for(int i = 0; listParams.size() > i; i++) {
 					
-					
-					if (listCheck.get(0) instanceof ParamFromParamsPanel) {
-						List<ParamFromParamsPanel> listParamsPanel = (List<ParamFromParamsPanel>) listParams;
-					
-						PARAM_NAME 	 = listParamsPanel.get(i).getPARAM_NAME();
-					    PARAM_LABEL	 = listParamsPanel.get(i).getPARAM_LABEL();
-					    PARAM_TYPE 	 = listParamsPanel.get(i).getPARAM_TYPE();
-					    PARAM_CONTENTS = listParamsPanel.get(i).getPARAM_CONTENTS();
-					}
-					if (listCheck.get(0) instanceof ParamFromRptDesign) {
-						List<ParamFromRptDesign> listParamsDesign = (List<ParamFromRptDesign>) listParams;
-					
-						PARAM_NAME 	 = listParamsDesign.get(i).getPARAM_NAME();
-					    PARAM_LABEL	 = listParamsDesign.get(i).getPARAM_LABEL();
-					    PARAM_TYPE 	 = listParamsDesign.get(i).getPARAM_TYPE();
-					    PARAM_CONTENTS = listParamsDesign.get(i).getPARAM_CONTENTS();
-					} else {
-						throw new Exception("Wrong argument type for this list!!!");
-					}
-					
-					  if(PARAM_CONTENTS == null) {
-						  PARAM_CONTENTS = "NULL";
-						  PARAM_CONTENTS_TYPE = "NULL";
-					  }
-					  else {
-						  PARAM_CONTENTS_TYPE = "'SQL'";
-						  PARAM_CONTENTS = "'" +PARAM_CONTENTS.replace("'", "''")+ "'";
-					 }
-				      
-				     values.append("("+
-				        "  '"+RPT_ID+"',         "+
-				        "  '"+PARAM_NAME+"',     "+
-				        "   '"+PARAM_TYPE+"',    "+
-				        "   '"+PARAM_LABEL+"',   "+
-				        "   "+PARAM_CONTENTS+",  "+
-				        "   '',                  "+
-				        "   NULL,                "+
-				        "   "+PARAM_CONTENTS_TYPE+","+
-				        "   NULL,                "+
-				        "   1,                   "+
-				        "   NULL,                "+
-				        "   NULL,                "+
-				        "   '1'                  "+
-						"),"
-				        );
+					PARAM_NAME 	 = listParams.get(i).getPARAM_NAME();
+				    PARAM_LABEL	 = listParams.get(i).getPARAM_LABEL();
+				    PARAM_TYPE 	 = listParams.get(i).getPARAM_TYPE();
+				    PARAM_CONTENTS = listParams.get(i).getPARAM_CONTENTS();
+				
+				  if(PARAM_CONTENTS == null) {
+					  PARAM_CONTENTS = "NULL";
+					  PARAM_CONTENTS_TYPE = "NULL";
+				  }
+				  else {
+					  PARAM_CONTENTS_TYPE = "'SQL'";
+					  PARAM_CONTENTS = "'" +PARAM_CONTENTS.replace("'", "''")+ "'";
+				 }
+			     values.append("("+
+			        "  '"+RPT_ID+"',         "+
+			        "  '"+PARAM_NAME+"',     "+
+			        "   '"+PARAM_TYPE+"',    "+
+			        "   '"+PARAM_LABEL+"',   "+
+			        "   "+PARAM_CONTENTS+",  "+
+			        "   '',                  "+
+			        "   NULL,                "+
+			        "   "+PARAM_CONTENTS_TYPE+","+
+			        "   NULL,                "+
+			        "   1,                   "+
+			        "   NULL,                "+
+			        "   NULL,                "+
+			        "   '1'                  "+
+					"),"
+			        );
 				}
 				values.deleteCharAt(values.length()-1);	
 				insertPBSRPT_REPORTS_PARAMS = insertPBSRPT_REPORTS_PARAMS + values.toString();
@@ -200,7 +199,7 @@ public class ParamsRelatedData {
 						insertPar.execute();
 						connection.commit();
 				}	
-		    }
+		    
 	
 	}
 }
