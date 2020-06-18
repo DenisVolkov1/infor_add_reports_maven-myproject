@@ -35,6 +35,13 @@ import javax.swing.border.EmptyBorder;
 import log.LOg;
 import test.TestMain;
 import util.DialogWindows;
+import windows.tabs.TabCategories;
+import windows.tabs.TabConnectionMSSQLServer;
+import windows.tabs.TabDeleteReport;
+import windows.tabs.TabRepositories;
+import windows.tabs.TabScrollable;
+import windows.tabs.add.TabAddReport;
+import windows.tabs.update.TabUpdateReport;
 
 import java.awt.Cursor;
 import javax.swing.JToggleButton;

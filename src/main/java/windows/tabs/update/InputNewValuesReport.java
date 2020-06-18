@@ -1,4 +1,4 @@
-package windows;
+package windows.tabs.update;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -15,6 +15,8 @@ import java.awt.Dialog.ModalityType;
 import javax.swing.border.EtchedBorder;
 
 import database.CategoryAndCode;
+import database.ParamFromDataBase;
+import database.ParamsRelatedData;
 import database.ReportRelatedData;
 import exception.InfoException;
 import log.LOg;
@@ -28,6 +30,9 @@ import javax.swing.JButton;
 import java.awt.Font;
 import util.DialogWindows;
 import util.Verification;
+import windows.MainRunWindow;
+import windows.param.SettingParamsPanel;
+import windows.tabs.TabSuperClass;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -39,12 +44,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.FlowLayout;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class InputNewValuesReport extends JDialog {
 
 	private JTextField RPT_IDField;
 	private JTextField nameReportField;
 	private JTextField fileNameField;
+	private SettingParamsPanel settingParamsPanel;
 																		
 	private JLabel RPT_IDLabel;
 	private JLabel categoryLabel;
@@ -60,25 +70,23 @@ public class InputNewValuesReport extends JDialog {
 	//
 	private String nameReport;
 	private Integer categoryId;
+	//
+	private Integer startHeight = 210;
 	
-	public InputNewValuesReport(String nameReport, Integer categoryId) {
+	public InputNewValuesReport(String nameReport, Integer categoryId) throws Exception {
 		super(MainRunWindow.getInstance(), "Input values");
-		this.setResizable(false);
 		this.nameReport = nameReport;
 		this.categoryId = categoryId;
 		
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setBounds(100, 100, 770, 230);
+		setBounds(100, 100, 757, startHeight);
 		Point p = MainRunWindow.getInstance().getLocation();
 		p.setLocation(p.getX(), p.getY()+100);
 		this.setLocation(p);
-		
-		getContentPane().setLayout(null);
 		panel = new JPanel();
+		panel.setAutoscrolls(true);
 		panel.setAlignmentX(0.0f);
 		panel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
-		panel.setBounds(13, 10, 727, 171);
-		getContentPane().add(panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{70, 332, 320, 0};
 		gbl_panel.rowHeights = new int[]{26, 27, 27, 27, 27, 0};
@@ -98,8 +106,8 @@ public class InputNewValuesReport extends JDialog {
 		panel.add(lblDescr, gbc_lblDescr);
 		
 		JLabel lblNewLabel_4 = new JLabel("<Old values>");
+		lblNewLabel_4.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		lblNewLabel_4.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_4.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_lblNewLabel_4 = new GridBagConstraints();
 		gbc_lblNewLabel_4.fill = GridBagConstraints.BOTH;
@@ -280,6 +288,30 @@ public class InputNewValuesReport extends JDialog {
 		gbc_fileNameField.gridy = 4;
 		panel.add(fileNameField, gbc_fileNameField);
 		
+		settingParamsPanel = new SettingParamsPanel();
+		settingParamsPanel.setVisible(false);
+		GroupLayout groupLayout = new GroupLayout(getContentPane());
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(5)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(settingParamsPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 726, Short.MAX_VALUE)
+						.addComponent(panel, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(5))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(5)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(5)
+					.addComponent(settingParamsPanel, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+					.addGap(5))
+		);
+		getContentPane().setLayout(groupLayout);
+		
+		
 		//////////////////Code
 		/////////////
 		primaryInit();
@@ -287,7 +319,8 @@ public class InputNewValuesReport extends JDialog {
 		setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 		setVisible(true);
 	}
-	private void primaryInit() {
+	private void primaryInit() throws Exception {
+		if (ParamsRelatedData.isExistTableParams()) settingParamsPanel.setVisible(true);
 		Vector<CategoryAndCode> listCategoryAndCodes = new Vector( new TabSuperClass().listCategoryAndCodes);
 		listCategoryAndCodes.add(0, new CategoryAndCode(null, "<Old value>"));
 		final DefaultComboBoxModel<String> model = new DefaultComboBoxModel(listCategoryAndCodes);
@@ -300,18 +333,20 @@ public class InputNewValuesReport extends JDialog {
 		            e.consume(); 
 			}
 		});
-		
-		try {
+		// set data from report 
 			String[] reportFields = ReportRelatedData.getReportFields(this.nameReport, this.categoryId);
 				RPT_IDLabel.setText(reportFields    [0]);
 				categoryLabel.setText(reportFields  [1]);
 				nameReportLabel.setText(reportFields[2]);
 				fileNameLabel.setText(reportFields  [3]);
-		} catch (Exception e) {
-			DialogWindows.dialogWindowError(e);
-				LOg.logToFile(e);
-					return;
+		// set params
+		if (ParamsRelatedData.isExistTableParams()) {
+			Vector<ParamFromDataBase> params = ParamsRelatedData.getListOfParam(reportFields[0]);
+			int plusHeight = params.size() * 34;
+			setBounds(100, 100, 757, startHeight + 50 + plusHeight);
+			settingParamsPanel.addlistParams(params);
 		}
+	
 		
 			for (Component c : panel.getComponents()) {
 				if (c instanceof JTextField) {

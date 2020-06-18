@@ -1,4 +1,4 @@
-package windows;
+package windows.tabs.add;
 
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -8,8 +8,14 @@ import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.joda.time.DateTime;
+import org.xml.sax.SAXException;
 
 import database.CategoryAndCode;
+import database.ConnectionMSSQL;
+import database.ParamsRelatedData;
 import database.ReportRelatedData;
 import exception.ConfirmException;
 import exception.InfoException;
@@ -18,9 +24,16 @@ import log.LOg;
 import util.DialogWindows;
 import util.MyHoverButton;
 import util.MyProperties;
-import util.ReadXML;
+import util.Util;
 import util.Verification;
+import util.parce_rptdesign.ParamFromRptDesign;
+import util.parce_rptdesign.ReadXML;
 import war.WarArchive;
+import windows.MainRunWindow;
+import windows.SettingsWindow;
+import windows.param.NewParam;
+import windows.param.ParamFromParamsPanel;
+import windows.tabs.TabSuperClass;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.DefaultComboBoxModel;
@@ -32,13 +45,19 @@ import javax.swing.JFileChooser;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.JButton;
 import java.awt.Cursor;
 import java.awt.ComponentOrientation;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JToggleButton;
@@ -74,12 +93,17 @@ public class TabAddReport extends TabSuperClass {
 	private JCheckBox autoInsertCheckBox;
 	private JComboBox<String> foldersProjectComboBox;
 	private JLabel lblNewLabel;
+	private MyHoverButton newParamButton;
+
+	protected NewParam newParam;
+
+	protected ComponentAdapter adapterNewParams;
 
 	/**
 	 * Create the panel.
 	 */
 	private TabAddReport() {
-
+			
 		setBackground(UIManager.getColor("Button.background"));
 		setFont(new Font("Dialog", Font.PLAIN, 12));
 		//setPreferredSize(new Dimension(520, 390));
@@ -161,6 +185,10 @@ public class TabAddReport extends TabSuperClass {
 		lblNewLabel = new JLabel("Project folder in repositories");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
+		newParamButton = new MyHoverButton("New Param");
+		newParamButton.setEmptyHover();
+	
+		
 		GroupLayout gl_addReportPanel = new GroupLayout(addReportPanel);
 		gl_addReportPanel.setHorizontalGroup(
 			gl_addReportPanel.createParallelGroup(Alignment.LEADING)
@@ -195,13 +223,16 @@ public class TabAddReport extends TabSuperClass {
 										.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
 										.addComponent(nameReportFileField, GroupLayout.PREFERRED_SIZE, 429, GroupLayout.PREFERRED_SIZE)
 										.addComponent(nameFileReportLabelTF, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
-										.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 432, GroupLayout.PREFERRED_SIZE)
-										.addGroup(gl_addReportPanel.createSequentialGroup()
-											.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
-												.addComponent(nameReportLabel)
-												.addComponent(RPT_IDField, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(autoInsertCheckBox))))
+										.addGroup(gl_addReportPanel.createParallelGroup(Alignment.TRAILING, false)
+											.addGroup(gl_addReportPanel.createSequentialGroup()
+												.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
+													.addComponent(nameReportLabel)
+													.addComponent(RPT_IDField, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(autoInsertCheckBox)
+												.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(newParamButton))
+											.addComponent(nameReportField, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 432, GroupLayout.PREFERRED_SIZE))))
 								.addComponent(foldersProjectComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE))
 							.addGap(27))))
 		);
@@ -219,14 +250,19 @@ public class TabAddReport extends TabSuperClass {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(rptIdLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_addReportPanel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(RPT_IDField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-								.addComponent(autoInsertCheckBox))
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(nameReportLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_addReportPanel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_addReportPanel.createSequentialGroup()
+									.addComponent(rptIdLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(gl_addReportPanel.createParallelGroup(Alignment.BASELINE)
+										.addComponent(RPT_IDField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+										.addComponent(autoInsertCheckBox))
+									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(nameReportLabel)
+									.addPreferredGap(ComponentPlacement.RELATED))
+								.addGroup(Alignment.TRAILING, gl_addReportPanel.createSequentialGroup()
+									.addComponent(newParamButton)
+									.addGap(10)))
 							.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(nameFileReportLabelTF, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
@@ -264,6 +300,8 @@ public class TabAddReport extends TabSuperClass {
 		nameReportFileField.setEnabled(false);
 		nameReportFileField.setEditable(false);
 		nameFileReportLabelTF.setEnabled(false);
+		newParamButton.setEnabled(false);
+		newParamButton.setVisible(false);
 		RPT_IDField.setEnabled(false);
 		RPT_IDField.setEditable(false);
 		if (!SettingsWindow.enableAddToRepositoriesGetSaveSelected()) foldersProjectComboBox.setEnabled(false);
@@ -286,6 +324,21 @@ public class TabAddReport extends TabSuperClass {
 		            e.consume(); 
 			}
 		});
+		 adapterNewParams = new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				try {
+					if(!ConnectionMSSQL.isGoodLastsConnection) return;
+					if(!ParamsRelatedData.isExistTableParams()) newParamButton.setVisible(false);
+					else newParamButton.setVisible(true);
+					
+				} catch (ClassNotFoundException | SQLException e1) {
+					DialogWindows.dialogWindowError(e1);
+						LOg.logToFile(e1);
+				}
+			
+			}
+		};
 		fileReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -294,11 +347,17 @@ public class TabAddReport extends TabSuperClass {
 					if (result == JFileChooser.APPROVE_OPTION) {
 						fileReportLabel.setText(fileChooser.getSelectedFile().getName().replace(".rptdesign",""));
 						ipDataSrcLabel.setText(ReadXML.getIpDataSource(fileChooser.getSelectedFile()));
+						Util.changeColorErrDataSource(ReadXML.getIpDataSource(fileChooser.getSelectedFile()), ipDataSrcLabel);
 					}
 				} catch (Exception e2) {
 					DialogWindows.dialogWindowError(e2);
 						LOg.logToFile(e2);
 				}
+			}
+		});
+		newParamButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 newParam = new NewParam();
 			}
 		});
 		autoInsertCheckBox.addItemListener(new ItemListener() {
@@ -327,6 +386,7 @@ public class TabAddReport extends TabSuperClass {
 					nameReportFileField.setEnabled(false);
 					nameReportFileField.setEditable(false);
 					nameFileReportLabelTF.setEnabled(false);
+					newParamButton.setEnabled(false);
 		
 					autoInsertCheckBox.setEnabled(false);
 					rptIdLabel.setEnabled(false);
@@ -357,6 +417,7 @@ public class TabAddReport extends TabSuperClass {
 						nameReportFileField.setEnabled(true);
 						nameReportFileField.setEditable(true);
 						nameFileReportLabelTF.setEnabled(true);
+						newParamButton.setEnabled(true);
 					}
 				}
 			}
@@ -369,11 +430,13 @@ public class TabAddReport extends TabSuperClass {
 					fileReportButton.setEnabled(false);
 					nameFileReportLabel.setEnabled(false);
 					fileReportLabel.setEnabled(false);
+					newParamButton.setEnabled(false);
 					ipDataSrcLabel.setVisible(false);
 					if (addDataBaseToggleButton.isSelected()) {
 						nameReportFileField.setEnabled(true);
 						nameReportFileField.setEditable(true);
 						nameFileReportLabelTF.setEnabled(true);
+						newParamButton.setEnabled(true);
 					}
 				} else {
 					if (addDataBaseToggleButton.isSelected()) {
@@ -390,20 +453,26 @@ public class TabAddReport extends TabSuperClass {
 						nameReportFileField.setEnabled(false);
 						nameReportFileField.setEditable(false);
 						nameFileReportLabelTF.setEnabled(false);
+						newParamButton.setEnabled(false);
 					}
 					
 				}
 			}
 		});
+		
+	
 		addReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Connection connectionForCommit = null;
 				String RPT_ID , nameReport = null , nameFileReport = null , nameProgect = null;
 				Integer categoryId = null;
 				File selectedFile = null;
+				boolean isExistTableParams = false;
+				
+				String autoRPT_ID = new DateTime().toString("ddHHmmss");
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {
 					matchCheckingValidInputData();
+					isExistTableParams = ParamsRelatedData.isExistTableParams();
 					if(addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
 						//
 						RPT_ID         = RPT_IDField.getText().trim();
@@ -414,16 +483,19 @@ public class TabAddReport extends TabSuperClass {
 						nameProgect    = (String)foldersProjectComboBox.getSelectedItem();
 						
 						if (autoInsertCheckBox.isSelected()) {
-							connectionForCommit = ReportRelatedData.insertReport(null, nameReport, categoryId, nameFileReport);
+							ReportRelatedData.insertReport(autoRPT_ID, nameReport, categoryId, nameFileReport);
+							if (isExistTableParams) insertParams(autoRPT_ID,selectedFile);
 						} else {
-							connectionForCommit = ReportRelatedData.insertReport(RPT_ID, nameReport, categoryId, nameFileReport);
+							ReportRelatedData.insertReport(RPT_ID, nameReport, categoryId, nameFileReport);
+							if (isExistTableParams) insertParams(RPT_ID,selectedFile);
 						}
+						
 						WarArchive.createBackup(selectedFile);
 							WarArchive.addOrUpdateReportFileInArchive(selectedFile);
 							if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
 							}
-							connectionForCommit.commit();
+							
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addDataBaseToggleButton.isSelected()) {
 						//
@@ -433,11 +505,13 @@ public class TabAddReport extends TabSuperClass {
 						nameFileReport = nameReportFileField.getText().trim();
 						//
 						if (autoInsertCheckBox.isSelected()) {
-							connectionForCommit = ReportRelatedData.insertReport(null, nameReport, categoryId, nameFileReport);
+							ReportRelatedData.insertReport(autoRPT_ID, nameReport, categoryId, nameFileReport);
+							if (isExistTableParams) insertParams(autoRPT_ID);
+						
 						} else {
-							connectionForCommit = ReportRelatedData.insertReport(RPT_ID, nameReport, categoryId, nameFileReport);
+							ReportRelatedData.insertReport(RPT_ID, nameReport, categoryId, nameFileReport);
+							if (isExistTableParams) insertParams(RPT_ID);
 						}
-							connectionForCommit.commit();
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addArchiveToggleButton.isSelected()) {
 						//
@@ -461,17 +535,21 @@ public class TabAddReport extends TabSuperClass {
 					 	LOg.logToFile(e1);
 				} finally {
 					 setCursor(null);
-						if (connectionForCommit != null) {
-							try {
-								connectionForCommit.close();
-							} catch (SQLException e1) {
-								DialogWindows.dialogWindowError(e1);
-									LOg.logToFile(e1);
-							}
-						}
 				}	
 			}	
 		});
+	}
+	private void insertParams(String RPT_ID, File selectedFile) throws Exception {
+		List<ParamFromRptDesign> params = ReadXML.getListOfParamsFromRptDesign(selectedFile);
+		if (params.size() == 0) return;
+		ParamsRelatedData.insertParam(params, RPT_ID);
+		
+	}
+	private void insertParams(String RPT_ID) throws Exception {
+		if (newParam == null) return;
+		List<ParamFromParamsPanel> params = newParam.getSettingParamsPanel().getlistOfParams();
+		if (params.size() == 0) return;
+		ParamsRelatedData.insertParam(params, RPT_ID);
 	}
 	private void matchCheckingValidInputData() throws Exception {
 		if (addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
@@ -497,6 +575,8 @@ public class TabAddReport extends TabSuperClass {
 	private void matchCheckingInputValueFileName() throws Exception {
 		String newFileNameReport = nameReportFileField.getText().trim();
 		if (newFileNameReport.isEmpty()) throw new InfoException("Field file name report is empty.");
+		if (newFileNameReport.matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
+		//
 		Vector<String> listFileNameReport = null;
 		try {
 			 listFileNameReport = WarArchive.getListOfReportFilesNames();
@@ -510,6 +590,7 @@ public class TabAddReport extends TabSuperClass {
 				else throw new ConfirmException();
 			}
 		}
+		Verification.checkInvalidFilenamesWindows(newFileNameReport);
 	}
 	
 	private void matchCheckingProjectComboBox() throws Exception {
@@ -522,12 +603,22 @@ public class TabAddReport extends TabSuperClass {
 		//
 		String RPT_ID = RPT_IDField.getText().trim();
 		if (RPT_ID.isEmpty()) throw new InfoException("Field RPT_ID is empty.");
+		if (RPT_ID.matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
 		//
 		String nameNewReport = nameReportField.getText().trim();
-		String newFileNameReport = nameReportFileField.getText().trim();
 		if (nameNewReport.isEmpty()) throw new InfoException("Field name report is empty.");
-		//
-		Verification.checkIvalidFilenamesWindows(nameNewReport, newFileNameReport);
+		if (nameNewReport.matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
+		if (newParam!= null) {
+			List<ParamFromParamsPanel> params = newParam.getSettingParamsPanel().getlistOfParams();
+			if (params.size() != 0) {
+				for (ParamFromParamsPanel pfpp : params) {
+					if (pfpp.getPARAM_NAME().trim().length() == 0) throw new InfoException("One or more field 'Param name' empty.");
+					if (pfpp.getPARAM_NAME().matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
+					if (pfpp.getPARAM_LABEL().trim().length() == 0) throw new InfoException("One or more field 'Param label' empty.");
+					if (pfpp.getPARAM_LABEL().matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
+				}
+			}
+		}
 	}
 	private void matchCheckingDataBase() throws Exception {
 		String nameNewReport = nameReportField.getText().trim();
@@ -564,5 +655,11 @@ public class TabAddReport extends TabSuperClass {
 	}
 	public JToggleButton getAddArchiveToggleButton() {
 		return addArchiveToggleButton;
+	}
+	public MyHoverButton getNewParamButton() {
+		return newParamButton;
+	}
+	public ComponentAdapter getAdapterNewParams() {
+		return adapterNewParams;
 	}
 }

@@ -1,10 +1,11 @@
-package windows;
+package windows.tabs;
 
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,6 +18,7 @@ import org.omg.PortableServer.AdapterActivator;
 import database.CategoryAndCode;
 import database.CategoryRelatedData;
 import database.ConnectionMSSQL;
+import database.ParamsRelatedData;
 import database.ReportRelatedData;
 import exception.InfoException;
 import files_repository.FilesRepository;
@@ -24,17 +26,18 @@ import log.LOg;
 import util.DialogWindows;
 import util.MyProperties;
 import util.ServiceWindow;
+import windows.SettingsWindow;
 
 public class TabSuperClass extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
-	protected static Vector<CategoryAndCode> listCategoryAndCodes = new Vector<>();
+	public static Vector<CategoryAndCode> listCategoryAndCodes = new Vector<>();
 	protected static Vector<String> listNamesFoldersProject = new Vector<>();
 	protected static ActionListener refreshService;
 	private ComponentAdapter adapterCategories;
 	private ComponentAdapter adapterListProjectsNames;
 	
-	protected TabSuperClass() {
+	public TabSuperClass() {
 		
 		adapterCategories = new ComponentAdapter() {
 			@Override
@@ -43,9 +46,7 @@ public class TabSuperClass extends JPanel {
 					listCategoryAndCodes.clear();
 					return;
 				}
-				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					refreshCategory();
-				setCursor(null);
+				refreshCategory();
 			}
 		};
 		adapterListProjectsNames = new ComponentAdapter() {
@@ -100,12 +101,15 @@ public class TabSuperClass extends JPanel {
 	public void refreshCategory() {
 		listCategoryAndCodes.clear();
 		Vector<CategoryAndCode> categoriesMap;
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		try {
 			categoriesMap = CategoryRelatedData.getCategories();
 			listCategoryAndCodes.addAll(categoriesMap);
 		} catch (Exception e) {
 			DialogWindows.dialogWindowError(e);
 				LOg.logToFile(e);
+		} finally {
+			setCursor(null);
 		}
 	}
 	public ComponentAdapter getCategoriesAdapter() {
@@ -114,4 +118,5 @@ public class TabSuperClass extends JPanel {
 	public ComponentAdapter getListProjectsNamesAdapter() {
 		return adapterListProjectsNames;
 	}
+
 }

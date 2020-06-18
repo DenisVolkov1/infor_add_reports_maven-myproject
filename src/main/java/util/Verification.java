@@ -8,7 +8,7 @@ public class Verification {
 	
 	private Verification () {}
 	
-	public static void checkIvalidFilenamesWindows(String... fields) throws InfoException {
+	public static void checkInvalidFilenamesWindows(String... fields) throws InfoException {
 		for (String field : fields) {
 			if (field != null) {
 				if (field.trim().matches(".*[<>:\"/\\\\|?*].*")) throw new InfoException("Fild contains invalid characters.\n<, >, :, /, \\, |, ?, *");
@@ -17,5 +17,8 @@ public class Verification {
 			}
 		}
 	}
+
+	
+	
 
 }
