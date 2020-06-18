@@ -36,11 +36,8 @@ public class ParamsRelatedData {
 	 * @param PARAM_LABEL - Rus name
 	 * @return - Connection object return for commit transaction. -connection.commit();
 	 * */
-<<<<<<< HEAD
-	public static Connection insertParam(String RPT_ID, String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS) throws ClassNotFoundException, SQLException {
-=======
+
 	public static void insertParam(String RPT_ID, String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS) throws ClassNotFoundException, SQLException {
->>>>>>> branch 'master' of https://github.com/DenisVolkov1/infor_add_reports_maven-myproject.git
 		String schema = MyProperties.getProperty("schema");
 		String PARAM_CONTENTS_TYPE = "NULL";
 		if(PARAM_CONTENTS == null) PARAM_CONTENTS = "NULL";
