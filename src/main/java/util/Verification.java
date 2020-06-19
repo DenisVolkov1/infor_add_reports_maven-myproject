@@ -17,6 +17,18 @@ public class Verification {
 			}
 		}
 	}
+	public static void checkInvalidChar(String... fields) throws InfoException {
+		for (String field : fields) {
+			if (field != null) {
+				if (field.trim().matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");	
+			}
+		}
+	}
+	public static void checkInvalidFields(String... fields) throws InfoException {
+		checkInvalidChar(fields);
+		checkInvalidFilenamesWindows(fields);
+	}
+		
 
 	
 	

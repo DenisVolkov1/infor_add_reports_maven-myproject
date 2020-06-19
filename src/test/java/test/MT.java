@@ -24,9 +24,7 @@ public class MT {
 
 	public static void main(String[] args) throws Exception {
 		
-		
-		  
-		if ("  ".matches(".*'.*")) System.out.println("wert");
+
 		 
 
 	}

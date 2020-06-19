@@ -23,6 +23,7 @@ import files_repository.FilesRepository;
 import log.LOg;
 import util.DialogWindows;
 import util.MyHoverButton;
+import util.MyHoverToggleButton;
 import util.MyProperties;
 import util.Util;
 import util.Verification;
@@ -80,8 +81,8 @@ public class TabAddReport extends TabSuperClass {
 	private JButton fileReportButton;
 	private JButton addReportButton;
 	private JButton refreshServiceButton;
-	private JToggleButton addDataBaseToggleButton;
-	private JToggleButton addArchiveToggleButton;
+	private MyHoverToggleButton addDataBaseToggleButton;
+	private MyHoverToggleButton addArchiveToggleButton;
 	private JLabel categoryLabel;
 	private JLabel nameReportLabel;
 	private JLabel nameFileReportLabel;
@@ -141,13 +142,11 @@ public class TabAddReport extends TabSuperClass {
 		nameFileReportLabel = new JLabel("Name file report");
 		nameFileReportLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		addDataBaseToggleButton = new JToggleButton();
+		addDataBaseToggleButton = new MyHoverToggleButton("");
 		addDataBaseToggleButton.setSelected(true);
-		addArchiveToggleButton = new JToggleButton("");
-		addDataBaseToggleButton.setBackground(Color.LIGHT_GRAY);
+		addArchiveToggleButton = new MyHoverToggleButton("");
 		addDataBaseToggleButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		addArchiveToggleButton.setSelected(true);
-		addArchiveToggleButton.setBackground(Color.LIGHT_GRAY);
 		addArchiveToggleButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		nameFileReportLabelTF = new JLabel("Name file report");
@@ -603,19 +602,19 @@ public class TabAddReport extends TabSuperClass {
 		//
 		String RPT_ID = RPT_IDField.getText().trim();
 		if (RPT_ID.isEmpty()) throw new InfoException("Field RPT_ID is empty.");
-		if (RPT_ID.matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
+		Verification.checkInvalidChar(RPT_ID);
 		//
 		String nameNewReport = nameReportField.getText().trim();
 		if (nameNewReport.isEmpty()) throw new InfoException("Field name report is empty.");
-		if (nameNewReport.matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
+		
+			Verification.checkInvalidFields(nameNewReport);
 		if (newParam!= null) {
 			List<ParamFromParamsPanel> params = newParam.getSettingParamsPanel().getlistOfParams();
 			if (params.size() != 0) {
 				for (ParamFromParamsPanel pfpp : params) {
 					if (pfpp.getPARAM_NAME().trim().length() == 0) throw new InfoException("One or more field 'Param name' empty.");
-					if (pfpp.getPARAM_NAME().matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
 					if (pfpp.getPARAM_LABEL().trim().length() == 0) throw new InfoException("One or more field 'Param label' empty.");
-					if (pfpp.getPARAM_LABEL().matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
+						Verification.checkInvalidChar(pfpp.getPARAM_LABEL(), pfpp.getPARAM_NAME());
 				}
 			}
 		}

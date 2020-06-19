@@ -3,6 +3,7 @@ package windows.tabs.update;
 import javax.swing.JPanel;
 
 import database.CategoryAndCode;
+import database.ParamsRelatedData;
 import database.ReportRelatedData;
 import exception.ConfirmException;
 import exception.InfoException;
@@ -33,6 +34,7 @@ import javax.swing.JTextField;
 
 import util.DialogWindows;
 import util.MyHoverButton;
+import util.MyHoverToggleButton;
 import util.Util;
 import util.Verification;
 import util.parce_rptdesign.ReadXML;
@@ -58,8 +60,8 @@ public class TabUpdateReport extends TabSuperClass {
 	private JTextField nameReportField;
 	private JComboBox<String> categoriesComboBox;
 	private MyHoverButton updateReportButton;
-	private JToggleButton updateDataBaseToggleButton;
-	private JToggleButton updateFileArchiveToggleButton;
+	private MyHoverToggleButton updateDataBaseToggleButton;
+	private MyHoverToggleButton updateFileArchiveToggleButton;
 	private MyHoverButton fileReportButton;
 	private JLabel categoryLabel;
 	private JLabel nameReportLabel;
@@ -71,6 +73,7 @@ public class TabUpdateReport extends TabSuperClass {
 	private JLabel ipDataSrcLabel;
 	private JComboBox<String> foldersProjectComboBox;
 	private JLabel lblProjectFolderIn;
+	private JButton btnNewButton;
 	//
 	/**
 	 * Create the panel.
@@ -112,15 +115,15 @@ public class TabUpdateReport extends TabSuperClass {
 		
 		fileReportButton = new MyHoverButton("File ...");
 		
-		updateDataBaseToggleButton = new JToggleButton();
+		updateDataBaseToggleButton = new MyHoverToggleButton("");
 		updateDataBaseToggleButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		updateDataBaseToggleButton.setSelected(true);
-		updateDataBaseToggleButton.setBackground(Color.LIGHT_GRAY);
 		
-		updateFileArchiveToggleButton = new JToggleButton();
+		
+		updateFileArchiveToggleButton = new MyHoverToggleButton("");
 		updateFileArchiveToggleButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		updateFileArchiveToggleButton.setSelected(true);
-		updateFileArchiveToggleButton.setBackground(Color.LIGHT_GRAY);
+		
 		
 		refreshServiceButton = new MyHoverButton("Refresh service");
 		
@@ -140,6 +143,8 @@ public class TabUpdateReport extends TabSuperClass {
 		
 		lblProjectFolderIn = new JLabel("Project folder in repositories");
 		lblProjectFolderIn.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		btnNewButton = new JButton("Params");
 		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
@@ -168,7 +173,10 @@ public class TabUpdateReport extends TabSuperClass {
 								.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
 								.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
 								.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 429, GroupLayout.PREFERRED_SIZE)
-								.addComponent(inputNewValuesButton, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+								.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+									.addComponent(btnNewButton)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(inputNewValuesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 						.addComponent(foldersProjectComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblProjectFolderIn, GroupLayout.PREFERRED_SIZE, 268, GroupLayout.PREFERRED_SIZE))
 					.addGap(24))
@@ -191,7 +199,9 @@ public class TabUpdateReport extends TabSuperClass {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 							.addGap(36)
-							.addComponent(inputNewValuesButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
+							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(inputNewValuesButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnNewButton)))
 						.addComponent(updateDataBaseToggleButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(gl_panel.createSequentialGroup()
@@ -213,7 +223,7 @@ public class TabUpdateReport extends TabSuperClass {
 						.addGroup(gl_panel.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(ipDataSrcLabel, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(22, Short.MAX_VALUE))
+					.addContainerGap(26, Short.MAX_VALUE))
 		);
 		panel.setLayout(gl_panel);
 		//////////////////Code
@@ -449,29 +459,23 @@ public class TabUpdateReport extends TabSuperClass {
 		String nameReport = nameReportField.getText().trim();
 		if (nameReport.isEmpty()) throw new InfoException("Field name report is empty.");
 	}
-	private void matchCheckingInputValues2() throws Exception {
+	private void matchCheckingRep() throws Exception {
 		if (inputNewValuesReport == null) throw new InfoException("Change at least one report attribute");
 		String newRPT_ID = inputNewValuesReport.getRPT_ID();
 		Integer newCategoryId = inputNewValuesReport.getCategory();
 		String newNameReport = inputNewValuesReport.getNameReport();
 		String newNameFileReport = inputNewValuesReport.getNameFileReport();
 			if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) throw new InfoException("Change at least one report attribute");
-		//
-		if  (newNameReport ==null)	
-		Verification.checkInvalidFilenamesWindows(newNameReport,newNameFileReport);
+		Verification.checkInvalidFields(newNameReport,newNameFileReport,newRPT_ID);
 	}
-	private void matchCheckingNameFile() throws Exception {
-		String nameReport = nameReportField.getText().trim();
-		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
-		String updateNameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
+	private void matchCheckingParam() throws Exception {
 		
-		if (inputNewValuesReport.getNameFileReport() != null) {
-			if (!inputNewValuesReport.getNameFileReport().equals(updateNameFileReport+".rptdesign")) throw new InfoException("The file name of this report does not match the update file");
-		} else {
-			String pathString = ReportRelatedData.getReportFilePath(nameReport, categoryId);
-			String nameFileReport = pathString.replace("/frameset?__report=report/", "");
-				if (!updateNameFileReport.equals(nameFileReport)) throw new InfoException("The file name of this report does not match the update file");
-		}
+	}
+	
+	private void matchCheckingInputValues2() throws Exception {
+		
+		//
+		
 	}
 	private void matchCheckingDataBase() throws Exception {
 		String nameReport = nameReportField.getText().trim();

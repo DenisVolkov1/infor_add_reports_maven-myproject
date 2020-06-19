@@ -31,13 +31,38 @@ public class NewParam extends JDialog {
 	 * Create the dialog.
 	 */
 	public NewParam() {
-		super(MainRunWindow.getInstance(), "New Params");
-		setBounds(100, 100, 652, 300);
+		//super(MainRunWindow.getInstance(), "New Params");
+		super(null,ModalityType.APPLICATION_MODAL);
+		setBounds(100, 100, 652, 288);
 		//setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
-		setVisible(true);
 		settingParamsPanel = new SettingParamsPanel();
-		getContentPane().add(settingParamsPanel);
+		GroupLayout gl_settingParamsPanel = new GroupLayout(settingParamsPanel);
+		gl_settingParamsPanel.setHorizontalGroup(
+			gl_settingParamsPanel.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 615, Short.MAX_VALUE)
+		);
+		gl_settingParamsPanel.setVerticalGroup(
+			gl_settingParamsPanel.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 240, Short.MAX_VALUE)
+		);
+		settingParamsPanel.setLayout(gl_settingParamsPanel);
+		GroupLayout groupLayout = new GroupLayout(getContentPane());
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(9)
+					.addComponent(settingParamsPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGap(8))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(5)
+					.addComponent(settingParamsPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+		getContentPane().setLayout(groupLayout);
 		
 		this.addWindowListener(new WindowAdapter() {
 			@Override
@@ -49,6 +74,9 @@ public class NewParam extends JDialog {
 			}
 		
 		});
+		//pack();
+		setBounds(100, 100, 652, 300);
+		setVisible(true);
 	}
 
 	public SettingParamsPanel getSettingParamsPanel() {

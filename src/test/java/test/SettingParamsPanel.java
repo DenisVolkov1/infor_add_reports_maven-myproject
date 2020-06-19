@@ -1,4 +1,4 @@
-package windows.param;
+package test;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -14,6 +14,8 @@ import javax.swing.border.EtchedBorder;
 
 import util.MyHoverButton;
 import util.Params;
+import windows.param.JButtonContentsDialog;
+import windows.param.ParamFromParamsPanel;
 
 import java.awt.Rectangle;
 import javax.swing.SwingConstants;
@@ -54,9 +56,9 @@ public class SettingParamsPanel extends JPanel {
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
 		panelGrid = new JPanel();
-		panelGrid.setBounds(7, 47, 515, 2);
+		panelGrid.setBounds(7, 47, 515, 30);
 	    gbl_panelGrid = new GridBagLayout();
-		gbl_panelGrid.columnWidths = new int[] {150, 157, 115, 40, 40};
+		gbl_panelGrid.columnWidths = new int[] {140, 140, 115, 40, 40};
 		gbl_panelGrid.rowHeights = new int[] {30, 0};
 		gbl_panelGrid.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 		gbl_panelGrid.rowWeights = new double[]{0.0, 4.9E-324};
@@ -72,7 +74,7 @@ public class SettingParamsPanel extends JPanel {
 		header.setBounds(7, 12, 515, 30);
 		
 		GridBagLayout gbl_header = new GridBagLayout();
-		gbl_header.columnWidths = new int[] {150, 157, 115, 40, 40};
+		gbl_header.columnWidths = new int[] {130, 130, 115, 40, 40};
 		gbl_header.rowHeights = new int[]{30, 0};
 		gbl_header.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 		gbl_header.rowWeights = new double[]{0.0, Double.MIN_VALUE};
