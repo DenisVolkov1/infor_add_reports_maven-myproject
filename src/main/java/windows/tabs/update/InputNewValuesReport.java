@@ -54,8 +54,7 @@ public class InputNewValuesReport extends JDialog {
 	private JTextField RPT_IDField;
 	private JTextField nameReportField;
 	private JTextField fileNameField;
-	private SettingParamsPanel settingParamsPanel;
-																		
+												
 	private JLabel RPT_IDLabel;
 	private JLabel categoryLabel;
 	private JLabel nameReportLabel;
@@ -68,18 +67,17 @@ public class InputNewValuesReport extends JDialog {
 	private JLabel lblPath;
 	private JPanel panel;
 	//
-	private String nameReport;
-	private Integer categoryId;
+	private String nameReportInput;
+	private Integer categoryIdInput;
 	//
-	private Integer startHeight = 210;
 	
 	public InputNewValuesReport(String nameReport, Integer categoryId) throws Exception {
 		super(MainRunWindow.getInstance(), "Input values");
-		this.nameReport = nameReport;
-		this.categoryId = categoryId;
+		this.nameReportInput = nameReport;
+		this.categoryIdInput = categoryId;
 		
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setBounds(100, 100, 757, startHeight);
+		setBounds(100, 100, 751, 200);
 		Point p = MainRunWindow.getInstance().getLocation();
 		p.setLocation(p.getX(), p.getY()+100);
 		this.setLocation(p);
@@ -287,31 +285,22 @@ public class InputNewValuesReport extends JDialog {
 		gbc_fileNameField.gridx = 2;
 		gbc_fileNameField.gridy = 4;
 		panel.add(fileNameField, gbc_fileNameField);
-		
-		settingParamsPanel = new SettingParamsPanel();
-		settingParamsPanel.setVisible(false);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(5)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(settingParamsPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 726, Short.MAX_VALUE)
-						.addComponent(panel, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(5))
+					.addGap(4)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(5)
+					.addGap(3)
 					.addComponent(panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(5)
-					.addComponent(settingParamsPanel, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
-					.addGap(5))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		getContentPane().setLayout(groupLayout);
-		
-		
 		//////////////////Code
 		/////////////
 		primaryInit();
@@ -320,7 +309,6 @@ public class InputNewValuesReport extends JDialog {
 		setVisible(true);
 	}
 	private void primaryInit() throws Exception {
-		if (ParamsRelatedData.isExistTableParams()) settingParamsPanel.setVisible(true);
 		Vector<CategoryAndCode> listCategoryAndCodes = new Vector( new TabSuperClass().listCategoryAndCodes);
 		listCategoryAndCodes.add(0, new CategoryAndCode(null, "<Old value>"));
 		final DefaultComboBoxModel<String> model = new DefaultComboBoxModel(listCategoryAndCodes);
@@ -334,20 +322,12 @@ public class InputNewValuesReport extends JDialog {
 			}
 		});
 		// set data from report 
-			String[] reportFields = ReportRelatedData.getReportFields(this.nameReport, this.categoryId);
+			String[] reportFields = ReportRelatedData.getReportFields(this.nameReportInput, this.categoryIdInput);
 				RPT_IDLabel.setText(reportFields    [0]);
 				categoryLabel.setText(reportFields  [1]);
 				nameReportLabel.setText(reportFields[2]);
 				fileNameLabel.setText(reportFields  [3]);
-		// set params
-		if (ParamsRelatedData.isExistTableParams()) {
-			Vector<ParamFromDataBase> params = ParamsRelatedData.getListOfParam(reportFields[0]);
-			int plusHeight = params.size() * 34;
-			setBounds(100, 100, 757, startHeight + 50 + plusHeight);
-			settingParamsPanel.addlistParams(params);
-		}
 	
-		
 			for (Component c : panel.getComponents()) {
 				if (c instanceof JTextField) {
 					final JTextField textField = (JTextField) c;
@@ -364,9 +344,7 @@ public class InputNewValuesReport extends JDialog {
 				}
 			}
 		
-		
 			this.addWindowListener(new WindowAdapter() {
-				
 				@Override
 				public void windowClosing(WindowEvent e) {
 					
@@ -432,10 +410,12 @@ public class InputNewValuesReport extends JDialog {
 	public JTextField getNameReportField() {
 		return nameReportField;
 	}
+	public String getNameReportInput() {
+		return nameReportInput;
+	}
+	public Integer getCategoryIdInput() {
+		return categoryIdInput;
+	}
 	
-	
-	
-	
-	
-	
+
 }

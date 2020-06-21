@@ -82,10 +82,7 @@ public class ReportRelatedData {
 		} 
 		return resultVector;
 	}
-	/**
-	 * Close object connection after commit.
-	 * 
-	 */
+
 	public static void insertReport(String RPT_ID, String nameReport, int categoryId, String nameFileReport) throws ClassNotFoundException, SQLException {
 		String schema = MyProperties.getProperty("schema");
 		if (!nameFileReport.matches(".*.rptdesign")) {
@@ -231,11 +228,7 @@ public class ReportRelatedData {
 		}
 		return result;
 	}
-	/**
-	 * Close object connection after commit.
-	 * 
-	 * @return - Connection object return for commit transaction. -connection.commit(); 
-	 */
+
 	public static void updateReport(String nameReport, Integer categoryId, String newRPT_ID, Integer newCategoryId, String newNameReport, String newNameFileReport) throws Exception {
 		String schema = MyProperties.getProperty("schema");
 		String RPT_ID = getRPT_ID(nameReport, categoryId);
@@ -263,8 +256,7 @@ public class ReportRelatedData {
 									  +",EDITDATE = getutcdate()"
 									  +"WHERE RPT_ID = '"+RPT_ID+"'";
 		
-		Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
-		connection.setAutoCommit(false);
+		
 		if (newRPT_ID != null || newNameReport != null) {
 			
 			String setJOINKEY12345, setDescription = null;
@@ -288,7 +280,8 @@ public class ReportRelatedData {
 				  					   	     +"AND JOINKEY5 = '"+RPT_ID+"' "
 				  					   	     +"AND TBLNAME = 'PBSRPT_REPORTS' AND LOCALE = 'ru' AND COLUMNNAME = 'RPT_TITLE'";
 			
-			try (Statement statement = connection.createStatement();
+			try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
+					Statement statement = connection.createStatement();
 					PreparedStatement updateRep = connection.prepareStatement(updatePBSRPT_REPORTS);
 					PreparedStatement updateTranslate = connection.prepareStatement(updateTRANSLATIONLIST)) {
 					
@@ -298,7 +291,8 @@ public class ReportRelatedData {
 					connection.setAutoCommit(true);
 			}
 		} else {
-			try (Statement statement = connection.createStatement();
+			try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
+					Statement statement = connection.createStatement();
 					PreparedStatement updateRep = connection.prepareStatement(updatePBSRPT_REPORTS)) {
 					updateRep.execute();
 					connection.commit();

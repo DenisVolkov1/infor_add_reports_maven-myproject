@@ -5,6 +5,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import windows.tabs.add.TabAddReport;
+import windows.tabs.update.TabUpdateReport;
 
 public class TabScrollable extends JScrollPane {
 
@@ -19,6 +20,11 @@ public class TabScrollable extends JScrollPane {
 		if (tabPanel.getClass() == TabAddReport.class) {
 			this.addComponentListener(((TabAddReport)tabPanel).getAdapterNewParams());
 		}
+		if (tabPanel.getClass() == TabUpdateReport.class) {
+			this.addComponentListener(((TabUpdateReport)tabPanel).getAdapterParams());
+		}
+		
+		
 		this.addComponentListener(tabPanel.getCategoriesAdapter());
 		this.addComponentListener(tabPanel.getListProjectsNamesAdapter());
 		setViewportView(tabPanel);

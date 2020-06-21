@@ -32,7 +32,7 @@ import util.parce_rptdesign.ReadXML;
 import war.WarArchive;
 import windows.MainRunWindow;
 import windows.SettingsWindow;
-import windows.param.NewParam;
+import windows.param.ParamsPanel;
 import windows.param.ParamFromParamsPanel;
 import windows.tabs.TabSuperClass;
 
@@ -96,7 +96,7 @@ public class TabAddReport extends TabSuperClass {
 	private JLabel lblNewLabel;
 	private MyHoverButton newParamButton;
 
-	protected NewParam newParam;
+	protected ParamsPanelAdd newParam;
 
 	protected ComponentAdapter adapterNewParams;
 
@@ -356,7 +356,8 @@ public class TabAddReport extends TabSuperClass {
 		});
 		newParamButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 newParam = new NewParam();
+				if (newParam == null) newParam = new ParamsPanelAdd();
+				else newParam.setVisible(true);
 			}
 		});
 		autoInsertCheckBox.addItemListener(new ItemListener() {
@@ -494,7 +495,7 @@ public class TabAddReport extends TabSuperClass {
 							if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
 							}
-							
+							if (isExistTableParams) if (newParam != null) newParam = null;
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addDataBaseToggleButton.isSelected()) {
 						//
@@ -511,6 +512,7 @@ public class TabAddReport extends TabSuperClass {
 							ReportRelatedData.insertReport(RPT_ID, nameReport, categoryId, nameFileReport);
 							if (isExistTableParams) insertParams(RPT_ID);
 						}
+						if (isExistTableParams) if (newParam != null) newParam = null;
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addArchiveToggleButton.isSelected()) {
 						//
@@ -574,7 +576,6 @@ public class TabAddReport extends TabSuperClass {
 	private void matchCheckingInputValueFileName() throws Exception {
 		String newFileNameReport = nameReportFileField.getText().trim();
 		if (newFileNameReport.isEmpty()) throw new InfoException("Field file name report is empty.");
-		if (newFileNameReport.matches(".*'.*")) throw new InfoException("Incorrect character \" ' \"");
 		//
 		Vector<String> listFileNameReport = null;
 		try {
@@ -589,7 +590,7 @@ public class TabAddReport extends TabSuperClass {
 				else throw new ConfirmException();
 			}
 		}
-		Verification.checkInvalidFilenamesWindows(newFileNameReport);
+		Verification.checkInvalidFields(newFileNameReport);
 	}
 	
 	private void matchCheckingProjectComboBox() throws Exception {
