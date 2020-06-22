@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import database.CategoryAndCode;
+import database.ParamsRelatedData;
 import database.ReportRelatedData;
 import exception.ConfirmException;
 import exception.InfoException;
@@ -175,30 +176,27 @@ public class TabDeleteReport extends TabSuperClass {
 		
 		deleteReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Connection connectionForCommit = null;
 				String pathString = null;
 				String nameReport = null;
 				Integer categoryId = null;
 				String nameFileReport = null;
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {
+					matchCheckingDeleteReport();
+					//
+					nameReport = nameReportField.getText().trim();
+					categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
+					if (ParamsRelatedData.isExistTableParams()) {
+						String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, categoryId);
+							ParamsRelatedData.deleteParam(RPT_ID);
+					}
+						ReportRelatedData.deleteReport(nameReport, categoryId);
 					if (deleteFromArchiveCheckBox.isSelected()) {
-						matchCheckingDeleteReport();
 						matchCheckingDeleteReportFromArchive();
 						//
-						nameReport = nameReportField.getText().trim();
-						categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
-						
 						pathString = ReportRelatedData.getReportFilePath(nameReport, categoryId);
 						nameFileReport = (pathString.replace("/frameset?__report=report/", "")).replace(".rptdesign", "");
-							ReportRelatedData.deleteReport(nameReport, categoryId);
 								WarArchive.deleteReportFileFromArchive(nameFileReport);
-					} else {
-						matchCheckingDeleteReport();
-						//
-						nameReport = nameReportField.getText().trim();
-						categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
-							ReportRelatedData.deleteReport(nameReport, categoryId);
 					}
 					DialogWindows.dialogWindowWarning("Successfully delete!");
 				} catch (InfoException ie) {
@@ -208,14 +206,6 @@ public class TabDeleteReport extends TabSuperClass {
 					 	LOg.logToFile(e1);
 				} finally {
 					 setCursor(null);
-						if (connectionForCommit != null) {
-							try {
-								connectionForCommit.close();
-							} catch (SQLException e1) {
-								DialogWindows.dialogWindowError(e1);
-									LOg.logToFile(e1);
-							}
-						}
 				}	
 			}
 		});

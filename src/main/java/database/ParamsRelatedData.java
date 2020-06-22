@@ -215,6 +215,17 @@ public class ParamsRelatedData {
 			connection.commit();
 		} 
 	}
+	public static void deleteParam(String RPT_ID) throws Exception {
+		String schema = MyProperties.getProperty("schema");
+		
+		String deleteALL_PBSRPT_REPORTS_PARAMS = "USE [SCPRD] DELETE FROM ["+schema+"].[PBSRPT_REPORTS_PARAMS] " + 
+				  "WHERE RPT_ID = '"+RPT_ID+"'";
+		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
+				PreparedStatement delPar = connection.prepareStatement(deleteALL_PBSRPT_REPORTS_PARAMS)) {
+			
+			delPar.execute();
+		} 
+	}
 	public static void updateParam(List<? extends Params> listParams, String RPT_ID) throws Exception {
 		String schema = MyProperties.getProperty("schema");
 		
