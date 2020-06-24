@@ -17,6 +17,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
 import util.DialogWindows;
+import util.MyField;
 import util.MyHoverButton;
 import war.WarArchive;
 
@@ -43,11 +44,11 @@ import java.awt.Color;
 public class TabDeleteReport extends TabSuperClass {
 	private static TabDeleteReport TAB_DELETE_REPORT = null;
 	
-	private JTextField nameReportField;
+	private MyField nameReportField;
 	private JComboBox<String> categoriesComboBox;
 	private MyHoverButton deleteReportButton;
 	private JCheckBox deleteFromArchiveCheckBox;
-	private JTextField nameFileTextField;
+	private MyField nameFileTextField;
 	private MyHoverButton deleteFileButton;
 	/**
 	 * Create the panel.
@@ -67,7 +68,7 @@ public class TabDeleteReport extends TabSuperClass {
 		categoriesComboBox.setFont(new Font("Dialog", Font.BOLD, 14));
 		categoriesComboBox.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		
-		nameReportField = new JTextField();
+		nameReportField = new MyField();
 		nameReportField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameReportField.setColumns(10);
 		
@@ -131,7 +132,7 @@ public class TabDeleteReport extends TabSuperClass {
 		
 		deleteFileButton = new MyHoverButton("Delete file");
 		
-		nameFileTextField = new JTextField();
+		nameFileTextField = new MyField();
 		nameFileTextField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameFileTextField.setColumns(10);
 		
@@ -184,7 +185,7 @@ public class TabDeleteReport extends TabSuperClass {
 				try {
 					matchCheckingDeleteReport();
 					//
-					nameReport = nameReportField.getText().trim();
+					nameReport = nameReportField.getTextWithCheck("name report");
 					categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 					if (ParamsRelatedData.isExistTableParams()) {
 						String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, categoryId);
@@ -215,7 +216,7 @@ public class TabDeleteReport extends TabSuperClass {
 				try {
 					matchCheckingDeleteReportFileFromArchive();
 					//
-					String nameFileReport = nameFileTextField.getText().trim();
+					String nameFileReport = nameFileTextField.getTextWithCheck("name file report");
 					WarArchive.deleteReportFileFromArchive(nameFileReport);
 						DialogWindows.dialogWindowWarning("Successfully delete!");
 				} catch (InfoException ie) {
@@ -232,8 +233,7 @@ public class TabDeleteReport extends TabSuperClass {
 	private void matchCheckingDeleteReport() throws Exception {
 		if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
 		
-		String nameReport = nameReportField.getText().trim();
-		if (nameReport.isEmpty()) throw new InfoException("Field name report is empty.");
+		String nameReport = nameReportField.getTextWithCheck("name report");
 	
 		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 		Vector<String> listReportStrings = ReportRelatedData.getListOfReportNames(categoryId);
@@ -246,7 +246,7 @@ public class TabDeleteReport extends TabSuperClass {
 		
 	}
 	private void matchCheckingDeleteReportFromArchive() throws Exception {
-		String nameReport = nameReportField.getText().trim();
+		String nameReport = nameReportField.getTextWithCheck("name report");
 		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 		String pathString = ReportRelatedData.getReportFilePath(nameReport, categoryId);
 		//
@@ -259,8 +259,7 @@ public class TabDeleteReport extends TabSuperClass {
 		if(!b) throw new InfoException("A file report absent.");			
 	}
 	private void matchCheckingDeleteReportFileFromArchive() throws Exception {
-		String nameReport = nameFileTextField.getText().trim();
-		if (nameReport.isEmpty()) throw new InfoException("Field file name report is empty.");
+		String nameReport = nameFileTextField.getTextWithCheck("name report");
 		//
 		String nameFileReport = nameReport + ".rptdesign";
 		Vector<String> listFileNameReport = WarArchive.getListOfReportFilesNames();

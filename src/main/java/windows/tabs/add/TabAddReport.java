@@ -22,11 +22,12 @@ import exception.InfoException;
 import files_repository.FilesRepository;
 import log.LOg;
 import util.DialogWindows;
+import util.ListCellRendererCategory;
+import util.MyField;
 import util.MyHoverButton;
 import util.MyHoverToggleButton;
 import util.MyProperties;
 import util.Util;
-import util.Verification;
 import util.parce_rptdesign.ParamFromRptDesign;
 import util.parce_rptdesign.ReadXML;
 import war.WarArchive;
@@ -74,10 +75,13 @@ public class TabAddReport extends TabSuperClass {
 	
 	private static TabAddReport TAB_ADD_REPORT = null;
 	
-	private JTextField nameReportField;
+	private MyField nameReportField;
+	private MyField RPT_IDField;
+	private MyField nameReportFileField;
+	
 	private JFileChooser fileChooser;
 	private JLabel fileReportLabel;
-	private JComboBox<String> categoriesComboBox;
+	private JComboBox<CategoryAndCode> categoriesComboBox;
 	private JButton fileReportButton;
 	private JButton addReportButton;
 	private JButton refreshServiceButton;
@@ -87,10 +91,8 @@ public class TabAddReport extends TabSuperClass {
 	private JLabel nameReportLabel;
 	private JLabel nameFileReportLabel;
 	private JLabel nameFileReportLabelTF;
-	private JTextField nameReportFileField;
 	private JLabel ipDataSrcLabel;
 	private JLabel rptIdLabel;
-	private JTextField RPT_IDField;
 	private JCheckBox autoInsertCheckBox;
 	private JComboBox<String> foldersProjectComboBox;
 	private JLabel lblNewLabel;
@@ -114,11 +116,11 @@ public class TabAddReport extends TabSuperClass {
 		add(addReportPanel);
 		setPreferredSize(new Dimension(560, 418));
 
-		nameReportField = new JTextField();
+		nameReportField = new MyField();
 		nameReportField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameReportField.setColumns(10);
 
-		categoriesComboBox = new JComboBox<String>();
+		categoriesComboBox = new JComboBox<CategoryAndCode>(listCategoryAndCodes);
 		categoriesComboBox.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		categoriesComboBox.setInheritsPopupMenu(true);
 		categoriesComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -152,7 +154,7 @@ public class TabAddReport extends TabSuperClass {
 		nameFileReportLabelTF = new JLabel("Name file report");
 		nameFileReportLabelTF.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		nameReportFileField = new JTextField();
+		nameReportFileField = new MyField();
 		nameReportFileField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameReportFileField.setColumns(10);
 		
@@ -164,7 +166,7 @@ public class TabAddReport extends TabSuperClass {
 		rptIdLabel = new JLabel("RPT_ID");
 		rptIdLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		RPT_IDField = new JTextField();
+		RPT_IDField = new MyField();
 		RPT_IDField.setText("Auto");
 	
 		RPT_IDField.setHorizontalAlignment(SwingConstants.CENTER);
@@ -303,6 +305,7 @@ public class TabAddReport extends TabSuperClass {
 		newParamButton.setVisible(false);
 		RPT_IDField.setEnabled(false);
 		RPT_IDField.setEditable(false);
+		
 		if (!SettingsWindow.enableAddToRepositoriesGetSaveSelected()) foldersProjectComboBox.setEnabled(false);
 		
 		fileChooser = new JFileChooser();
@@ -311,8 +314,12 @@ public class TabAddReport extends TabSuperClass {
 		fileChooser.setFileFilter(filter);
 		refreshServiceButton.addActionListener(refreshService);
 		
-		final DefaultComboBoxModel<String> model = new DefaultComboBoxModel(listCategoryAndCodes);
-		categoriesComboBox.setModel(model);
+		//final DefaultComboBoxModel<CategoryAndCode> model = new DefaultComboBoxModel(listCategoryAndCodes);
+		final ListCellRendererCategory l = new ListCellRendererCategory(); 
+		//categoriesComboBox.setModel(model);
+		categoriesComboBox.setRenderer(l);
+		
+		
 		final DefaultComboBoxModel<String> model2 = new DefaultComboBoxModel(listNamesFoldersProject);
 		foldersProjectComboBox.setModel(model2);
 		
@@ -335,7 +342,6 @@ public class TabAddReport extends TabSuperClass {
 					DialogWindows.dialogWindowError(e1);
 						LOg.logToFile(e1);
 				}
-			
 			}
 		};
 		fileReportButton.addActionListener(new ActionListener() {
@@ -346,7 +352,7 @@ public class TabAddReport extends TabSuperClass {
 					if (result == JFileChooser.APPROVE_OPTION) {
 						fileReportLabel.setText(fileChooser.getSelectedFile().getName().replace(".rptdesign",""));
 						ipDataSrcLabel.setText(ReadXML.getIpDataSource(fileChooser.getSelectedFile()));
-						Util.changeColorErrDataSource(ReadXML.getIpDataSource(fileChooser.getSelectedFile()), ipDataSrcLabel);
+							Util.changeColorErrDataSource(ReadXML.getIpDataSource(fileChooser.getSelectedFile()), ipDataSrcLabel);
 					}
 				} catch (Exception e2) {
 					DialogWindows.dialogWindowError(e2);
@@ -356,7 +362,13 @@ public class TabAddReport extends TabSuperClass {
 		});
 		newParamButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (newParam == null) newParam = new ParamsPanelAdd();
+				if (newParam == null)
+					try {
+						newParam = new ParamsPanelAdd();
+					} catch (InfoException e1) {
+						DialogWindows.dialogWindowError(e1);
+						 LOg.logToFile(e1);
+					}
 				else newParam.setVisible(true);
 			}
 		});
@@ -467,6 +479,8 @@ public class TabAddReport extends TabSuperClass {
 				Integer categoryId = null;
 				File selectedFile = null;
 				boolean isExistTableParams = false;
+				List<ParamFromRptDesign> paramsFromDesign = null;
+				List<ParamFromParamsPanel> paramsFromPanel = null;
 				
 				String autoRPT_ID = new DateTime().toString("ddHHmmss");
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -475,19 +489,20 @@ public class TabAddReport extends TabSuperClass {
 					isExistTableParams = ParamsRelatedData.isExistTableParams();
 					if(addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
 						//
-						RPT_ID         = RPT_IDField.getText().trim();
-						nameReport     = nameReportField.getText().trim();
+						RPT_ID         = RPT_IDField.getTextWithCheck("RPT_ID");
+						nameReport     = nameReportField.getTextWithCheck("name report");
 						categoryId     = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 						selectedFile   = fileChooser.getSelectedFile();
 						nameFileReport = selectedFile.toPath().getFileName().toString();
 						nameProgect    = (String)foldersProjectComboBox.getSelectedItem();
+						paramsFromPanel = newParam.getSettingParamsPanel().getlistOfParams();
 						
 						if (autoInsertCheckBox.isSelected()) {
 							ReportRelatedData.insertReport(autoRPT_ID, nameReport, categoryId, nameFileReport);
-							if (isExistTableParams) insertParams(autoRPT_ID,selectedFile);
+							if (isExistTableParams && newParam != null) ParamsRelatedData.insertParam(paramsFromPanel, autoRPT_ID);
 						} else {
 							ReportRelatedData.insertReport(RPT_ID, nameReport, categoryId, nameFileReport);
-							if (isExistTableParams) insertParams(RPT_ID,selectedFile);
+							if (isExistTableParams && newParam != null) ParamsRelatedData.insertParam(paramsFromPanel, autoRPT_ID);
 						}
 						
 						WarArchive.createBackup(selectedFile);
@@ -495,36 +510,41 @@ public class TabAddReport extends TabSuperClass {
 							if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
 							}
-							if (isExistTableParams) if (newParam != null) newParam = null;
+							if (newParam != null) newParam = null;
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addDataBaseToggleButton.isSelected()) {
 						//
-						RPT_ID         = RPT_IDField.getText().trim();
-						nameReport     = nameReportField.getText().trim();
+						RPT_ID         = RPT_IDField.getTextWithCheck("RPT_ID");
+						nameReport     = nameReportField.getTextWithCheck("name report");
+						nameFileReport = nameReportFileField.getTextWithCheck("name file report");
 						categoryId     = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
-						nameFileReport = nameReportFileField.getText().trim();
+						paramsFromPanel = newParam.getSettingParamsPanel().getlistOfParams();
 						//
 						if (autoInsertCheckBox.isSelected()) {
 							ReportRelatedData.insertReport(autoRPT_ID, nameReport, categoryId, nameFileReport);
-							if (isExistTableParams) insertParams(autoRPT_ID);
+							if (isExistTableParams && newParam != null) ParamsRelatedData.insertParam(paramsFromPanel, autoRPT_ID);
 						
 						} else {
 							ReportRelatedData.insertReport(RPT_ID, nameReport, categoryId, nameFileReport);
-							if (isExistTableParams) insertParams(RPT_ID);
+							if (isExistTableParams && newParam != null) ParamsRelatedData.insertParam(paramsFromPanel, RPT_ID);
 						}
-						if (isExistTableParams) if (newParam != null) newParam = null;
+						if (newParam != null) newParam = null;
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addArchiveToggleButton.isSelected()) {
-						//
+						RPT_ID         = RPT_IDField.getTextWithCheck("RPT_ID");
 						selectedFile = fileChooser.getSelectedFile();
 						nameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
 						Vector<String> reportNames = ReportRelatedData.getListOfReportNames(nameFileReport);
+						paramsFromDesign = ReadXML.getListOfParamsFromRptDesign(selectedFile);
+						//
 						String names = "";
 							for (String name : reportNames) names += name+"\r\n"; 
 							
+						ParamsRelatedData.insertParam(paramsFromDesign, RPT_ID);	
 						 WarArchive.createBackup(selectedFile);
 						 	WarArchive.addOrUpdateReportFileInArchive(selectedFile);
 						 		DialogWindows.dialogWindowWarning("Report file successfully added! For report(s):\r\n\n"+names);
+						 		
 					} else DialogWindows.dialogWindowWarning("No one toggle button is pressed!");
 					//
 				} catch (InfoException ie) {
@@ -540,18 +560,7 @@ public class TabAddReport extends TabSuperClass {
 			}	
 		});
 	}
-	private void insertParams(String RPT_ID, File selectedFile) throws Exception {
-		List<ParamFromRptDesign> params = ReadXML.getListOfParamsFromRptDesign(selectedFile);
-		if (params.size() == 0) return;
-		ParamsRelatedData.insertParam(params, RPT_ID);
-		
-	}
-	private void insertParams(String RPT_ID) throws Exception {
-		if (newParam == null) return;
-		List<ParamFromParamsPanel> params = newParam.getSettingParamsPanel().getlistOfParams();
-		if (params.size() == 0) return;
-		ParamsRelatedData.insertParam(params, RPT_ID);
-	}
+
 	private void matchCheckingValidInputData() throws Exception {
 		if (addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
 			if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
@@ -560,22 +569,19 @@ public class TabAddReport extends TabSuperClass {
 				String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
 					FilesRepository.isNotExistFolderReport(nameReport, nameProgect);
 			}
-			matchCheckingInputValues();
+			if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
 			matchCheckingDataBase();
-			WarArchive.checkPathArchive();
 				matchCheckingArchive();
 		} else if (addDataBaseToggleButton.isSelected()) {
-			matchCheckingInputValues();
+			if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
 			matchCheckingInputValueFileName();
-			matchCheckingDataBase();
+				matchCheckingDataBase();
 		} else if (addArchiveToggleButton.isSelected()) {
-			WarArchive.checkPathArchive();
 			matchCheckingArchive();
 		}
 	}
 	private void matchCheckingInputValueFileName() throws Exception {
-		String newFileNameReport = nameReportFileField.getText().trim();
-		if (newFileNameReport.isEmpty()) throw new InfoException("Field file name report is empty.");
+		String newFileNameReport = nameReportFileField.getTextWithCheck("name file report");
 		//
 		Vector<String> listFileNameReport = null;
 		try {
@@ -590,7 +596,6 @@ public class TabAddReport extends TabSuperClass {
 				else throw new ConfirmException();
 			}
 		}
-		Verification.checkInvalidFields(newFileNameReport);
 	}
 	
 	private void matchCheckingProjectComboBox() throws Exception {
@@ -598,30 +603,9 @@ public class TabAddReport extends TabSuperClass {
 			if (foldersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
 		}
 	}
-	private void matchCheckingInputValues() throws Exception {
-		if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
-		//
-		String RPT_ID = RPT_IDField.getText().trim();
-		if (RPT_ID.isEmpty()) throw new InfoException("Field RPT_ID is empty.");
-		Verification.checkInvalidChar(RPT_ID);
-		//
-		String nameNewReport = nameReportField.getText().trim();
-		if (nameNewReport.isEmpty()) throw new InfoException("Field name report is empty.");
-		
-			Verification.checkInvalidFields(nameNewReport);
-		if (newParam!= null) {
-			List<ParamFromParamsPanel> params = newParam.getSettingParamsPanel().getlistOfParams();
-			if (params.size() != 0) {
-				for (ParamFromParamsPanel pfpp : params) {
-					if (pfpp.getPARAM_NAME().trim().length() == 0) throw new InfoException("One or more field 'Param name' empty.");
-					if (pfpp.getPARAM_LABEL().trim().length() == 0) throw new InfoException("One or more field 'Param label' empty.");
-						Verification.checkInvalidChar(pfpp.getPARAM_LABEL(), pfpp.getPARAM_NAME());
-				}
-			}
-		}
-	}
+
 	private void matchCheckingDataBase() throws Exception {
-		String nameNewReport = nameReportField.getText().trim();
+		String nameNewReport = nameReportField.getTextWithCheck("name report");
 		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 		Vector<String> listReportStrings;
 		listReportStrings = ReportRelatedData.getListOfReportNamesAndTranslation(categoryId);
@@ -630,6 +614,7 @@ public class TabAddReport extends TabSuperClass {
 		}			
 	}
 	private void matchCheckingArchive() throws Exception {
+		WarArchive.checkPathArchive();
 		if (fileChooser.getSelectedFile() == null) throw new InfoException("Select report file.");
 			if (!fileChooser.getSelectedFile().exists()) throw new InfoException("File not found.");
 		

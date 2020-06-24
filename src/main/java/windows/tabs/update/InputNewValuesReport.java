@@ -10,50 +10,37 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.Dialog.ModalityType;
-
 import javax.swing.border.EtchedBorder;
 
 import database.CategoryAndCode;
-import database.ParamFromDataBase;
-import database.ParamsRelatedData;
 import database.ReportRelatedData;
 import exception.InfoException;
-import log.LOg;
-
 import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import java.awt.Font;
-import util.DialogWindows;
-import util.Verification;
+import util.MyField;
 import windows.MainRunWindow;
-import windows.param.SettingParamsPanel;
 import windows.tabs.TabSuperClass;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 import java.awt.Cursor;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.FlowLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class InputNewValuesReport extends JDialog {
 
-	private JTextField RPT_IDField;
-	private JTextField nameReportField;
-	private JTextField fileNameField;
+	private MyField RPT_IDField;
+	private MyField nameReportField;
+	private MyField fileNameField;
 												
 	private JLabel RPT_IDLabel;
 	private JLabel categoryLabel;
@@ -67,14 +54,14 @@ public class InputNewValuesReport extends JDialog {
 	private JLabel lblPath;
 	private JPanel panel;
 	//
-	private String nameReportInput;
-	private Integer categoryIdInput;
+	private String previousNameReport;
+	private Integer previousCategoryId;
 	//
 	
 	public InputNewValuesReport(String nameReport, Integer categoryId) throws Exception {
 		super(MainRunWindow.getInstance(), "Input values");
-		this.nameReportInput = nameReport;
-		this.categoryIdInput = categoryId;
+		this.previousNameReport = nameReport;
+		this.previousCategoryId = categoryId;
 		
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setBounds(100, 100, 751, 200);
@@ -150,7 +137,7 @@ public class InputNewValuesReport extends JDialog {
 		gbc_RPT_IDLabel.gridy = 1;
 		panel.add(RPT_IDLabel, gbc_RPT_IDLabel);
 		
-		RPT_IDField = new JTextField();
+		RPT_IDField = new MyField();
 		RPT_IDField.setFocusable(false);
 
 			RPT_IDField.setBackground(Color.LIGHT_GRAY);
@@ -229,7 +216,7 @@ public class InputNewValuesReport extends JDialog {
 		gbc_nameReportLabel.gridy = 3;
 		panel.add(nameReportLabel, gbc_nameReportLabel);
 		
-		nameReportField = new JTextField();
+		nameReportField = new MyField();
 		nameReportField.setFocusable(false);
 		nameReportField.setFocusTraversalKeysEnabled(false);
 		nameReportField.setText("<Old value>");
@@ -270,7 +257,7 @@ public class InputNewValuesReport extends JDialog {
 		gbc_fileNameLabel.gridy = 4;
 		panel.add(fileNameLabel, gbc_fileNameLabel);
 		
-		fileNameField = new JTextField();
+		fileNameField = new MyField();
 		fileNameField.setFocusable(false);
 		fileNameField.setFocusTraversalKeysEnabled(false);
 		fileNameField.setBackground(Color.LIGHT_GRAY);
@@ -322,7 +309,7 @@ public class InputNewValuesReport extends JDialog {
 			}
 		});
 		// set data from report 
-			String[] reportFields = ReportRelatedData.getReportFields(this.nameReportInput, this.categoryIdInput);
+			String[] reportFields = ReportRelatedData.getReportFields(this.previousNameReport, this.previousCategoryId);
 				RPT_IDLabel.setText(reportFields    [0]);
 				categoryLabel.setText(reportFields  [1]);
 				nameReportLabel.setText(reportFields[2]);
@@ -343,7 +330,10 @@ public class InputNewValuesReport extends JDialog {
 					});
 				}
 			}
-		
+			final String newRPT_ID = getRPT_ID();
+			final Integer newCategoryId = getCategory();
+			final String newNameReport = getNameReport();
+			final String newNameFileReport = getNameFileReport();
 			this.addWindowListener(new WindowAdapter() {
 				@Override
 				public void windowClosing(WindowEvent e) {
@@ -363,12 +353,9 @@ public class InputNewValuesReport extends JDialog {
 							}
 						}
 					}
-					String newRPT_ID = getRPT_ID();
-					Integer newCategoryId = getCategory();
-					String newNameReport = getNameReport();
-					String newNameFileReport = getNameFileReport();
-						if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) TabUpdateReport.getInstance().getInputNewValuesButton().setEmptyHover();
-						else TabUpdateReport.getInstance().getInputNewValuesButton().setStandartHover();
+			
+					if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) TabUpdateReport.getInstance().getInputNewValuesButton().setEmptyHover();
+					else TabUpdateReport.getInstance().getInputNewValuesButton().setStandartHover();
 				}
 			});
 	}
@@ -377,24 +364,27 @@ public class InputNewValuesReport extends JDialog {
 	}
 	/**
 	 * @return - if null means don`t update this value
+	 * @throws InfoException 
 	 * */
-	public String getRPT_ID() {
+	public String getRPT_ID() throws InfoException {
 		if (RPT_IDField.getBackground() == Color.LIGHT_GRAY && RPT_IDField.getText().trim().equals("<Old value>")) return null;
-		return RPT_IDField.getText().trim();
+		return RPT_IDField.getTextWithCheck("RPT_ID");
 	}
 	/**
 	 * @return - if null means don`t update this value
+	 * @throws InfoException 
 	 * */
-	public String getNameReport() {
+	public String getNameReport() throws InfoException {
 		if (nameReportField.getBackground() == Color.LIGHT_GRAY && nameReportField.getText().trim().equals("<Old value>")) return null;
-		return nameReportField.getText().trim();
+		return nameReportField.getTextWithCheck("name report");
 	}
 	/**
 	 * @return - if null means don`t update this value
+	 * @throws InfoException 
 	 * */
-	public String getNameFileReport() {
+	public String getNameFileReport() throws InfoException {
 		if (fileNameField.getBackground() == Color.LIGHT_GRAY && fileNameField.getText().trim().equals("<Old value>")) return null;
-		return fileNameField.getText().trim();
+		return fileNameField.getTextWithCheck("file name report");
 	}
 	/**
 	 * @return - if null means don`t update this value
@@ -410,11 +400,11 @@ public class InputNewValuesReport extends JDialog {
 	public JTextField getNameReportField() {
 		return nameReportField;
 	}
-	public String getNameReportInput() {
-		return nameReportInput;
+	public String getPreviousNameReport() {
+		return previousNameReport;
 	}
-	public Integer getCategoryIdInput() {
-		return categoryIdInput;
+	public Integer getPreviousCategoryId() {
+		return previousCategoryId;
 	}
 	
 

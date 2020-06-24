@@ -1,22 +1,32 @@
 package windows.tabs.add;
 
+import java.awt.Dialog.ModalityType;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import exception.InfoException;
+import windows.MainRunWindow;
 import windows.param.ParamsPanel;
 
 public class ParamsPanelAdd extends ParamsPanel {
 	
-	{
+	public ParamsPanelAdd() throws InfoException {
+
+		final int size = settingParamsPanel.getlistOfParams().size();
+		
 		setBounds(100, 100, 652, 288);
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int size = settingParamsPanel.getlistOfParams().size();
-				if(size != 0) TabAddReport.getInstance().getNewParamButton().setStandartHover();
+				
+				if (size != 0) TabAddReport.getInstance().getNewParamButton().setStandartHover();
 				else TabAddReport.getInstance().getNewParamButton().setEmptyHover();
 			}
 		});
 	}
+	
+	
+	
+
 
 }

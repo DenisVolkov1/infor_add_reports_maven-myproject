@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import database.ParamFromDataBase;
 import database.ParamsRelatedData;
+import exception.InfoException;
 import windows.param.ParamFromParamsPanel;
 import windows.param.ParamsPanel;
 
@@ -17,8 +18,8 @@ public class ParamsPanelUpdate extends ParamsPanel {
 	private int startHeight = 88;
 	private String RPT_IDInput;
 	
-	public ParamsPanelUpdate(String RPT_ID) throws ClassNotFoundException, SQLException {
-		super();
+	public ParamsPanelUpdate(String RPT_ID) throws Exception {
+	
 		this.RPT_IDInput = RPT_ID; 
 		setBounds(100, 100, 652, 88);
 		// set params
@@ -26,11 +27,12 @@ public class ParamsPanelUpdate extends ParamsPanel {
 			settingParamsPanel.addlistParams(params);
 		// init params
 			initParams = settingParamsPanel.getlistOfParams();
+			final boolean isChangeParams = isChangeParams();
 			
 			this.addWindowListener(new WindowAdapter() {
 				@Override
 				public void windowClosing(WindowEvent e) {
-					if (isChangeParams()) TabUpdateReport.getInstance().getParamsButton().setStandartHover();
+					if (isChangeParams) TabUpdateReport.getInstance().getParamsButton().setStandartHover();
 					else TabUpdateReport.getInstance().getParamsButton().setEmptyHover();
 				}
 			});
@@ -44,10 +46,8 @@ public class ParamsPanelUpdate extends ParamsPanel {
 		return initParams;
 	}
 	
-	public boolean isChangeParams() {
-		
+	public boolean isChangeParams() throws InfoException {
 		return !initParams.equals(settingParamsPanel.getlistOfParams());
-		
 	}
 
 	public String getRPT_IDInput() {

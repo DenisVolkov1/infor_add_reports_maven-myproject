@@ -40,7 +40,6 @@ public class ParamsRelatedData {
 		if(PARAM_CONTENTS == null) PARAM_CONTENTS = "NULL";
 		else {
 			PARAM_CONTENTS_TYPE = "'SQL'";
-			PARAM_CONTENTS = "'" +PARAM_CONTENTS.replace("'", "''")+ "'";
 		}
 		
 		String insertPBSRPT_REPORTS_PARAMS = ""
@@ -124,6 +123,7 @@ public class ParamsRelatedData {
 	}
 	
 	public static void insertParam(List<? extends Params> listParams, String RPT_ID) throws Exception {
+		if (listParams.size() == 0) return;
 		
 		String schema = MyProperties.getProperty("schema");
 		String PARAM_CONTENTS_TYPE = "NULL";
@@ -166,7 +166,6 @@ public class ParamsRelatedData {
 				  }
 				  else {
 					  PARAM_CONTENTS_TYPE = "'SQL'";
-					  PARAM_CONTENTS = "'" +PARAM_CONTENTS.replace("'", "''")+ "'";
 				 }
 			     values.append("("+
 			        "  '"+RPT_ID+"',         "+
@@ -273,7 +272,6 @@ public class ParamsRelatedData {
 					  }
 					  else {
 						  PARAM_CONTENTS_TYPE = "'SQL'";
-						  PARAM_CONTENTS = "'" +PARAM_CONTENTS.replace("'", "''")+ "'";
 					 }
 				     values.append("("+
 				        "  '"+RPT_ID+"',         "+

@@ -29,25 +29,20 @@ import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JTextField;
-
 import util.DialogWindows;
+import util.MyField;
 import util.MyHoverButton;
 import util.MyHoverToggleButton;
 import util.Util;
-import util.Verification;
 import util.parce_rptdesign.ReadXML;
 import war.WarArchive;
 import windows.MainRunWindow;
 import windows.SettingsWindow;
 import windows.param.ParamFromParamsPanel;
-import windows.param.ParamsPanel;
 import windows.tabs.TabSuperClass;
 
 import javax.swing.JComboBox;
@@ -56,7 +51,6 @@ import javax.swing.JFileChooser;
 import java.awt.ComponentOrientation;
 import java.awt.Cursor;
 
-import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Dimension;
 import javax.swing.JToggleButton;
@@ -64,7 +58,9 @@ import javax.swing.JToggleButton;
 public class TabUpdateReport extends TabSuperClass {
 	private static TabUpdateReport TAB_UPDADE_REPORT = null;
 	private static InputNewValuesReport inputNewValuesReport = null;
-	private JTextField nameReportField;
+	
+	private MyField nameReportField;
+	
 	private JComboBox<String> categoriesComboBox;
 	private MyHoverButton updateReportButton;
 	private MyHoverToggleButton updateDataBaseToggleButton;
@@ -99,7 +95,7 @@ public class TabUpdateReport extends TabSuperClass {
 		categoryLabel = new JLabel("Category");
 		categoryLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		nameReportField = new JTextField();
+		nameReportField = new MyField();
 		nameReportField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameReportField.setColumns(10);
 		
@@ -305,9 +301,9 @@ public class TabUpdateReport extends TabSuperClass {
 			public void actionPerformed(ActionEvent e) {
 				try {	
 					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					matchCheckingInputValues1();
+					if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
 					matchCheckingDataBase();
-					String nameReport = nameReportField.getText().trim();
+					String nameReport = nameReportField.getTextWithCheck("name field");
 					Integer categoryId = ((CategoryAndCode)categoriesComboBox.getSelectedItem()).getCategoryId();
 					String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, categoryId);
 					//
@@ -333,15 +329,15 @@ public class TabUpdateReport extends TabSuperClass {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					matchCheckingInputValues1();
+					
 					matchCheckingDataBase();
-					String nameReport = nameReportField.getText().trim();
+					String nameReport = nameReportField.getTextWithCheck("name field");
 					Integer categoryId = ((CategoryAndCode)categoriesComboBox.getSelectedItem()).getCategoryId();
 					//
 					if (inputNewValuesReport != null) {
-						String previousNameRep = inputNewValuesReport.getNameReportInput();
-						Integer previousCatId = inputNewValuesReport.getCategoryIdInput();
-						if (previousNameRep.equals(nameReport) && previousCatId.equals(categoryId)) {
+						String prevNameRep = inputNewValuesReport.getPreviousNameReport();
+						Integer prevCatId = inputNewValuesReport.getPreviousCategoryId();
+						if (prevNameRep.equals(nameReport) && prevCatId.equals(categoryId)) {
 							inputNewValuesReport.setVisible(true);
 						} else inputNewValuesReport = new InputNewValuesReport(nameReport, categoryId);
 						
@@ -367,7 +363,7 @@ public class TabUpdateReport extends TabSuperClass {
 				try {
 					matchCheckingValidInputData();
 					if (updateDataBaseToggleButton.isSelected()) {
-						nameReport = nameReportField.getText().trim();
+						nameReport = nameReportField.getTextWithCheck("name field");
 						categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 						//
 						if (ParamsRelatedData.isExistTableParams()) {
@@ -504,11 +500,10 @@ public class TabUpdateReport extends TabSuperClass {
 		}
 	}
 	private void matchCheckingValidInputData() throws Exception {
-
 		if (updateDataBaseToggleButton.isSelected()) {
-			matchCheckingInputValues1();
+			if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
 			matchCheckingDataBase();
-			matchCheckingInputValues2();
+			matchCheckingInputValues();
 		} else if (updateFileArchiveToggleButton.isSelected()) {
 			if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 				matchCheckingProjectComboBox();
@@ -537,24 +532,19 @@ public class TabUpdateReport extends TabSuperClass {
 			throw new InfoException("There is more than one report for this file.\n" + s);
 		}
 	}
-	private void matchCheckingInputValues1() throws Exception {
-		if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
-		String nameReport = nameReportField.getText().trim();
-		if (nameReport.isEmpty()) throw new InfoException("Field name report is empty.");
-	}
+
 	private boolean isChangeRepAttr() throws InfoException {
 		if (inputNewValuesReport != null) {
 			String newRPT_ID = inputNewValuesReport.getRPT_ID();
 			Integer newCategoryId = inputNewValuesReport.getCategory();
 			String newNameReport = inputNewValuesReport.getNameReport();
 			String newNameFileReport = inputNewValuesReport.getNameFileReport();
-				Verification.checkInvalidFields(newNameReport,newNameFileReport,newRPT_ID);
 				if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) {
 					return false;
 				} else return true;
 		} else return false;		
 	}
-	private void matchCheckingInputValues2() throws Exception {
+	private void matchCheckingInputValues() throws Exception {
 		if (ParamsRelatedData.isExistTableParams()) {
 			if (inputNewValuesReport == null && params == null) {
 				throw new InfoException("Change at least one report attribute or param");
@@ -570,20 +560,11 @@ public class TabUpdateReport extends TabSuperClass {
 		}
 	}
 	private boolean isChangeParams() throws InfoException {
-		if (params != null) {	
-			List<ParamFromParamsPanel> paramList = params.getSettingParamsPanel().getlistOfParams();
-			if (paramList.size() != 0) {
-				for (ParamFromParamsPanel pfpp : paramList) {
-					if (pfpp.getPARAM_NAME().trim().length() == 0) throw new InfoException("One or more field 'Param name' empty.");
-					if (pfpp.getPARAM_LABEL().trim().length() == 0) throw new InfoException("One or more field 'Param label' empty.");
-						Verification.checkInvalidChar(pfpp.getPARAM_LABEL(), pfpp.getPARAM_NAME());
-				}
-			}	
-			return params.isChangeParams();
-		} else return false;		
+		if (params != null) return params.isChangeParams(); 
+		else return false;		
 	}
 	private void matchCheckingDataBase() throws Exception {
-		String nameReport = nameReportField.getText().trim();
+		String nameReport = nameReportField.getTextWithCheck("name report");
 		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
 		Vector<String> listReportStrings = ReportRelatedData.getListOfReportNames(categoryId);
 			boolean b = false;
