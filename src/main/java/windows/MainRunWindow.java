@@ -35,6 +35,7 @@ import javax.swing.border.EmptyBorder;
 import log.LOg;
 import test.TestMain;
 import util.DialogWindows;
+import util.MyProperties;
 import windows.tabs.TabCategories;
 import windows.tabs.TabConnectionMSSQLServer;
 import windows.tabs.TabDeleteReport;
@@ -66,8 +67,9 @@ public class MainRunWindow extends JFrame {
 	 */
 	public static void main(String[] args) {
 		  try {
-	            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-	            //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			  String slaf = MyProperties.getProperty("windowsTheme");
+			  if (slaf == null) slaf = "javax.swing.plaf.metal.MetalLookAndFeel";
+	            UIManager.setLookAndFeel(slaf.equals("true")?"com.sun.java.swing.plaf.windows.WindowsLookAndFeel":"javax.swing.plaf.metal.MetalLookAndFeel");
 	        } catch (UnsupportedLookAndFeelException ex) {
 	            ex.printStackTrace();
 	        } catch (IllegalAccessException ex) {

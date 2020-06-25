@@ -32,10 +32,13 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JCheckBox;
+import javax.swing.JRadioButton;
 
 public class SettingsWindow extends JDialog {
 
@@ -50,6 +53,8 @@ public class SettingsWindow extends JDialog {
 	private JTextField portField;
 	private JCheckBox enableAddToRepositoriesCheckBox;
 	private JPanel repSettingsPanel;
+	private JRadioButton classicThemeRadioButton;
+	private JRadioButton windowsThemeRadioButton;
 	/**
 	 * Create the dialog.
 	 */
@@ -101,17 +106,26 @@ public class SettingsWindow extends JDialog {
 		enableAddToRepositoriesCheckBox = new JCheckBox("Enable add to Repositories");
 		enableAddToRepositoriesCheckBox.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
+		windowsThemeRadioButton = new JRadioButton("windows theme");
+		windowsThemeRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				classicThemeRadioButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
+					}
+		});
+		
+		classicThemeRadioButton = new JRadioButton("classic theme");
+		
 		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
 		gl_contentPanel.setHorizontalGroup(
-			gl_contentPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_contentPanel.createSequentialGroup()
+			gl_contentPanel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPanel.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_contentPanel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(repSettingsPanel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
-						.addComponent(enableAddToRepositoriesCheckBox, Alignment.LEADING)
-						.addComponent(pathArchiveField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
-						.addComponent(pathArchiveLabel, Alignment.LEADING)
-						.addGroup(Alignment.LEADING, gl_contentPanel.createSequentialGroup()
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(repSettingsPanel, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+						.addComponent(enableAddToRepositoriesCheckBox)
+						.addComponent(pathArchiveField, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+						.addComponent(pathArchiveLabel)
+						.addGroup(gl_contentPanel.createSequentialGroup()
 							.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING, false)
 								.addGroup(gl_contentPanel.createSequentialGroup()
 									.addComponent(lblIpBaseSqlLabel, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
@@ -124,17 +138,26 @@ public class SettingsWindow extends JDialog {
 							.addGap(18)
 							.addComponent(lblPort)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(portField, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(portField, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(classicThemeRadioButton)
+								.addComponent(windowsThemeRadioButton))))
 					.addContainerGap())
 		);
 		gl_contentPanel.setVerticalGroup(
 			gl_contentPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPanel.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(schemaLabel)
-						.addComponent(schemaField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(6)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(schemaLabel)
+								.addComponent(schemaField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(6))
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addComponent(classicThemeRadioButton)
+							.addPreferredGap(ComponentPlacement.RELATED)))
 					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPanel.createSequentialGroup()
 							.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
@@ -144,13 +167,14 @@ public class SettingsWindow extends JDialog {
 							.addComponent(pathArchiveLabel))
 						.addGroup(gl_contentPanel.createParallelGroup(Alignment.TRAILING, false)
 							.addComponent(lblPort, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(portField, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(portField, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(windowsThemeRadioButton)))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(pathArchiveField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(enableAddToRepositoriesCheckBox)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(repSettingsPanel, GroupLayout.PREFERRED_SIZE, 111, Short.MAX_VALUE)
+					.addComponent(repSettingsPanel, GroupLayout.PREFERRED_SIZE, 115, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		
@@ -254,6 +278,7 @@ public class SettingsWindow extends JDialog {
 		setVisible(true);
 	}
 	private void primaryInit() {
+		
 		if (enableAddToRepositoriesGetSaveSelected()) {
 			repSettingsPanel.setVisible(true);
 		} else repSettingsPanel.setVisible(false);
@@ -268,11 +293,26 @@ public class SettingsWindow extends JDialog {
 				}
 			}
 		});	
+		
 		portField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				if (portField.getText().length() >= 4) // limit textfield to 4 characters
 		            e.consume(); 
+			}
+		});
+		windowsThemeRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (windowsThemeRadioButton.isSelected()) {
+					classicThemeRadioButton.setSelected(false);
+				} else classicThemeRadioButton.setSelected(true);
+			}
+		});	
+		classicThemeRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (classicThemeRadioButton.isSelected()) {
+					windowsThemeRadioButton.setSelected(false);
+				} else windowsThemeRadioButton.setSelected(true);
 			}
 		});
 		
@@ -316,7 +356,6 @@ public class SettingsWindow extends JDialog {
 					
 				}
 				
-				
 				String repPathDir = repPathDirField.getText().trim();
 				repPathDir = repPathDir.replace('\\', '/');
 				//Save properties
@@ -328,7 +367,8 @@ public class SettingsWindow extends JDialog {
 						"repPassword", repPasswordField.getText().trim(),
 						"repUsername", repUsernameField.getText().trim(),
 						"repPathDir", repPathDir,
-						"enableAddToRepositories", enableAddToRepositoriesIsSelectedToText()
+						"enableAddToRepositories", enableAddToRepositoriesIsSelectedToText(),
+						"windowsTheme", windowsThemeRadioButton.isSelected()?"true":"false"
 						);
 				DialogWindows.dialogWindowWarning("Save settings");
 			}
@@ -342,6 +382,8 @@ public class SettingsWindow extends JDialog {
 		repUsernameField.setText(MyProperties.getProperty("repUsername"));
 		repPathDirField.setText(MyProperties.getProperty("repPathDir"));
 		enableAddToRepositoriesCheckBox.setSelected(enableAddToRepositoriesGetSaveSelected());
+		classicThemeRadioButton.setSelected(MyProperties.getProperty("windowsTheme").equals("false")?true:false);
+		windowsThemeRadioButton.setSelected(MyProperties.getProperty("windowsTheme").equals("false")?false:true);
 	}
 	private String enableAddToRepositoriesIsSelectedToText() {
 		if (enableAddToRepositoriesCheckBox.isSelected()) return "true";
@@ -352,5 +394,4 @@ public class SettingsWindow extends JDialog {
 		if (saveProp.equals("true")) return true;
 		else return false;
 	}
-	
 }

@@ -80,6 +80,7 @@ public class TabRepositories extends TabSuperClass {
 		nameFileReportLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		fileReportButton = new MyHoverButton("File ...");
+		fileReportButton.setFont(new Font("Dialog", Font.BOLD, 12));
 		
 		nameReportField = new JTextField();
 		nameReportField.setFont(new Font("Dialog", Font.PLAIN, 14));
@@ -89,10 +90,12 @@ public class TabRepositories extends TabSuperClass {
 		nameReportLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		createToRepositoriesButton = new MyHoverButton("File ...");
+		createToRepositoriesButton.setFont(new Font("Dialog", Font.BOLD, 12));
 		
 		createToRepositoriesButton.setText("Create to Repo...");
 		
 		updateToRepositoriesButton = new MyHoverButton("File ...");
+		updateToRepositoriesButton.setFont(new Font("Dialog", Font.BOLD, 12));
 		
 		updateToRepositoriesButton.setText("Update to Repo...");
 		GroupLayout gl_panel = new GroupLayout(panel);

@@ -50,6 +50,7 @@ public class MyProperties {
 			Properties prop = new Properties();
 			java.io.File propFile = new File("config.properties");
 			// Settings default properties to file 'config.properties'
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				prop.setProperty("schema", "wmwhse1");
 				prop.setProperty("pathArchiveWar", "C:\\infor\\sce\\jboss-as-7.2.0.Final\\scprd-reports1\\deployments");
 				prop.setProperty("password", "sql");
@@ -62,7 +63,8 @@ public class MyProperties {
 				prop.setProperty("reportCatalog", "rpt");
 				prop.setProperty("enableAddToRepositories", "false");
 				prop.setProperty("nameServiceReport", "Infor SCE Reports Server scprd-reports1");
-			//
+				prop.setProperty("windowsTheme", "false");
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			
 		    try {
 		    	prop.store(new FileOutputStream(propFile), "defult properties");

@@ -61,6 +61,7 @@ public class TabDeleteReport extends TabSuperClass {
 		add(panel);
 		
 		deleteReportButton = new MyHoverButton("Delete report");
+		deleteReportButton.setFont(new Font("Dialog", Font.BOLD, 12));
 
 		categoriesComboBox = new JComboBox<CategoryAndId>(listCategoryAndCodes);
 		categoriesComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -132,6 +133,7 @@ public class TabDeleteReport extends TabSuperClass {
 		);
 		
 		deleteFileButton = new MyHoverButton("Delete file");
+		deleteFileButton.setFont(new Font("Dialog", Font.BOLD, 12));
 		
 		nameFileTextField = new MyField("name file report");
 		nameFileTextField.setFont(new Font("Dialog", Font.PLAIN, 14));
@@ -148,11 +150,11 @@ public class TabDeleteReport extends TabSuperClass {
 						.addGroup(gl_panel_1.createSequentialGroup()
 							.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
 								.addComponent(deleteFileButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(nameFileTextField, GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE))
+								.addComponent(nameFileTextField, GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE))
 							.addGap(24))
 						.addGroup(gl_panel_1.createSequentialGroup()
 							.addComponent(lblNameFileReport)
-							.addContainerGap(346, Short.MAX_VALUE))))
+							.addContainerGap(366, Short.MAX_VALUE))))
 		);
 		gl_panel_1.setVerticalGroup(
 			gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -162,8 +164,8 @@ public class TabDeleteReport extends TabSuperClass {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(nameFileTextField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 					.addGap(10)
-					.addComponent(deleteFileButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addComponent(deleteFileButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(30, Short.MAX_VALUE))
 		);
 		panel_1.setLayout(gl_panel_1);
 		panel.setLayout(gl_panel);
