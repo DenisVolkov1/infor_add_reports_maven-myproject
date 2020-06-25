@@ -57,7 +57,10 @@ public class ParamFromParamsPanel implements Params {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((PARAM_CONTENTS == null) ? 0 : PARAM_CONTENTS.hashCode());
+		result = prime * result + ((PARAM_LABEL == null) ? 0 : PARAM_LABEL.hashCode());
 		result = prime * result + ((PARAM_NAME == null) ? 0 : PARAM_NAME.hashCode());
+		result = prime * result + ((PARAM_TYPE == null) ? 0 : PARAM_TYPE.hashCode());
 		return result;
 	}
 	@Override
@@ -69,15 +72,26 @@ public class ParamFromParamsPanel implements Params {
 		if (getClass() != obj.getClass())
 			return false;
 		ParamFromParamsPanel other = (ParamFromParamsPanel) obj;
+		if (PARAM_CONTENTS == null) {
+			if (other.PARAM_CONTENTS != null)
+				return false;
+		} else if (!PARAM_CONTENTS.equals(other.PARAM_CONTENTS))
+			return false;
+		if (PARAM_LABEL == null) {
+			if (other.PARAM_LABEL != null)
+				return false;
+		} else if (!PARAM_LABEL.equals(other.PARAM_LABEL))
+			return false;
 		if (PARAM_NAME == null) {
 			if (other.PARAM_NAME != null)
 				return false;
 		} else if (!PARAM_NAME.equals(other.PARAM_NAME))
 			return false;
+		if (PARAM_TYPE == null) {
+			if (other.PARAM_TYPE != null)
+				return false;
+		} else if (!PARAM_TYPE.equals(other.PARAM_TYPE))
+			return false;
 		return true;
 	}
-	
-	
-	
-
 }

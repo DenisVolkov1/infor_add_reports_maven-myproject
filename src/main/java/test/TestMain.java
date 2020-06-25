@@ -76,6 +76,7 @@ public class TestMain {
 		System.out.println("List param DateBase (RPT_ID 11111111)");
 		System.out.println(ParamsRelatedData.getListOfParam("11111111"));
 		System.out.println("-----------------------------------------------");
+	
 		
 		/*
 		 * System.out.println("-----------------------------------------------");

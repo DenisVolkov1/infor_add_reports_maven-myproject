@@ -41,7 +41,14 @@ public class ContentsDialog extends JDialog {
 		scrollPane.setBounds(10, 11, 437, 296);
 		contentPanel.add(scrollPane);
 		
-		textArea = new JTextArea();
+		textArea = new JTextArea() {
+			@Override
+			public String getText() {
+				// add ' for SQL insert
+				String PARAM_CONTENTS = super.getText().replace("'", "''");
+				return "'" +PARAM_CONTENTS+ "'";
+			}
+		};
 		textArea.setFont(new Font("Dialog", Font.PLAIN, 14));
 		scrollPane.setViewportView(textArea);
 	}

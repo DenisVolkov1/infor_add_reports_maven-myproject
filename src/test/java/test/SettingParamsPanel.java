@@ -1,4 +1,4 @@
-package windows.param;
+package test;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -12,10 +12,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.border.EtchedBorder;
 
-import exception.InfoException;
-import util.MyField;
 import util.MyHoverButton;
 import util.Params;
+import windows.param.JButtonContentsDialog;
+import windows.param.ParamFromParamsPanel;
 
 import java.awt.Rectangle;
 import javax.swing.SwingConstants;
@@ -35,8 +35,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class SettingParamsPanel extends JPanel {
 	
-	private List<MyField> paramNameField = new Vector<MyField>(15);
-	private List<MyField> paramLabelField = new Vector<MyField>(15);
+	private List<JTextField> paramNameField = new Vector<JTextField>(15);
+	private List<JTextField> paramLabelField = new Vector<JTextField>(15);
 	private List<JComboBox<String>> paramTypeComboBox = new Vector<JComboBox<String>>(15);
 	private List<JButtonContentsDialog > contentsButton = new Vector<JButtonContentsDialog >(15);
 	private List<JButton> deleteButton = new Vector<JButton>(15);
@@ -56,9 +56,9 @@ public class SettingParamsPanel extends JPanel {
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
 		panelGrid = new JPanel();
-		panelGrid.setBounds(7, 47, 515, 2);
+		panelGrid.setBounds(7, 47, 515, 30);
 	    gbl_panelGrid = new GridBagLayout();
-		gbl_panelGrid.columnWidths = new int[] {150, 157, 115, 40, 40};
+		gbl_panelGrid.columnWidths = new int[] {140, 140, 115, 40, 40};
 		gbl_panelGrid.rowHeights = new int[] {30, 0};
 		gbl_panelGrid.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 		gbl_panelGrid.rowWeights = new double[]{0.0, 4.9E-324};
@@ -74,7 +74,7 @@ public class SettingParamsPanel extends JPanel {
 		header.setBounds(7, 12, 515, 30);
 		
 		GridBagLayout gbl_header = new GridBagLayout();
-		gbl_header.columnWidths = new int[] {150, 157, 115, 40, 40};
+		gbl_header.columnWidths = new int[] {130, 130, 115, 40, 40};
 		gbl_header.rowHeights = new int[]{30, 0};
 		gbl_header.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 		gbl_header.rowWeights = new double[]{0.0, Double.MIN_VALUE};
@@ -170,7 +170,7 @@ public class SettingParamsPanel extends JPanel {
 		
 		panelGrid.setBounds(7, 47, 515, panelGrid.getHeight()+34);
 			
-		MyField nameField = new MyField();
+		JTextField nameField = new JTextField();
 		nameField.setHorizontalAlignment(SwingConstants.CENTER);
 		nameField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameField.setText(PARAM_NAME == null ? "" : PARAM_NAME);
@@ -184,7 +184,7 @@ public class SettingParamsPanel extends JPanel {
 		panelGrid.add(nameField, gbc_paramNameField);
 		nameField.setColumns(10);
 		
-		MyField labelField = new MyField();
+		JTextField labelField = new JTextField();
 		labelField.setHorizontalAlignment(SwingConstants.CENTER);
 		labelField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		labelField.setText(PARAM_LABEL == null ? "" : PARAM_LABEL);
@@ -235,7 +235,7 @@ public class SettingParamsPanel extends JPanel {
 		panelGrid.repaint();
 	}
 	
-	private void addParamDinamic(MyField nameField, MyField labelField, JComboBox<String> typeComboBox,JButtonContentsDialog contBtn, JButton deleteBtn, int gridy) {
+	private void addParamDinamic(JTextField nameField, JTextField labelField, JComboBox<String> typeComboBox,JButtonContentsDialog contBtn, JButton deleteBtn, int gridy) {
 
 		panelGrid.setBounds(7, 47, 515, panelGrid.getHeight()+34);
 		
@@ -278,12 +278,12 @@ public class SettingParamsPanel extends JPanel {
 		panelGrid.revalidate();
 		panelGrid.repaint();
 	}
-	public Vector<ParamFromParamsPanel> getlistOfParams() throws InfoException {
+	public Vector<ParamFromParamsPanel> getlistOfParams() {
 		Vector<ParamFromParamsPanel> res = new Vector<ParamFromParamsPanel>();
 		//
 		for(int i = 0;paramNameField.size() > i;i++) {
-			String pARAM_NAME     = paramNameField.get(i).getTextWithCheck("param name");
-			String pARAM_LABEL    = paramLabelField.get(i).getTextWithCheck("param label");
+			String pARAM_NAME     = paramNameField.get(i).getText();
+			String pARAM_LABEL    = paramLabelField.get(i).getText();
 			String pARAM_TYPE     = (String)(paramTypeComboBox.get(i).getSelectedItem()); 
 			String pARAM_CONTENTS = contentsButton.get(i).getContentDialog().getText();
 			//

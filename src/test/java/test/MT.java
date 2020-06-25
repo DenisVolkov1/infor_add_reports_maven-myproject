@@ -25,12 +25,7 @@ public class MT {
 
 	public static void main(String[] args) throws Exception {
 		
-		
-		byte[] bytes = "ИД учётной единицы".getBytes();
-				
-		System.out.println(new String(bytes, StandardCharsets.UTF_16).getBytes());
-		
-		
+
 		 
 
 	}

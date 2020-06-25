@@ -131,7 +131,6 @@ public class FilesRepository {
 	public static void isNotExistFolderReport(String nameReport, String nameProgect) throws Exception {
 		SmbFile smbFile = getSmbFileObject(repoPathToReportsFolder(nameProgect));
 		SmbFile[] listOfFoldersReport = smbFile.listFiles();
-		Vector<String> v = new Vector<String>();
 		for (SmbFile fileReport : listOfFoldersReport) {
 		    if (fileReport.isDirectory()) {
 		       if (fileReport.getName().matches(nameReport+".*")) throw new InfoException("Report folder in storage with this name alreary exist.");
@@ -146,7 +145,6 @@ public class FilesRepository {
 	public static void isExistFolderReport(String nameReport, String nameProgect) throws Exception {
 		SmbFile smbFile = getSmbFileObject(repoPathToReportsFolder(nameProgect));
 		SmbFile[] listOfFoldersReport = smbFile.listFiles();
-		Vector<String> v = new Vector<String>();
 		boolean b = false;
 		for (SmbFile fileReport : listOfFoldersReport) {
 		    if (fileReport.isDirectory()) {

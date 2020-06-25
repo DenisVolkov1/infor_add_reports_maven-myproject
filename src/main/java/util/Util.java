@@ -12,7 +12,4 @@ public class Util {
 		if (!odaURL.matches(".*localhost.*")) ipDataSrcLabel.setForeground(Color.RED);
 		else ipDataSrcLabel.setForeground(Color.GRAY);
 	}
-	
-	
-
 }
