@@ -52,7 +52,13 @@ public class ContentsDialog extends JDialog {
 		textArea.setFont(new Font("Dialog", Font.PLAIN, 14));
 		scrollPane.setViewportView(textArea);
 	}
-
+	/**
+	 * 
+	 * @return text for insert in base example: ->
+	 *  <br>'SELECT SKU, STORERKEY
+	 *   <br>FROM wmwhse1.SKU
+	 *   <br>WHERE SKU = '00000002''
+	 */
 	public String getText() {
 		return textArea.getText();
 	}

@@ -12,8 +12,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.border.EtchedBorder;
 
-import util.MyHoverButton;
 import util.Params;
+import util.my_components.MyHoverButton;
 import windows.param.JButtonContentsDialog;
 import windows.param.ParamFromParamsPanel;
 

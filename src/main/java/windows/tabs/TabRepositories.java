@@ -16,18 +16,18 @@ import javax.swing.JTextField;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import util.CategoryAndId;
 import util.DialogWindows;
-import util.MyHoverButton;
-import util.parce_rptdesign.ReadXML;
+import util.my_components.MyHoverButton;
 import windows.MainRunWindow;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import database.CategoryAndCode;
 import exception.InfoException;
 import files_repository.FilesRepository;
 import log.LOg;
+import parce_rptdesign.ReadXML;
 
 import java.awt.event.ActionListener;
 import java.io.File;

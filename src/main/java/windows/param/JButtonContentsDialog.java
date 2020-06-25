@@ -11,7 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import util.MyHoverButton;
+import util.my_components.MyHoverButton;
 
 public class JButtonContentsDialog extends MyHoverButton {
 	

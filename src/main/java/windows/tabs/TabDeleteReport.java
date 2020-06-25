@@ -3,7 +3,6 @@ package windows.tabs;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-import database.CategoryAndCode;
 import database.ParamsRelatedData;
 import database.ReportRelatedData;
 import exception.ConfirmException;
@@ -16,9 +15,11 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
+import util.CategoryAndId;
 import util.DialogWindows;
-import util.MyField;
-import util.MyHoverButton;
+import util.ListCellRendererCategory;
+import util.my_components.MyField;
+import util.my_components.MyHoverButton;
 import war.WarArchive;
 
 import javax.swing.JComboBox;
@@ -45,7 +46,7 @@ public class TabDeleteReport extends TabSuperClass {
 	private static TabDeleteReport TAB_DELETE_REPORT = null;
 	
 	private MyField nameReportField;
-	private JComboBox<String> categoriesComboBox;
+	private JComboBox<CategoryAndId> categoriesComboBox;
 	private MyHoverButton deleteReportButton;
 	private JCheckBox deleteFromArchiveCheckBox;
 	private MyField nameFileTextField;
@@ -61,14 +62,14 @@ public class TabDeleteReport extends TabSuperClass {
 		
 		deleteReportButton = new MyHoverButton("Delete report");
 
-		categoriesComboBox = new JComboBox<String>();
+		categoriesComboBox = new JComboBox<CategoryAndId>(listCategoryAndCodes);
 		categoriesComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		categoriesComboBox.setMaximumRowCount(10);
 		categoriesComboBox.setInheritsPopupMenu(true);
 		categoriesComboBox.setFont(new Font("Dialog", Font.BOLD, 14));
 		categoriesComboBox.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		
-		nameReportField = new MyField();
+		nameReportField = new MyField("name report");
 		nameReportField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameReportField.setColumns(10);
 		
@@ -132,7 +133,7 @@ public class TabDeleteReport extends TabSuperClass {
 		
 		deleteFileButton = new MyHoverButton("Delete file");
 		
-		nameFileTextField = new MyField();
+		nameFileTextField = new MyField("name file report");
 		nameFileTextField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameFileTextField.setColumns(10);
 		
@@ -172,8 +173,10 @@ public class TabDeleteReport extends TabSuperClass {
 	//////
 	}
 	private void primaryInit() {
-		final DefaultComboBoxModel<String> model3 = new DefaultComboBoxModel(listCategoryAndCodes);
-		categoriesComboBox.setModel(model3);
+		//final DefaultComboBoxModel<String> model3 = new DefaultComboBoxModel(listCategoryAndCodes);
+		//categoriesComboBox.setModel(model3);
+		final ListCellRendererCategory listCellRendererCategory = new ListCellRendererCategory(); 
+		categoriesComboBox.setRenderer(listCellRendererCategory);
 		
 		deleteReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -185,8 +188,8 @@ public class TabDeleteReport extends TabSuperClass {
 				try {
 					matchCheckingDeleteReport();
 					//
-					nameReport = nameReportField.getTextWithCheck("name report");
-					categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
+					nameReport = nameReportField.getTextWithCheck();
+					categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
 					if (ParamsRelatedData.isExistTableParams()) {
 						String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, categoryId);
 							ParamsRelatedData.deleteParam(RPT_ID);
@@ -216,7 +219,7 @@ public class TabDeleteReport extends TabSuperClass {
 				try {
 					matchCheckingDeleteReportFileFromArchive();
 					//
-					String nameFileReport = nameFileTextField.getTextWithCheck("name file report");
+					String nameFileReport = nameFileTextField.getTextWithCheck();
 					WarArchive.deleteReportFileFromArchive(nameFileReport);
 						DialogWindows.dialogWindowWarning("Successfully delete!");
 				} catch (InfoException ie) {
@@ -233,9 +236,9 @@ public class TabDeleteReport extends TabSuperClass {
 	private void matchCheckingDeleteReport() throws Exception {
 		if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
 		
-		String nameReport = nameReportField.getTextWithCheck("name report");
+		String nameReport = nameReportField.getTextWithCheck();
 	
-		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
+		int categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
 		Vector<String> listReportStrings = ReportRelatedData.getListOfReportNames(categoryId);
 	
 		boolean isMatch = false;
@@ -246,8 +249,8 @@ public class TabDeleteReport extends TabSuperClass {
 		
 	}
 	private void matchCheckingDeleteReportFromArchive() throws Exception {
-		String nameReport = nameReportField.getTextWithCheck("name report");
-		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
+		String nameReport = nameReportField.getTextWithCheck();
+		int categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
 		String pathString = ReportRelatedData.getReportFilePath(nameReport, categoryId);
 		//
 		String nameFileReport = pathString.replace("/frameset?__report=report/", "");
@@ -259,7 +262,7 @@ public class TabDeleteReport extends TabSuperClass {
 		if(!b) throw new InfoException("A file report absent.");			
 	}
 	private void matchCheckingDeleteReportFileFromArchive() throws Exception {
-		String nameReport = nameFileTextField.getTextWithCheck("name report");
+		String nameReport = nameFileTextField.getTextWithCheck();
 		//
 		String nameFileReport = nameReport + ".rptdesign";
 		Vector<String> listFileNameReport = WarArchive.getListOfReportFilesNames();

@@ -8,9 +8,9 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Vector;
 
+import parce_rptdesign.ParamFromRptDesign;
 import util.MyProperties;
 import util.Params;
-import util.parce_rptdesign.ParamFromRptDesign;
 import windows.param.ParamFromParamsPanel;
 
 public class ParamsRelatedData {

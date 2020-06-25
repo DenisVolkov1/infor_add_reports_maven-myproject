@@ -1,4 +1,4 @@
-package util;
+package util.my_components;
 
 import java.awt.Color;
 import java.awt.Cursor;
