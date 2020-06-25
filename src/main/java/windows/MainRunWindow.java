@@ -66,8 +66,8 @@ public class MainRunWindow extends JFrame {
 	 */
 	public static void main(String[] args) {
 		  try {
-	            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-	            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+	            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+	            //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 	        } catch (UnsupportedLookAndFeelException ex) {
 	            ex.printStackTrace();
 	        } catch (IllegalAccessException ex) {
@@ -82,7 +82,7 @@ public class MainRunWindow extends JFrame {
 					try {
 						MainRunWindow frame = MainRunWindow.getInstance();
 						//Test main
-							TestMain.testMain();
+							//TestMain.testMain();
 							////////////////////////////////////////
 						frame.setVisible(true);
 					} catch (Exception e) {
