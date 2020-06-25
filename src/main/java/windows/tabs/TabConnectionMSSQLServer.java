@@ -51,7 +51,7 @@ public class TabConnectionMSSQLServer extends JPanel {
 		
 		 panel = new JPanel();
 		panel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "MS SQL Server Authentication", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "MS SQL Server Authentication", TitledBorder.LEADING, TitledBorder.TOP, new Font("Dialog", Font.BOLD, 12), new Color(51, 51, 51)));
 		panel.setBounds(13, 11, 553, 183);
 		add(panel);
 		
