@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
+import util.CategoryAndId;
 import util.MyProperties;
 import windows.MainRunWindow;
 
@@ -16,9 +17,9 @@ public class CategoryRelatedData {
 	
 	private CategoryRelatedData() {}
 	
-	public static Vector<CategoryAndCode> getCategories() throws SQLException, ClassNotFoundException {	
+	public static Vector<CategoryAndId> getCategories() throws SQLException, ClassNotFoundException {	
 		String schema = MyProperties.getProperty("schema"); 
-		Vector<CategoryAndCode> resultVector = new Vector<CategoryAndCode>();
+		Vector<CategoryAndId> resultVector = new Vector<CategoryAndId>();
 				String sql = "USE [SCPRD] "
 							  + "SELECT cat.CATEGORY_ID, "
 							  + "(CASE"
@@ -38,7 +39,7 @@ public class CategoryRelatedData {
 					ResultSet rs = statement.executeQuery(sql)) {
 			
 			while(rs.next()) {
-				resultVector.add(new CategoryAndCode(rs.getInt(1), rs.getString(2)));
+				resultVector.add(new CategoryAndId(rs.getInt(1), rs.getString(2)));
 			}
 		} 
 		return resultVector;

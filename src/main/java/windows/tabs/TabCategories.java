@@ -6,13 +6,15 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.TitledBorder;
 
-import database.CategoryAndCode;
 import database.CategoryRelatedData;
 import database.ReportRelatedData;
 import exception.InfoException;
 import log.LOg;
+import util.CategoryAndId;
 import util.DialogWindows;
-import util.MyHoverButton;
+import util.ListCellRendererCategory;
+import util.my_components.MyField;
+import util.my_components.MyHoverButton;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -34,10 +36,11 @@ import java.awt.Cursor;
 public class TabCategories extends TabSuperClass {
 	private static TabCategories TAB_CATWGORY_REPORT = null;
 	
-	private JTextField nameCategoryTextField;
+	private MyField nameCategoryTextField;
+	private MyField newNameCategoryTextField;
+	
 	private JButton addCategoryButton;
-	private JTextField newNameCategoryTextField;
-	private JComboBox<String> renameCategoriesComboBox;
+	private JComboBox<CategoryAndId> renameCategoriesComboBox;
 	private JButton renameCategoryButton;
 	private JPanel panel_1;
 
@@ -56,7 +59,7 @@ public class TabCategories extends TabSuperClass {
 		panel.setBounds(0, 0, 504, 229);
 		panel_1.add(panel);
 		
-		nameCategoryTextField = new JTextField();
+		nameCategoryTextField = new MyField("name category");
 		nameCategoryTextField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameCategoryTextField.setText("");
 		nameCategoryTextField.setColumns(10);
@@ -72,7 +75,7 @@ public class TabCategories extends TabSuperClass {
 		
 		renameCategoryButton = new MyHoverButton("Rename");
 		
-		newNameCategoryTextField = new JTextField();
+		newNameCategoryTextField = new MyField("new name category");
 		newNameCategoryTextField.setText("");
 		newNameCategoryTextField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		newNameCategoryTextField.setColumns(10);
@@ -80,7 +83,7 @@ public class TabCategories extends TabSuperClass {
 		JLabel newNameCategoryLabel = new JLabel("New name category");
 		newNameCategoryLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		renameCategoriesComboBox = new JComboBox<String>();
+		renameCategoriesComboBox = new JComboBox<CategoryAndId>(listCategoryAndCodes);
 		renameCategoriesComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		renameCategoriesComboBox.setMaximumRowCount(10);
 		renameCategoriesComboBox.setInheritsPopupMenu(true);
@@ -140,14 +143,16 @@ public class TabCategories extends TabSuperClass {
 		/////
 	}
 	private void primaryInit() {
-		final DefaultComboBoxModel<String> model = new DefaultComboBoxModel(listCategoryAndCodes);
-		renameCategoriesComboBox.setModel(model);
+		//final DefaultComboBoxModel<String> model = new DefaultComboBoxModel(listCategoryAndCodes);
+		//renameCategoriesComboBox.setModel(model);
+		final ListCellRendererCategory cellRendererCategory = new ListCellRendererCategory();
+		renameCategoriesComboBox.setRenderer(cellRendererCategory);
 		
 		addCategoryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					matchCheckingNameCategory();
-					String newCategory = nameCategoryTextField.getText().trim();
+					String newCategory = nameCategoryTextField.getTextWithCheck();
 		
 					CategoryRelatedData.insertCategory(newCategory);	
 						DialogWindows.dialogWindowWarning("Category successfully added!");
@@ -163,9 +168,9 @@ public class TabCategories extends TabSuperClass {
 		renameCategoryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					matchCheckingNewNameCategory();
-					String newNameCategory = newNameCategoryTextField.getText().trim();
-					int categoryId = ((CategoryAndCode) renameCategoriesComboBox.getSelectedItem()).getCategoryId();
+					if (renameCategoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
+					String newNameCategory = newNameCategoryTextField.getTextWithCheck();
+					int categoryId = ((CategoryAndId) renameCategoriesComboBox.getSelectedItem()).getCategoryId();
 	
 					CategoryRelatedData.updateCategory(newNameCategory, categoryId);
 						DialogWindows.dialogWindowWarning("Category successfully rename!");
@@ -179,20 +184,13 @@ public class TabCategories extends TabSuperClass {
 		});
 	}
 	private void matchCheckingNameCategory() throws Exception {
-		String newCategory = nameCategoryTextField.getText().trim();
-		if (newCategory.isEmpty()) throw new InfoException("Field name category is empty.");
-	
+		
 		Vector<String> listCategories = CategoryRelatedData.getListOfCategoryNames(); 
 		for (String nameExistCategory : listCategories) {
 			if (nameExistCategory.equals(nameCategoryTextField.getText().trim())) throw new InfoException("This name category already exist");
 		}
 	}
-	private void matchCheckingNewNameCategory() throws Exception {
-		if (renameCategoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
-		
-		String newNameCategory = newNameCategoryTextField.getText().trim();
-		if (newNameCategory.isEmpty()) throw new InfoException("Field new name category is empty.");
-	}
+
 	public static TabCategories getInstance() {
 		if (TAB_CATWGORY_REPORT == null) {
 			TAB_CATWGORY_REPORT = new TabCategories();

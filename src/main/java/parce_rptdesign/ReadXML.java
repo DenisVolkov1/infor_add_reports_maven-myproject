@@ -1,4 +1,4 @@
-package util.parce_rptdesign;
+package parce_rptdesign;
 
 import java.io.File;
 import java.io.IOException;

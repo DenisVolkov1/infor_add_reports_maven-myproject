@@ -13,7 +13,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.joda.time.DateTime;
 import org.xml.sax.SAXException;
 
-import database.CategoryAndCode;
 import database.ConnectionMSSQL;
 import database.ParamsRelatedData;
 import database.ReportRelatedData;
@@ -21,15 +20,16 @@ import exception.ConfirmException;
 import exception.InfoException;
 import files_repository.FilesRepository;
 import log.LOg;
+import parce_rptdesign.ParamFromRptDesign;
+import parce_rptdesign.ReadXML;
+import util.CategoryAndId;
 import util.DialogWindows;
 import util.ListCellRendererCategory;
-import util.MyField;
-import util.MyHoverButton;
-import util.MyHoverToggleButton;
 import util.MyProperties;
 import util.Util;
-import util.parce_rptdesign.ParamFromRptDesign;
-import util.parce_rptdesign.ReadXML;
+import util.my_components.MyField;
+import util.my_components.MyHoverButton;
+import util.my_components.MyHoverToggleButton;
 import war.WarArchive;
 import windows.MainRunWindow;
 import windows.SettingsWindow;
@@ -81,7 +81,7 @@ public class TabAddReport extends TabSuperClass {
 	
 	private JFileChooser fileChooser;
 	private JLabel fileReportLabel;
-	private JComboBox<CategoryAndCode> categoriesComboBox;
+	private JComboBox<CategoryAndId> categoriesComboBox;
 	private JButton fileReportButton;
 	private JButton addReportButton;
 	private JButton refreshServiceButton;
@@ -116,11 +116,11 @@ public class TabAddReport extends TabSuperClass {
 		add(addReportPanel);
 		setPreferredSize(new Dimension(560, 418));
 
-		nameReportField = new MyField();
+		nameReportField = new MyField("name report");
 		nameReportField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameReportField.setColumns(10);
 
-		categoriesComboBox = new JComboBox<CategoryAndCode>(listCategoryAndCodes);
+		categoriesComboBox = new JComboBox<CategoryAndId>(listCategoryAndCodes);
 		categoriesComboBox.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		categoriesComboBox.setInheritsPopupMenu(true);
 		categoriesComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -156,7 +156,7 @@ public class TabAddReport extends TabSuperClass {
 		nameFileReportLabelTF = new JLabel("Name file report");
 		nameFileReportLabelTF.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		nameReportFileField = new MyField();
+		nameReportFileField = new MyField("neme report file");
 		nameReportFileField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameReportFileField.setColumns(10);
 		
@@ -168,7 +168,7 @@ public class TabAddReport extends TabSuperClass {
 		rptIdLabel = new JLabel("RPT_ID");
 		rptIdLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		RPT_IDField = new MyField();
+		RPT_IDField = new MyField("RPT_ID");
 		RPT_IDField.setText("Auto");
 	
 		RPT_IDField.setHorizontalAlignment(SwingConstants.CENTER);
@@ -319,9 +319,10 @@ public class TabAddReport extends TabSuperClass {
 		refreshServiceButton.addActionListener(refreshService);
 		
 		//final DefaultComboBoxModel<CategoryAndCode> model = new DefaultComboBoxModel(listCategoryAndCodes);
-		final ListCellRendererCategory l = new ListCellRendererCategory(); 
 		//categoriesComboBox.setModel(model);
-		categoriesComboBox.setRenderer(l);
+		final ListCellRendererCategory listCellRendererCategory = new ListCellRendererCategory(); 
+		categoriesComboBox.setRenderer(listCellRendererCategory);
+		
 		
 		
 		final DefaultComboBoxModel<String> model2 = new DefaultComboBoxModel(listNamesFoldersProject);
@@ -493,9 +494,9 @@ public class TabAddReport extends TabSuperClass {
 					isExistTableParams = ParamsRelatedData.isExistTableParams();
 					if(addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
 						//
-						RPT_ID         = RPT_IDField.getTextWithCheck("RPT_ID");
-						nameReport     = nameReportField.getTextWithCheck("name report");
-						categoryId     = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
+						RPT_ID         = RPT_IDField.getTextWithCheck();
+						nameReport     = nameReportField.getTextWithCheck();
+						categoryId     = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
 						selectedFile   = fileChooser.getSelectedFile();
 						nameFileReport = selectedFile.toPath().getFileName().toString();
 						nameProgect    = (String)foldersProjectComboBox.getSelectedItem();
@@ -518,11 +519,11 @@ public class TabAddReport extends TabSuperClass {
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addDataBaseToggleButton.isSelected()) {
 						//
-						RPT_ID         = RPT_IDField.getTextWithCheck("RPT_ID");
-						nameReport     = nameReportField.getTextWithCheck("name report");
-						nameFileReport = nameReportFileField.getTextWithCheck("name file report");
-						categoryId     = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
-						if (newParam != null) paramsFromPanel = newParam.getSettingParamsPanel().getlistOfParams();
+						RPT_ID         = RPT_IDField.getTextWithCheck();
+						nameReport     = nameReportField.getTextWithCheck();
+						nameFileReport = nameReportFileField.getTextWithCheck();
+						categoryId     = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
+						paramsFromPanel = newParam.getSettingParamsPanel().getlistOfParams();
 						//
 						if (autoInsertCheckBox.isSelected()) {
 							ReportRelatedData.insertReport(autoRPT_ID, nameReport, categoryId, nameFileReport);
@@ -537,7 +538,7 @@ public class TabAddReport extends TabSuperClass {
 						if (newParam != null) newParam = null;
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addArchiveToggleButton.isSelected()) {
-						RPT_ID         = RPT_IDField.getTextWithCheck("RPT_ID");
+						RPT_ID         = RPT_IDField.getTextWithCheck();
 						selectedFile = fileChooser.getSelectedFile();
 						nameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
 						Vector<String> reportNames = ReportRelatedData.getListOfReportNames(nameFileReport);
@@ -587,7 +588,7 @@ public class TabAddReport extends TabSuperClass {
 		}
 	}
 	private void matchCheckingInputValueFileName() throws Exception {
-		String newFileNameReport = nameReportFileField.getTextWithCheck("name file report");
+		String newFileNameReport = nameReportFileField.getTextWithCheck();
 		//
 		Vector<String> listFileNameReport = null;
 		try {
@@ -603,7 +604,6 @@ public class TabAddReport extends TabSuperClass {
 			}
 		}
 	}
-	
 	private void matchCheckingProjectComboBox() throws Exception {
 		if (FilesRepository.isOpenRepo()) {
 			if (foldersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
@@ -611,8 +611,8 @@ public class TabAddReport extends TabSuperClass {
 	}
 
 	private void matchCheckingDataBase() throws Exception {
-		String nameNewReport = nameReportField.getTextWithCheck("name report");
-		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
+		String nameNewReport = nameReportField.getTextWithCheck();
+		int categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
 		Vector<String> listReportStrings;
 		listReportStrings = ReportRelatedData.getListOfReportNamesAndTranslation(categoryId);
 		for (String repNameExists : listReportStrings) {

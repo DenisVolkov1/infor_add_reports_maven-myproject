@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import util.DialogWindows;
-import util.MyHoverButton;
 import util.MyProperties;
+import util.my_components.MyHoverButton;
 import windows.tabs.TabRepositories;
 import windows.tabs.add.TabAddReport;
 import windows.tabs.update.TabUpdateReport;

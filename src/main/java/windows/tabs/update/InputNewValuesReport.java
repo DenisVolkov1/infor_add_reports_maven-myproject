@@ -12,16 +12,18 @@ import java.awt.Insets;
 import java.awt.Point;
 import javax.swing.border.EtchedBorder;
 
-import database.CategoryAndCode;
 import database.ReportRelatedData;
 import exception.InfoException;
+import util.CategoryAndId;
+import util.my_components.MyField;
+
 import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.DefaultComboBoxModel;
 import java.awt.Font;
-import util.MyField;
+
 import windows.MainRunWindow;
 import windows.tabs.TabSuperClass;
 
@@ -137,7 +139,7 @@ public class InputNewValuesReport extends JDialog {
 		gbc_RPT_IDLabel.gridy = 1;
 		panel.add(RPT_IDLabel, gbc_RPT_IDLabel);
 		
-		RPT_IDField = new MyField();
+		RPT_IDField = new MyField("RPT_ID");
 		RPT_IDField.setFocusable(false);
 
 			RPT_IDField.setBackground(Color.LIGHT_GRAY);
@@ -216,7 +218,7 @@ public class InputNewValuesReport extends JDialog {
 		gbc_nameReportLabel.gridy = 3;
 		panel.add(nameReportLabel, gbc_nameReportLabel);
 		
-		nameReportField = new MyField();
+		nameReportField = new MyField("name report");
 		nameReportField.setFocusable(false);
 		nameReportField.setFocusTraversalKeysEnabled(false);
 		nameReportField.setText("<Old value>");
@@ -257,7 +259,7 @@ public class InputNewValuesReport extends JDialog {
 		gbc_fileNameLabel.gridy = 4;
 		panel.add(fileNameLabel, gbc_fileNameLabel);
 		
-		fileNameField = new MyField();
+		fileNameField = new MyField("name file");
 		fileNameField.setFocusable(false);
 		fileNameField.setFocusTraversalKeysEnabled(false);
 		fileNameField.setBackground(Color.LIGHT_GRAY);
@@ -296,8 +298,8 @@ public class InputNewValuesReport extends JDialog {
 		setVisible(true);
 	}
 	private void primaryInit() throws Exception {
-		Vector<CategoryAndCode> listCategoryAndCodes = new Vector( new TabSuperClass().listCategoryAndCodes);
-		listCategoryAndCodes.add(0, new CategoryAndCode(null, "<Old value>"));
+		Vector<CategoryAndId> listCategoryAndCodes = new Vector( new TabSuperClass().listCategoryAndCodes);
+		listCategoryAndCodes.add(0, new CategoryAndId(null, "<Old value>"));
 		final DefaultComboBoxModel<String> model = new DefaultComboBoxModel(listCategoryAndCodes);
 		categoriesComboBox.setModel(model);
 		
@@ -368,7 +370,7 @@ public class InputNewValuesReport extends JDialog {
 	 * */
 	public String getRPT_ID() throws InfoException {
 		if (RPT_IDField.getBackground() == Color.LIGHT_GRAY && RPT_IDField.getText().trim().equals("<Old value>")) return null;
-		return RPT_IDField.getTextWithCheck("RPT_ID");
+		return RPT_IDField.getTextWithCheck();
 	}
 	/**
 	 * @return - if null means don`t update this value
@@ -376,7 +378,7 @@ public class InputNewValuesReport extends JDialog {
 	 * */
 	public String getNameReport() throws InfoException {
 		if (nameReportField.getBackground() == Color.LIGHT_GRAY && nameReportField.getText().trim().equals("<Old value>")) return null;
-		return nameReportField.getTextWithCheck("name report");
+		return nameReportField.getTextWithCheck();
 	}
 	/**
 	 * @return - if null means don`t update this value
@@ -384,13 +386,13 @@ public class InputNewValuesReport extends JDialog {
 	 * */
 	public String getNameFileReport() throws InfoException {
 		if (fileNameField.getBackground() == Color.LIGHT_GRAY && fileNameField.getText().trim().equals("<Old value>")) return null;
-		return fileNameField.getTextWithCheck("file name report");
+		return fileNameField.getTextWithCheck();
 	}
 	/**
 	 * @return - if null means don`t update this value
 	 * */
 	public Integer getCategory() {
-		CategoryAndCode newCategory = (CategoryAndCode) categoriesComboBox.getSelectedItem();
+		CategoryAndId newCategory = (CategoryAndId) categoriesComboBox.getSelectedItem();
 		if (newCategory.getCategoryId() == null) return null;
 		return newCategory.getCategoryId();
 	}

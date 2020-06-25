@@ -19,9 +19,9 @@ import database.ParamsRelatedData;
 import database.ReportRelatedData;
 import files_repository.FilesRepository;
 import jcifs.smb.SmbFile;
+import parce_rptdesign.ParamFromRptDesign;
+import parce_rptdesign.ReadXML;
 import util.MyProperties;
-import util.parce_rptdesign.ParamFromRptDesign;
-import util.parce_rptdesign.ReadXML;
 import war.WarArchive;
 
 public class TestMain {

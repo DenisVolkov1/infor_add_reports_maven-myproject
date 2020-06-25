@@ -1,10 +1,10 @@
-package database;
+package util;
 
-public class CategoryAndCode {
+public class CategoryAndId {
 	private Integer categoryId;
 	private String category;
 	
-	public CategoryAndCode(Integer categoryId, String category) {
+	public CategoryAndId(Integer categoryId, String category) {
 		this.categoryId = categoryId;
 		this.category = category;
 	}
@@ -19,6 +19,6 @@ public class CategoryAndCode {
 
 	@Override
 	public String toString() {
-		return category;
+		return category +" "+ categoryId;
 	}
 }

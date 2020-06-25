@@ -13,9 +13,9 @@ import java.awt.Font;
 import javax.swing.border.EtchedBorder;
 
 import exception.InfoException;
-import util.MyField;
-import util.MyHoverButton;
 import util.Params;
+import util.my_components.MyField;
+import util.my_components.MyHoverButton;
 
 import java.awt.Rectangle;
 import javax.swing.SwingConstants;
@@ -170,7 +170,7 @@ public class SettingParamsPanel extends JPanel {
 		
 		panelGrid.setBounds(7, 47, 515, panelGrid.getHeight()+34);
 			
-		MyField nameField = new MyField();
+		MyField nameField = new MyField("param: param name");
 		nameField.setHorizontalAlignment(SwingConstants.CENTER);
 		nameField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameField.setText(PARAM_NAME == null ? "" : PARAM_NAME);
@@ -184,7 +184,7 @@ public class SettingParamsPanel extends JPanel {
 		panelGrid.add(nameField, gbc_paramNameField);
 		nameField.setColumns(10);
 		
-		MyField labelField = new MyField();
+		MyField labelField = new MyField("param: param label");
 		labelField.setHorizontalAlignment(SwingConstants.CENTER);
 		labelField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		labelField.setText(PARAM_LABEL == null ? "" : PARAM_LABEL);
@@ -282,8 +282,8 @@ public class SettingParamsPanel extends JPanel {
 		Vector<ParamFromParamsPanel> res = new Vector<ParamFromParamsPanel>();
 		//
 		for(int i = 0;paramNameField.size() > i;i++) {
-			String pARAM_NAME     = paramNameField.get(i).getTextWithCheck("param name");
-			String pARAM_LABEL    = paramLabelField.get(i).getTextWithCheck("param label");
+			String pARAM_NAME     = paramNameField.get(i).getTextWithCheck();
+			String pARAM_LABEL    = paramLabelField.get(i).getTextWithCheck();
 			String pARAM_TYPE     = (String)(paramTypeComboBox.get(i).getSelectedItem()); 
 			String pARAM_CONTENTS = contentsButton.get(i).getContentDialog().getText();
 			//

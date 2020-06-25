@@ -14,8 +14,8 @@ import javax.swing.border.TitledBorder;
 import database.ConnectionMSSQL;
 import log.LOg;
 import util.DialogWindows;
-import util.MyHoverButton;
 import util.MyProperties;
+import util.my_components.MyHoverButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;

@@ -8,9 +8,9 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Vector;
 
+import parce_rptdesign.ParamFromRptDesign;
 import util.MyProperties;
 import util.Params;
-import util.parce_rptdesign.ParamFromRptDesign;
 import windows.param.ParamFromParamsPanel;
 
 public class ParamsRelatedData {
@@ -34,6 +34,7 @@ public class ParamsRelatedData {
 	 * @param PARAM_CONTENTS -  null acceptable
 	 * @param PARAM_LABEL - Rus name
 	 * */
+
 	public static void insertParam(String RPT_ID, String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS) throws ClassNotFoundException, SQLException {
 		String schema = MyProperties.getProperty("schema");
 		String PARAM_CONTENTS_TYPE = "NULL";

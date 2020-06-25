@@ -2,7 +2,6 @@ package windows.tabs.update;
 
 import javax.swing.JPanel;
 
-import database.CategoryAndCode;
 import database.ConnectionMSSQL;
 import database.ParamsRelatedData;
 import database.ReportRelatedData;
@@ -10,6 +9,7 @@ import exception.ConfirmException;
 import exception.InfoException;
 import files_repository.FilesRepository;
 import log.LOg;
+import parce_rptdesign.ReadXML;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -33,12 +33,13 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
+import util.CategoryAndId;
 import util.DialogWindows;
-import util.MyField;
-import util.MyHoverButton;
-import util.MyHoverToggleButton;
+import util.ListCellRendererCategory;
 import util.Util;
-import util.parce_rptdesign.ReadXML;
+import util.my_components.MyField;
+import util.my_components.MyHoverButton;
+import util.my_components.MyHoverToggleButton;
 import war.WarArchive;
 import windows.MainRunWindow;
 import windows.SettingsWindow;
@@ -61,7 +62,7 @@ public class TabUpdateReport extends TabSuperClass {
 	
 	private MyField nameReportField;
 	
-	private JComboBox<String> categoriesComboBox;
+	private JComboBox<CategoryAndId> categoriesComboBox;
 	private MyHoverButton updateReportButton;
 	private MyHoverToggleButton updateDataBaseToggleButton;
 	private MyHoverToggleButton updateFileArchiveToggleButton;
@@ -95,7 +96,7 @@ public class TabUpdateReport extends TabSuperClass {
 		categoryLabel = new JLabel("Category");
 		categoryLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		nameReportField = new MyField();
+		nameReportField = new MyField("name report");
 		nameReportField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameReportField.setColumns(10);
 		
@@ -104,7 +105,7 @@ public class TabUpdateReport extends TabSuperClass {
 		nameReportLabel = new JLabel("Name report");
 		nameReportLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		categoriesComboBox = new JComboBox<String>();
+		categoriesComboBox = new JComboBox<CategoryAndId>(listCategoryAndCodes);
 		categoriesComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		categoriesComboBox.setMaximumRowCount(10);
 		categoriesComboBox.setInheritsPopupMenu(true);
@@ -262,8 +263,11 @@ public class TabUpdateReport extends TabSuperClass {
 		fileChooser.setFileFilter(filter);
 		refreshServiceButton.addActionListener(refreshService);
 		
-		final DefaultComboBoxModel<String> model = new DefaultComboBoxModel(listCategoryAndCodes);
-		categoriesComboBox.setModel(model);
+		//final DefaultComboBoxModel<String> model = new DefaultComboBoxModel(listCategoryAndCodes);
+		//categoriesComboBox.setModel(model);
+		final ListCellRendererCategory cellRendererCategory = new ListCellRendererCategory();
+		categoriesComboBox.setRenderer(cellRendererCategory);
+		
 		final DefaultComboBoxModel<String> model2 = new DefaultComboBoxModel(listNamesFoldersProject);
 		foldersProjectComboBox.setModel(model2);
 		
@@ -303,8 +307,8 @@ public class TabUpdateReport extends TabSuperClass {
 					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
 					matchCheckingDataBase();
-					String nameReport = nameReportField.getTextWithCheck("name field");
-					Integer categoryId = ((CategoryAndCode)categoriesComboBox.getSelectedItem()).getCategoryId();
+					String nameReport = nameReportField.getTextWithCheck();
+					Integer categoryId = ((CategoryAndId)categoriesComboBox.getSelectedItem()).getCategoryId();
 					String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, categoryId);
 					//
 					if (params != null) {
@@ -331,8 +335,8 @@ public class TabUpdateReport extends TabSuperClass {
 					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					
 					matchCheckingDataBase();
-					String nameReport = nameReportField.getTextWithCheck("name field");
-					Integer categoryId = ((CategoryAndCode)categoriesComboBox.getSelectedItem()).getCategoryId();
+					String nameReport = nameReportField.getTextWithCheck();
+					Integer categoryId = ((CategoryAndId)categoriesComboBox.getSelectedItem()).getCategoryId();
 					//
 					if (inputNewValuesReport != null) {
 						String prevNameRep = inputNewValuesReport.getPreviousNameReport();
@@ -363,8 +367,8 @@ public class TabUpdateReport extends TabSuperClass {
 				try {
 					matchCheckingValidInputData();
 					if (updateDataBaseToggleButton.isSelected()) {
-						nameReport = nameReportField.getTextWithCheck("name field");
-						categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
+						nameReport = nameReportField.getTextWithCheck();
+						categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
 						//
 						if (ParamsRelatedData.isExistTableParams()) {
 							if (isChangeRepAttr()) {
@@ -564,8 +568,8 @@ public class TabUpdateReport extends TabSuperClass {
 		else return false;		
 	}
 	private void matchCheckingDataBase() throws Exception {
-		String nameReport = nameReportField.getTextWithCheck("name report");
-		int categoryId = ((CategoryAndCode) categoriesComboBox.getSelectedItem()).getCategoryId();
+		String nameReport = nameReportField.getTextWithCheck();
+		int categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
 		Vector<String> listReportStrings = ReportRelatedData.getListOfReportNames(categoryId);
 			boolean b = false;
 			for (String repNameExists : listReportStrings) {

@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 
 import org.omg.PortableServer.AdapterActivator;
 
-import database.CategoryAndCode;
 import database.CategoryRelatedData;
 import database.ConnectionMSSQL;
 import database.ParamsRelatedData;
@@ -23,6 +22,7 @@ import database.ReportRelatedData;
 import exception.InfoException;
 import files_repository.FilesRepository;
 import log.LOg;
+import util.CategoryAndId;
 import util.DialogWindows;
 import util.MyProperties;
 import util.ServiceWindow;
@@ -31,7 +31,7 @@ import windows.SettingsWindow;
 public class TabSuperClass extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
-	public static Vector<CategoryAndCode> listCategoryAndCodes = new Vector<>();
+	public static Vector<CategoryAndId> listCategoryAndCodes = new Vector<>();
 	protected static Vector<String> listNamesFoldersProject = new Vector<>();
 	protected static ActionListener refreshService;
 	private ComponentAdapter adapterCategories;
@@ -100,7 +100,7 @@ public class TabSuperClass extends JPanel {
 	}
 	public void refreshCategory() {
 		listCategoryAndCodes.clear();
-		Vector<CategoryAndCode> categoriesMap;
+		Vector<CategoryAndId> categoriesMap;
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		try {
 			categoriesMap = CategoryRelatedData.getCategories();
