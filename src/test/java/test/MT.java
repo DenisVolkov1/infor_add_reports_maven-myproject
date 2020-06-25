@@ -1,6 +1,7 @@
 package test;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,8 +26,11 @@ public class MT {
 	public static void main(String[] args) throws Exception {
 		
 		
-		  
-		if ("  ".matches(".*'.*")) System.out.println("wert");
+		byte[] bytes = "ИД учётной единицы".getBytes();
+				
+		System.out.println(new String(bytes, StandardCharsets.UTF_16).getBytes());
+		
+		
 		 
 
 	}
