@@ -107,13 +107,11 @@ public class SettingsWindow extends JDialog {
 		enableAddToRepositoriesCheckBox.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
 		windowsThemeRadioButton = new JRadioButton("windows theme");
-		windowsThemeRadioButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				classicThemeRadioButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
-					}
-		});
+		windowsThemeRadioButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			
 		
 		classicThemeRadioButton = new JRadioButton("classic theme");
+		classicThemeRadioButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
 		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
 		gl_contentPanel.setHorizontalGroup(
