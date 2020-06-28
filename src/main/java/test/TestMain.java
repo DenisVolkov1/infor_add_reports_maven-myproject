@@ -71,12 +71,16 @@ public class TestMain {
 		}
 		System.out.println("-----------------------------------------------");
 		System.out.println("List param nam s (RPT_ID 11111111)");
-		System.out.println(ParamsRelatedData.getListOfParamName("11111111"));
-		System.out.println("-----------------------------------------------");
-		System.out.println("List param DateBase (RPT_ID 11111111)");
-		System.out.println(ParamsRelatedData.getListOfParam("11111111"));
-		System.out.println("-----------------------------------------------");
+		if(ParamsRelatedData.isExistTableParams()) {
+			System.out.println(ParamsRelatedData.getListOfParamName("11111111"));
+			System.out.println("-----------------------------------------------");
+			System.out.println("List param DateBase (RPT_ID 11111111)");
+			System.out.println(ParamsRelatedData.getListOfParam("11111111"));
+			System.out.println("-----------------------------------------------");
+		}
 	
+		
+		
 		
 		/*
 		 * System.out.println("-----------------------------------------------");
@@ -109,8 +113,8 @@ public class TestMain {
 //		  }
 		
 		
-		//List<ParamFromRptDesign> params = ReadXML.getListOfParamsFromRptDesign(new File("C:\\reports\\rep_22\\rep_2_2_monitoring_operacii.rptdesign"));
-		//ParamsRelatedData.insertParam(params, "Zepoiuyd");
+		//List<ParamFromRptDesign> params = ReadXML.getListOfParamsFromRptDesign(new File("C:\\reports\\rep_2_2_monitoring_operacii\\rep_2_2_monitoring_operacii.rptdesign"));
+		//ParamsRelatedData.insertParam(params, "27162634");
 
 		
 		

@@ -20,7 +20,7 @@ public class MyField extends JTextField {
 	public String getTextWithCheck() throws InfoException {
 		String textField = this.getText().trim();
 	// field empty -> Error
-		if (textField.isEmpty()) throw new InfoException("Field '"+nameField+"' is empty."); 
+		if (textField.isEmpty())  throw new InfoException("Field '"+nameField+"' is empty."); 
 	//  field consist incorrect char SQL (') -> Error
 		if (textField.matches(".*'.*")) throw new InfoException("Incorrect character (') in field '"+nameField+"'");
 	// invalid for Filenames window -> error

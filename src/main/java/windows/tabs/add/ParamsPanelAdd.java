@@ -12,13 +12,15 @@ public class ParamsPanelAdd extends ParamsPanel {
 	
 	public ParamsPanelAdd() throws InfoException {
 
-		final int size = settingParamsPanel.getlistOfParams().size();
+		
 		
 		setBounds(100, 100, 652, 288);
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				
+			
+				int size = settingParamsPanel.getlistOfParamsNotCheck().size();
+
 				if (size != 0) TabAddReport.getInstance().getNewParamButton().setStandartHover();
 				else TabAddReport.getInstance().getNewParamButton().setEmptyHover();
 			}

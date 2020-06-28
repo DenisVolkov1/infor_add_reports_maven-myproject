@@ -21,11 +21,7 @@ public class ParamFromRptDesign implements Params {
 	 *  'list-box' or 'text-box' or 'check-box' or 'radio-button'
 	 */
 	private String controlType;
-	/**
-	 * example
-	 *  select distinct(USERGROUP) as EMPLOYEE_GROUP from wmwhse1.TASKMANAGERUSER
-	 *  select s.STORERKEY as OWNERKEY, s.COMPANY as OWNERNAME from wmwhse1.STORER s where s.TYPE = 1
-	 */
+
 	private String queryText;
 	private String dataSetName;
 	

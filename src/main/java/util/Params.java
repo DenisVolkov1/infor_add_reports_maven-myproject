@@ -15,15 +15,10 @@ public interface Params {
 	public String getPARAM_TYPE();
 	/**@return String or 'null'
 	 * 'example'
-	 *  select distinct(USERGROUP) as EMPLOYEE_GROUP from wmwhse1.TASKMANAGERUSER
-	 *  select s.STORERKEY as OWNERKEY, s.COMPANY as OWNERNAME from wmwhse1.STORER s where s.TYPE = 1
+	 *  <p>'select s.STORERKEY as OWNERKEY, s.COMPANY as OWNERNAME from wmwhse1.STORER s where s.TYPE = ''1'''
 	 */
 	public String getPARAM_CONTENTS();
-	/*
-	 * p1.getPARAM_NAME = p2.getPARAM_NAME
-	 */
+
 	boolean equals(Object obj);
 	
-	
-
 }

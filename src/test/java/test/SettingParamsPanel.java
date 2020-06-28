@@ -12,7 +12,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.border.EtchedBorder;
 
+import database.ParamFromDataBase;
+import database.ParamsRelatedData;
+import exception.InfoException;
 import util.Params;
+import util.my_components.MyField;
 import util.my_components.MyHoverButton;
 import windows.param.JButtonContentsDialog;
 import windows.param.ParamFromParamsPanel;
@@ -26,6 +30,7 @@ import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
@@ -35,8 +40,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class SettingParamsPanel extends JPanel {
 	
-	private List<JTextField> paramNameField = new Vector<JTextField>(15);
-	private List<JTextField> paramLabelField = new Vector<JTextField>(15);
+	private List<MyField> paramNameField = new Vector<MyField>(15);
+	private List<MyField> paramLabelField = new Vector<MyField>(15);
 	private List<JComboBox<String>> paramTypeComboBox = new Vector<JComboBox<String>>(15);
 	private List<JButtonContentsDialog > contentsButton = new Vector<JButtonContentsDialog >(15);
 	private List<JButton> deleteButton = new Vector<JButton>(15);
@@ -47,7 +52,8 @@ public class SettingParamsPanel extends JPanel {
 	private JPanel panelGrid;
 	private ActionListener deleteButtonListener;
 	private GridBagLayout gbl_panelGrid;
-
+	
+	int addHeight = 33;
 	/**
 	 * Create the panel.
 	 */
@@ -56,12 +62,12 @@ public class SettingParamsPanel extends JPanel {
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
 		panelGrid = new JPanel();
-		panelGrid.setBounds(7, 47, 515, 30);
+		panelGrid.setBounds(7, 47, 515, 2);
 	    gbl_panelGrid = new GridBagLayout();
-		gbl_panelGrid.columnWidths = new int[] {140, 140, 115, 40, 40};
-		gbl_panelGrid.rowHeights = new int[] {30, 0};
+		gbl_panelGrid.columnWidths = new int[] {150, 157, 115, 40, 40};
+		//gbl_panelGrid.rowHeights = new int[] {30, 0};
 		gbl_panelGrid.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
-		gbl_panelGrid.rowWeights = new double[]{0.0, 4.9E-324};
+		//gbl_panelGrid.rowWeights = new double[]{0.0, 4.9E-324};
 		panelGrid.setLayout(gbl_panelGrid);
 		
 		addButton = new MyHoverButton("+",new Color(50,205,50),new Color(119,221,119));
@@ -74,7 +80,7 @@ public class SettingParamsPanel extends JPanel {
 		header.setBounds(7, 12, 515, 30);
 		
 		GridBagLayout gbl_header = new GridBagLayout();
-		gbl_header.columnWidths = new int[] {130, 130, 115, 40, 40};
+		gbl_header.columnWidths = new int[] {150, 157, 115, 40, 40};
 		gbl_header.rowHeights = new int[]{30, 0};
 		gbl_header.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 		gbl_header.rowWeights = new double[]{0.0, Double.MIN_VALUE};
@@ -164,13 +170,24 @@ public class SettingParamsPanel extends JPanel {
 				}
 			}
 		};
+		
+
+			List<ParamFromDataBase> l = new Vector<ParamFromDataBase>(10);
+			l.add(new ParamFromDataBase("p1", "ï1", "Text", null));
+			l.add(new ParamFromDataBase("p4", "ï4", "Text", null));
+			//l.add(new ParamFromDataBase("p5", "ï5", "Text", null));
+			//l.add(new ParamFromDataBase("p3", "ï3", "Text", null));
+			//l.add(new ParamFromDataBase("p2", "ï2", "Text", null));
+			addlistParams(l);
+	
+		
 	}
 	
 	public void addParam(String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS) {
 		
-		panelGrid.setBounds(7, 47, 515, panelGrid.getHeight()+34);
+		panelGrid.setBounds(7, 47, 515, panelGrid.getHeight()+addHeight);
 			
-		JTextField nameField = new JTextField();
+		MyField nameField = new MyField("param: param name");
 		nameField.setHorizontalAlignment(SwingConstants.CENTER);
 		nameField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameField.setText(PARAM_NAME == null ? "" : PARAM_NAME);
@@ -184,7 +201,7 @@ public class SettingParamsPanel extends JPanel {
 		panelGrid.add(nameField, gbc_paramNameField);
 		nameField.setColumns(10);
 		
-		JTextField labelField = new JTextField();
+		MyField labelField = new MyField("param: param label");
 		labelField.setHorizontalAlignment(SwingConstants.CENTER);
 		labelField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		labelField.setText(PARAM_LABEL == null ? "" : PARAM_LABEL);
@@ -235,9 +252,9 @@ public class SettingParamsPanel extends JPanel {
 		panelGrid.repaint();
 	}
 	
-	private void addParamDinamic(JTextField nameField, JTextField labelField, JComboBox<String> typeComboBox,JButtonContentsDialog contBtn, JButton deleteBtn, int gridy) {
+	private void addParamDinamic(MyField nameField, MyField labelField, JComboBox<String> typeComboBox,JButtonContentsDialog contBtn, JButton deleteBtn, int gridy) {
 
-		panelGrid.setBounds(7, 47, 515, panelGrid.getHeight()+34);
+		panelGrid.setBounds(7, 47, 515, panelGrid.getHeight()+addHeight);
 		
 		GridBagConstraints gbc_paramNameField = new GridBagConstraints();
 		gbc_paramNameField.insets = new Insets(0, 0, 5, 5);
@@ -278,7 +295,21 @@ public class SettingParamsPanel extends JPanel {
 		panelGrid.revalidate();
 		panelGrid.repaint();
 	}
-	public Vector<ParamFromParamsPanel> getlistOfParams() {
+	public Vector<ParamFromParamsPanel> getlistOfParams() throws InfoException {
+		Vector<ParamFromParamsPanel> res = new Vector<ParamFromParamsPanel>();
+		//
+		for(int i = 0;paramNameField.size() > i;i++) {
+			String pARAM_NAME     = paramNameField.get(i).getTextWithCheck();
+			String pARAM_LABEL    = paramLabelField.get(i).getTextWithCheck();
+			String pARAM_TYPE     = (String)(paramTypeComboBox.get(i).getSelectedItem()); 
+			String pARAM_CONTENTS = contentsButton.get(i).getContentDialog().getText();
+			//
+			ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_NAME, pARAM_LABEL, pARAM_TYPE, pARAM_CONTENTS);
+			res.add(p);
+		}
+		return res;
+	}
+	public Vector<ParamFromParamsPanel> getlistOfParamsNotCheck() {
 		Vector<ParamFromParamsPanel> res = new Vector<ParamFromParamsPanel>();
 		//
 		for(int i = 0;paramNameField.size() > i;i++) {

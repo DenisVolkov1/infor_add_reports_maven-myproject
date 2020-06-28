@@ -74,6 +74,7 @@ public class TabCategories extends TabSuperClass {
 		renameCategoryLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		renameCategoryButton = new MyHoverButton("Rename");
+		renameCategoryButton.setFont(new Font("Dialog", Font.BOLD, 12));
 		
 		newNameCategoryTextField = new MyField("new name category");
 		newNameCategoryTextField.setText("");

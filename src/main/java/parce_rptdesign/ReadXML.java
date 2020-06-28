@@ -53,7 +53,7 @@ public class ReadXML {
 	/**
 	 * 
 	 * @param file .rptdesign file
-	 * @return map: key DataSet , value QueryText
+	 * @return map: key DataSet , value QueryText = 'select s.STORERKEY from wmwhse1.STORER s where s.TYPE = ''1'''
 	 * @throws ParserConfigurationException 
 	 * @throws IOException 
 	 * @throws SAXException 
@@ -86,7 +86,8 @@ public class ReadXML {
 								Element eElement2 = (Element) node2;
 								if ((eElement2.getAttribute("name")).equals("queryText")) {
 									valueQueryText = eElement2.getTextContent();
-									res.put(keyNameDataSet, valueQueryText);
+									valueQueryText = valueQueryText.replace("'", "''");
+									res.put(keyNameDataSet, "'" +valueQueryText+ "'");
 								}
 						}
 			}

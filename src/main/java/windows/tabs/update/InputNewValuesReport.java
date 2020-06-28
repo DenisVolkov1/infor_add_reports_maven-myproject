@@ -14,7 +14,10 @@ import javax.swing.border.EtchedBorder;
 
 import database.ReportRelatedData;
 import exception.InfoException;
+import log.LOg;
 import util.CategoryAndId;
+import util.DialogWindows;
+import util.ListCellRendererCategory;
 import util.my_components.MyField;
 
 import java.awt.Dimension;
@@ -48,7 +51,8 @@ public class InputNewValuesReport extends JDialog {
 	private JLabel categoryLabel;
 	private JLabel nameReportLabel;
 	private JLabel fileNameLabel;
-	private JComboBox<String> categoriesComboBox;
+	private Vector<CategoryAndId> listCategoryAndCodes;
+	private JComboBox<CategoryAndId> categoriesComboBox;
 	private JLabel lblDescr;
 	private JLabel lblRptid;
 	private JLabel lblCategoey;
@@ -60,13 +64,19 @@ public class InputNewValuesReport extends JDialog {
 	private Integer previousCategoryId;
 	//
 	
-	public InputNewValuesReport(String nameReport, Integer categoryId) throws Exception {
+	public InputNewValuesReport(String nameReport, Integer categoryId, Vector<CategoryAndId> listCategoryAndCodes) throws Exception {
 		super(MainRunWindow.getInstance(), "Input values");
 		this.previousNameReport = nameReport;
 		this.previousCategoryId = categoryId;
+		this.listCategoryAndCodes = listCategoryAndCodes;
+		//ADD OLD VALUE
+		Vector<CategoryAndId> list = new Vector<CategoryAndId>(listCategoryAndCodes);
+		list.add(0, new CategoryAndId(null, "<Old value>"));
+		listCategoryAndCodes = list;
+		//
 		
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setBounds(100, 100, 751, 200);
+		setBounds(100, 100, 815, 200);
 		Point p = MainRunWindow.getInstance().getLocation();
 		p.setLocation(p.getX(), p.getY()+100);
 		this.setLocation(p);
@@ -75,7 +85,7 @@ public class InputNewValuesReport extends JDialog {
 		panel.setAlignmentX(0.0f);
 		panel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{70, 332, 320, 0};
+		gbl_panel.columnWidths = new int[]{70, 332, 360, 0};
 		gbl_panel.rowHeights = new int[]{26, 27, 27, 27, 27, 0};
 		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
@@ -179,12 +189,12 @@ public class InputNewValuesReport extends JDialog {
 		gbc_categoryLabel.gridy = 2;
 		panel.add(categoryLabel, gbc_categoryLabel);
 		
-		categoriesComboBox = new JComboBox<String>();
-		categoriesComboBox.setInheritsPopupMenu(true);
-		categoriesComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		categoriesComboBox = new JComboBox<CategoryAndId>(listCategoryAndCodes);
+		//categoriesComboBox.setInheritsPopupMenu(true);
+		//categoriesComboBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		categoriesComboBox.setMaximumRowCount(10);
-		categoriesComboBox.setFont(new Font("Dialog", Font.BOLD, 14));
-		categoriesComboBox.setPreferredSize(new Dimension(31, 27));
+		//categoriesComboBox.setFont(new Font("Dialog", Font.BOLD, 14));
+		//categoriesComboBox.setPreferredSize(new Dimension(31, 27));
 		
 		GridBagConstraints gbc_categoriesComboBox = new GridBagConstraints();
 		gbc_categoriesComboBox.anchor = GridBagConstraints.NORTH;
@@ -298,10 +308,13 @@ public class InputNewValuesReport extends JDialog {
 		setVisible(true);
 	}
 	private void primaryInit() throws Exception {
-		Vector<CategoryAndId> listCategoryAndCodes = new Vector( new TabSuperClass().listCategoryAndCodes);
-		listCategoryAndCodes.add(0, new CategoryAndId(null, "<Old value>"));
-		final DefaultComboBoxModel<String> model = new DefaultComboBoxModel(listCategoryAndCodes);
-		categoriesComboBox.setModel(model);
+
+		final ListCellRendererCategory listCellRendererCategory = new ListCellRendererCategory(); 
+		categoriesComboBox.setRenderer(listCellRendererCategory);
+		categoriesComboBox.setSelectedIndex(0);
+		
+	//	final DefaultComboBoxModel<String> model = new DefaultComboBoxModel(listCategoryAndCodes);
+	//	categoriesComboBox.setModel(model);
 		
 		RPT_IDField.addKeyListener(new KeyAdapter() {
 			@Override
@@ -332,32 +345,37 @@ public class InputNewValuesReport extends JDialog {
 					});
 				}
 			}
-			final String newRPT_ID = getRPT_ID();
-			final Integer newCategoryId = getCategory();
-			final String newNameReport = getNameReport();
-			final String newNameFileReport = getNameFileReport();
+
 			this.addWindowListener(new WindowAdapter() {
 				@Override
 				public void windowClosing(WindowEvent e) {
-					
-					for (Component c : panel.getComponents()) {
-						if (c instanceof JTextField) {
-							if (fieldAlredyEdit((JTextField)c)) {
-								String field = ((JTextField)c).getText().trim();
-								if (field.isEmpty()) {
-									JTextField textField = (JTextField) c;
-									textField.setBackground(Color.LIGHT_GRAY);
-									textField.setFocusable(false);
-									textField.setFocusTraversalKeysEnabled(false);
-									textField.setHorizontalAlignment(SwingConstants.CENTER);
-									textField.setText("<Old value>");
+					try {
+						 String newRPT_ID = getRPT_ID();
+						 Integer newCategoryId = getCategory();
+						 String newNameReport = getNameReport();
+						 String newNameFileReport = getNameFileReport();
+						for (Component c : panel.getComponents()) {
+							if (c instanceof JTextField) {
+								if (fieldAlredyEdit((JTextField)c)) {
+									String field = ((JTextField)c).getText().trim();
+									if (field.isEmpty()) {
+										JTextField textField = (JTextField) c;
+										textField.setBackground(Color.LIGHT_GRAY);
+										textField.setFocusable(false);
+										textField.setFocusTraversalKeysEnabled(false);
+										textField.setHorizontalAlignment(SwingConstants.CENTER);
+										textField.setText("<Old value>");
+									}
 								}
 							}
 						}
-					}
-			
-					if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) TabUpdateReport.getInstance().getInputNewValuesButton().setEmptyHover();
-					else TabUpdateReport.getInstance().getInputNewValuesButton().setStandartHover();
+				
+						if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) TabUpdateReport.getInstance().getInputNewValuesButton().setEmptyHover();
+						else TabUpdateReport.getInstance().getInputNewValuesButton().setStandartHover();
+					} catch (InfoException ie) {
+					//ignore
+					}	
+					
 				}
 			});
 	}

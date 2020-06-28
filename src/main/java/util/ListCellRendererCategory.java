@@ -21,13 +21,13 @@ public class ListCellRendererCategory extends JPanel implements ListCellRenderer
 		
 		setPreferredSize(new Dimension(360, 22));
 		categoryJLabel = new JLabel();
-		//category.setText("klklklk");
+		//categoryJLabel.setText("klklklk");
 		
 		categoryJLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		categoryJLabel.setFont(new Font("Dialog", Font.BOLD, 14));
 		
 		idJLabel = new JLabel();
-		//code.setText("5");
+		//idJLabel.setText("(55)");
 	
 		idJLabel.setForeground(Color.GRAY);
 		idJLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -37,20 +37,17 @@ public class ListCellRendererCategory extends JPanel implements ListCellRenderer
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(5)
 					.addComponent(idJLabel)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(categoryJLabel, GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+					.addComponent(categoryJLabel, GroupLayout.PREFERRED_SIZE, 309, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(1)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(1)
-							.addComponent(categoryJLabel))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(1)
-							.addComponent(idJLabel)))
+						.addComponent(categoryJLabel)
+						.addComponent(idJLabel))
 					.addContainerGap(1, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
@@ -62,7 +59,8 @@ public class ListCellRendererCategory extends JPanel implements ListCellRenderer
 		
 		if (value != null) {
 			categoryJLabel.setText(value.getCategory());
-			idJLabel.setText("(" + value.getCategoryId().toString() + ")");
+			if (value.getCategoryId() == null) idJLabel.setText("");
+			else idJLabel.setText("(" + value.getCategoryId().toString() + ")");
 		}
 	
 		   if (isSelected) {

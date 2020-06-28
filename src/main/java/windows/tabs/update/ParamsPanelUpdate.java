@@ -26,13 +26,12 @@ public class ParamsPanelUpdate extends ParamsPanel {
 			Vector<ParamFromDataBase> params = ParamsRelatedData.getListOfParam(RPT_ID);
 			settingParamsPanel.addlistParams(params);
 		// init params
-			initParams = settingParamsPanel.getlistOfParams();
-			final boolean isChangeParams = isChangeParams();
+			initParams = settingParamsPanel.getlistOfParamsNotCheck();
 			
 			this.addWindowListener(new WindowAdapter() {
 				@Override
 				public void windowClosing(WindowEvent e) {
-					if (isChangeParams) TabUpdateReport.getInstance().getParamsButton().setStandartHover();
+					if (isChangeParams()) TabUpdateReport.getInstance().getParamsButton().setStandartHover();
 					else TabUpdateReport.getInstance().getParamsButton().setEmptyHover();
 				}
 			});
@@ -46,8 +45,8 @@ public class ParamsPanelUpdate extends ParamsPanel {
 		return initParams;
 	}
 	
-	public boolean isChangeParams() throws InfoException {
-		return !initParams.equals(settingParamsPanel.getlistOfParams());
+	public boolean isChangeParams() {
+		return !initParams.equals(settingParamsPanel.getlistOfParamsNotCheck());
 	}
 
 	public String getRPT_IDInput() {

@@ -35,7 +35,7 @@ public class ServiceWindow {
 			  StringBuilder sb = new StringBuilder();
 			  String line = bufferedReader.readLine();
 			  if (line == null) {
-				  throw new InfoException("For restart service. Run with administrator permission!");
+				  throw new InfoException("For restart service. Run with administrator permission!\nProbably this service is absent");
 			  } else {
 				  while ((line = bufferedReader.readLine()) != null) {
 					  sb.append(line);

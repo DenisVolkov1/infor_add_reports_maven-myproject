@@ -189,22 +189,37 @@ public class TabDeleteReport extends TabSuperClass {
 				String nameFileReport = null;
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {
-					matchCheckingDeleteReport();
-					//
-					nameReport = nameReportField.getTextWithCheck();
-					categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
-					if (ParamsRelatedData.isExistTableParams()) {
-						String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, categoryId);
-							ParamsRelatedData.deleteParam(RPT_ID);
-					}
-						ReportRelatedData.deleteReport(nameReport, categoryId);
+					
 					if (deleteFromArchiveCheckBox.isSelected()) {
+						matchCheckingInputValue();
 						matchCheckingDeleteReportFromArchive();
-						//
+						
+						nameReport = nameReportField.getTextWithCheck();
+						categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
 						pathString = ReportRelatedData.getReportFilePath(nameReport, categoryId);
+						
+						if (ParamsRelatedData.isExistTableParams()) {
+							String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, categoryId);
+								ParamsRelatedData.deleteParam(RPT_ID);
+						}
+						ReportRelatedData.deleteReport(nameReport, categoryId);
+						//
 						nameFileReport = (pathString.replace("/frameset?__report=report/", "")).replace(".rptdesign", "");
 								WarArchive.deleteReportFileFromArchive(nameFileReport);
+					} else {
+						matchCheckingInputValue();
+						
+						nameReport = nameReportField.getTextWithCheck();
+						categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
+						pathString = ReportRelatedData.getReportFilePath(nameReport, categoryId);
+						
+						if (ParamsRelatedData.isExistTableParams()) {
+							String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, categoryId);
+								ParamsRelatedData.deleteParam(RPT_ID);
+						}
+						ReportRelatedData.deleteReport(nameReport, categoryId);
 					}
+	
 					DialogWindows.dialogWindowWarning("Successfully delete!");
 				} catch (InfoException ie) {
 					 DialogWindows.dialogWindowError(ie); 
@@ -236,19 +251,15 @@ public class TabDeleteReport extends TabSuperClass {
 			}
 		});
 	}
-	private void matchCheckingDeleteReport() throws Exception {
+	private void matchCheckingInputValue() throws Exception {
 		if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
 		
 		String nameReport = nameReportField.getTextWithCheck();
-	
 		int categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
-		Vector<String> listReportStrings = ReportRelatedData.getListOfReportNames(categoryId);
+		String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, categoryId);
+		
 	
-		boolean isMatch = false;
-		for (String repNameExists : listReportStrings) {
-			if (nameReport.equals(repNameExists.trim())) isMatch = true;
-		}
-		if (!isMatch) throw new InfoException("A report with the this name \""+nameReport+"\" absent.");
+		if (RPT_ID == null) throw new InfoException("A report with the this name \""+nameReport+"\" absent.");
 		
 	}
 	private void matchCheckingDeleteReportFromArchive() throws Exception {

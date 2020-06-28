@@ -509,14 +509,14 @@ public class TabAddReport extends TabSuperClass {
 						selectedFile   = fileChooser.getSelectedFile();
 						nameFileReport = selectedFile.toPath().getFileName().toString();
 						nameProgect    = (String)foldersProjectComboBox.getSelectedItem();
-						paramsFromPanel = newParam.getSettingParamsPanel().getlistOfParams();
+						paramsFromDesign = ReadXML.getListOfParamsFromRptDesign(selectedFile);
 						
 						if (autoInsertCheckBox.isSelected()) {
 							ReportRelatedData.insertReport(autoRPT_ID, nameReport, categoryId, nameFileReport);
-							if (isExistTableParams && newParam != null) ParamsRelatedData.insertParam(paramsFromPanel, autoRPT_ID);
+							if (isExistTableParams) ParamsRelatedData.insertParam(paramsFromDesign, autoRPT_ID);
 						} else {
 							ReportRelatedData.insertReport(RPT_ID, nameReport, categoryId, nameFileReport);
-							if (isExistTableParams && newParam != null) ParamsRelatedData.insertParam(paramsFromPanel, autoRPT_ID);
+							if (isExistTableParams) ParamsRelatedData.insertParam(paramsFromDesign, RPT_ID);
 						}
 						
 						WarArchive.createBackup(selectedFile);
@@ -547,19 +547,12 @@ public class TabAddReport extends TabSuperClass {
 						if (newParam != null) newParam = null;
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addArchiveToggleButton.isSelected()) {
-						RPT_ID         = RPT_IDField.getTextWithCheck();
 						selectedFile = fileChooser.getSelectedFile();
 						nameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
-						Vector<String> reportNames = ReportRelatedData.getListOfReportNames(nameFileReport);
-						paramsFromDesign = ReadXML.getListOfParamsFromRptDesign(selectedFile);
-						//
-						String names = "";
-							for (String name : reportNames) names += name+"\r\n"; 
-							
-						ParamsRelatedData.insertParam(paramsFromDesign, RPT_ID);	
+				
 						 WarArchive.createBackup(selectedFile);
 						 	WarArchive.addOrUpdateReportFileInArchive(selectedFile);
-						 		DialogWindows.dialogWindowWarning("Report file successfully added! For report(s):\r\n\n"+names);
+						 		DialogWindows.dialogWindowWarning("Report file successfully added!");
 						 		
 					} else DialogWindows.dialogWindowWarning("No one toggle button is pressed!");
 					//
@@ -638,6 +631,8 @@ public class TabAddReport extends TabSuperClass {
 		for (String fileNameReportExists : listFileNameReport) {
 			if (newFileNameReport.equals(fileNameReportExists)) throw new InfoException("A file report with the same name already exists.");
 		}
+		Util.checkWarPathAndReportParh(fileChooser.getSelectedFile().toPath().getParent());
+		
 	}
 	public static TabAddReport getInstance() {
 		if (TAB_ADD_REPORT == null) {

@@ -59,9 +59,9 @@ public class SettingParamsPanel extends JPanel {
 		panelGrid.setBounds(7, 47, 515, 2);
 	    gbl_panelGrid = new GridBagLayout();
 		gbl_panelGrid.columnWidths = new int[] {150, 157, 115, 40, 40};
-		gbl_panelGrid.rowHeights = new int[] {30, 0};
+		//gbl_panelGrid.rowHeights = new int[] {30, 0};
 		gbl_panelGrid.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
-		gbl_panelGrid.rowWeights = new double[]{0.0, 4.9E-324};
+		//gbl_panelGrid.rowWeights = new double[]{0.0, 4.9E-324};
 		panelGrid.setLayout(gbl_panelGrid);
 		
 		addButton = new MyHoverButton("+",new Color(50,205,50),new Color(119,221,119));
@@ -284,6 +284,20 @@ public class SettingParamsPanel extends JPanel {
 		for(int i = 0;paramNameField.size() > i;i++) {
 			String pARAM_NAME     = paramNameField.get(i).getTextWithCheck();
 			String pARAM_LABEL    = paramLabelField.get(i).getTextWithCheck();
+			String pARAM_TYPE     = (String)(paramTypeComboBox.get(i).getSelectedItem()); 
+			String pARAM_CONTENTS = contentsButton.get(i).getContentDialog().getText();
+			//
+			ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_NAME, pARAM_LABEL, pARAM_TYPE, pARAM_CONTENTS);
+			res.add(p);
+		}
+		return res;
+	}
+	public Vector<ParamFromParamsPanel> getlistOfParamsNotCheck() {
+		Vector<ParamFromParamsPanel> res = new Vector<ParamFromParamsPanel>();
+		//
+		for(int i = 0;paramNameField.size() > i;i++) {
+			String pARAM_NAME     = paramNameField.get(i).getText();
+			String pARAM_LABEL    = paramLabelField.get(i).getText();
 			String pARAM_TYPE     = (String)(paramTypeComboBox.get(i).getSelectedItem()); 
 			String pARAM_CONTENTS = contentsButton.get(i).getContentDialog().getText();
 			//

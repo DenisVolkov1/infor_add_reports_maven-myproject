@@ -55,6 +55,8 @@ import java.awt.Cursor;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Dimension;
 import javax.swing.JToggleButton;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class TabUpdateReport extends TabSuperClass {
 	private static TabUpdateReport TAB_UPDADE_REPORT = null;
@@ -311,12 +313,30 @@ public class TabUpdateReport extends TabSuperClass {
 					}
 				}
 			};
+		//if change this field refresh params and input object	
+		nameReportField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (params != null) params = null;
+				if (inputNewValuesReport != null) inputNewValuesReport = null;
+				System.out.println("typed field");
+			}
+		});
+		//if change category refresh params and input object	
+		categoriesComboBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (params != null) params = null;
+				if (inputNewValuesReport != null) inputNewValuesReport = null;
+				System.out.println("select item");
+			}
+		});
 		paramsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {	
-					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
 					matchCheckingDataBase();
+					
 					String nameReport = nameReportField.getTextWithCheck();
 					Integer categoryId = ((CategoryAndId)categoriesComboBox.getSelectedItem()).getCategoryId();
 					String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, categoryId);
@@ -330,6 +350,7 @@ public class TabUpdateReport extends TabSuperClass {
 					
 				} catch (InfoException e1) {
 					DialogWindows.dialogWindowError(e1);
+						e1.printStackTrace();
 						return;
 				} catch (Exception e2) {
 					DialogWindows.dialogWindowError(e2);
@@ -341,10 +362,11 @@ public class TabUpdateReport extends TabSuperClass {
 		
 		inputNewValuesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {
-					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					
+					if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
 					matchCheckingDataBase();
+					//
 					String nameReport = nameReportField.getTextWithCheck();
 					Integer categoryId = ((CategoryAndId)categoriesComboBox.getSelectedItem()).getCategoryId();
 					//
@@ -353,9 +375,9 @@ public class TabUpdateReport extends TabSuperClass {
 						Integer prevCatId = inputNewValuesReport.getPreviousCategoryId();
 						if (prevNameRep.equals(nameReport) && prevCatId.equals(categoryId)) {
 							inputNewValuesReport.setVisible(true);
-						} else inputNewValuesReport = new InputNewValuesReport(nameReport, categoryId);
+						} else inputNewValuesReport = new InputNewValuesReport(nameReport, categoryId,listCategoryAndCodes);
 						
-					} else inputNewValuesReport = new InputNewValuesReport(nameReport, categoryId);
+					} else inputNewValuesReport = new InputNewValuesReport(nameReport, categoryId,listCategoryAndCodes);
 			
 				} catch (InfoException e1) {
 					DialogWindows.dialogWindowError(e1);
@@ -516,7 +538,7 @@ public class TabUpdateReport extends TabSuperClass {
 	private void matchCheckingValidInputData() throws Exception {
 		if (updateDataBaseToggleButton.isSelected()) {
 			if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
-			matchCheckingDataBase();
+			checkNewInputCategory();
 			matchCheckingInputValues();
 		} else if (updateFileArchiveToggleButton.isSelected()) {
 			if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
@@ -587,6 +609,20 @@ public class TabUpdateReport extends TabSuperClass {
 			}
 			if (!b) throw new InfoException("A report with the this name \""+nameReport+"\" absent.");
 	}
+	private void checkNewInputCategory() throws Exception {
+		String nameReport = nameReportField.getTextWithCheck();
+		Integer newCategoryId = inputNewValuesReport.getCategory();
+		if (newCategoryId != null) {
+			String newNameReport = inputNewValuesReport.getNameReport();
+			if (newNameReport != null) {
+				String RPT_ID = ReportRelatedData.getRPT_ID(newNameReport, newCategoryId);
+				if (RPT_ID != null) throw new InfoException("A report with the this name \""+newNameReport+"\" already exist in category \""+newCategoryId+"\".");
+			} else {
+				String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, newCategoryId);
+				if (RPT_ID != null) throw new InfoException("A report with the this name \""+newNameReport+"\" already exist in category \""+newCategoryId+"\".");
+			}
+		}
+	}
 	private void matchCheckingArchive() throws Exception {
 		WarArchive.checkPathArchive();
 		//
@@ -601,6 +637,8 @@ public class TabUpdateReport extends TabSuperClass {
 				if (updateFileNameReport.equals(fileNameReportExists)) b = true;
 			}
 		if(!b) throw new InfoException("A file report with the this name \""+updateFileNameReport+"\" absent.");
+		//
+		Util.checkWarPathAndReportParh(fileChooser.getSelectedFile().toPath().getParent());
 	}
 	private void restoreBaseBeforeUpdate(String newRPT_ID, Integer newCategoryId, String[] oldValues) throws NumberFormatException, Exception {
 		if (newRPT_ID != null && newCategoryId != null) ReportRelatedData.updateReport(newRPT_ID, newCategoryId, oldValues[0],Integer.valueOf(oldValues[1]), oldValues[2], oldValues[3]); 

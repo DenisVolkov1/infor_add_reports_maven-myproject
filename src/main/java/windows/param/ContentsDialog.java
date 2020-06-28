@@ -57,7 +57,7 @@ public class ContentsDialog extends JDialog {
 	 * @return text for insert in base example: ->
 	 *  <br>'SELECT SKU, STORERKEY
 	 *   <br>FROM wmwhse1.SKU
-	 *   <br>WHERE SKU = '00000002''
+	 *   <br>WHERE SKU = ''00000002'''
 	 */
 	public String getText() {
 		return textArea.getText();
