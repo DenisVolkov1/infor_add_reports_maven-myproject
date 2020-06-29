@@ -376,13 +376,7 @@ public class TabAddReport extends TabSuperClass {
 		});
 		newParamButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (newParam == null)
-					try {
-						newParam = new ParamsPanelAdd();
-					} catch (InfoException e1) {
-						DialogWindows.dialogWindowError(e1);
-						 LOg.logToFile(e1);
-					}
+				if (newParam == null) newParam = new ParamsPanelAdd();
 				else newParam.setVisible(true);
 			}
 		});

@@ -10,10 +10,8 @@ import windows.param.ParamsPanel;
 
 public class ParamsPanelAdd extends ParamsPanel {
 	
-	public ParamsPanelAdd() throws InfoException {
+	public ParamsPanelAdd() {
 
-		
-		
 		setBounds(100, 100, 652, 288);
 		this.addWindowListener(new WindowAdapter() {
 			@Override
@@ -25,10 +23,6 @@ public class ParamsPanelAdd extends ParamsPanel {
 				else TabAddReport.getInstance().getNewParamButton().setEmptyHover();
 			}
 		});
+		this.setVisible(true);
 	}
-	
-	
-	
-
-
 }
