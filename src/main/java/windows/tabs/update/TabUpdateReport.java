@@ -319,7 +319,6 @@ public class TabUpdateReport extends TabSuperClass {
 			public void keyTyped(KeyEvent e) {
 				if (params != null) params = null;
 				if (inputNewValuesReport != null) inputNewValuesReport = null;
-				System.out.println("typed field");
 			}
 		});
 		//if change category refresh params and input object	
@@ -327,7 +326,6 @@ public class TabUpdateReport extends TabSuperClass {
 			public void itemStateChanged(ItemEvent e) {
 				if (params != null) params = null;
 				if (inputNewValuesReport != null) inputNewValuesReport = null;
-				System.out.println("select item");
 			}
 		});
 		paramsButton.addActionListener(new ActionListener() {
@@ -403,19 +401,25 @@ public class TabUpdateReport extends TabSuperClass {
 						categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
 						//
 						if (ParamsRelatedData.isExistTableParams()) {
+							String newRPT_ID         = null;
+							Integer newCategoryId    = null;
+							String newNameReport     = null;
+							String newNameFileReport = null;
 							if (isChangeRepAttr()) {
-								String newRPT_ID         = inputNewValuesReport.getRPT_ID();
-								Integer newCategoryId    = inputNewValuesReport.getCategory();
-								String newNameReport     = inputNewValuesReport.getNameReport();
-								String newNameFileReport = inputNewValuesReport.getNameFileReport();
+								 newRPT_ID         = inputNewValuesReport.getRPT_ID();
+								 newCategoryId     = inputNewValuesReport.getCategory();
+								 newNameReport     = inputNewValuesReport.getNameReport();
+								 newNameFileReport = inputNewValuesReport.getNameFileReport();
 									ReportRelatedData.updateReport(nameReport, categoryId, newRPT_ID, newCategoryId, newNameReport, newNameFileReport);
 											inputNewValuesReport = null;
 							}
 							if(isChangeParams()) {
 								List<ParamFromParamsPanel> listParamsForUpdate = params.getSettingParamsPanel().getlistOfParams();
-								String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, categoryId);
+								String RPT_ID = ReportRelatedData.getRPT_ID(newNameReport != null ? newNameReport : nameReport,
+																			newCategoryId != null ? newCategoryId : categoryId);
 									ParamsRelatedData.updateParam(listParamsForUpdate, RPT_ID);
 									params = null;
+										paramsButton.setEmptyHover();
 							}
 							DialogWindows.dialogWindowWarning("Report successfully update!");
 							
@@ -426,6 +430,7 @@ public class TabUpdateReport extends TabSuperClass {
 							String newNameFileReport = inputNewValuesReport.getNameFileReport();
 								ReportRelatedData.updateReport(nameReport, categoryId, newRPT_ID, newCategoryId, newNameReport, newNameFileReport);
 										inputNewValuesReport = null;
+										inputNewValuesButton.setEmptyHover();
 											DialogWindows.dialogWindowWarning("Report successfully update!");
 						}
 					} else if (updateFileArchiveToggleButton.isSelected()) {

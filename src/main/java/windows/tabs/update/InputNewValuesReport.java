@@ -349,11 +349,12 @@ public class InputNewValuesReport extends JDialog {
 			this.addWindowListener(new WindowAdapter() {
 				@Override
 				public void windowClosing(WindowEvent e) {
-					try {
-						 String newRPT_ID = getRPT_ID();
-						 Integer newCategoryId = getCategory();
-						 String newNameReport = getNameReport();
-						 String newNameFileReport = getNameFileReport();
+			
+					 String  newRPT_ID = getRPT_ID_private();
+					 Integer newCategoryId =  getCategory();
+					 String  newNameReport = getNameReport_private();
+					 String newNameFileReport = getNameFileReport_private();
+					 
 						for (Component c : panel.getComponents()) {
 							if (c instanceof JTextField) {
 								if (fieldAlredyEdit((JTextField)c)) {
@@ -371,10 +372,7 @@ public class InputNewValuesReport extends JDialog {
 						}
 				
 						if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) TabUpdateReport.getInstance().getInputNewValuesButton().setEmptyHover();
-						else TabUpdateReport.getInstance().getInputNewValuesButton().setStandartHover();
-					} catch (InfoException ie) {
-					//ignore
-					}	
+						else TabUpdateReport.getInstance().getInputNewValuesButton().setStandartHover();	
 					
 				}
 			});
@@ -414,6 +412,20 @@ public class InputNewValuesReport extends JDialog {
 		if (newCategory.getCategoryId() == null) return null;
 		return newCategory.getCategoryId();
 	}
+	//private////////////
+	private String getRPT_ID_private()  {
+		if (RPT_IDField.getBackground() == Color.LIGHT_GRAY && RPT_IDField.getText().trim().equals("<Old value>")) return null;
+		return RPT_IDField.getText();
+	}
+	private String getNameReport_private()  {
+		if (nameReportField.getBackground() == Color.LIGHT_GRAY && nameReportField.getText().trim().equals("<Old value>")) return null;
+		return nameReportField.getText();
+	}
+	private String getNameFileReport_private(){
+		if (fileNameField.getBackground() == Color.LIGHT_GRAY && fileNameField.getText().trim().equals("<Old value>")) return null;
+		return fileNameField.getText();
+	}
+	///////////////////
 	public JTextField getFileNameField() {
 		return fileNameField;
 	}
@@ -426,6 +438,4 @@ public class InputNewValuesReport extends JDialog {
 	public Integer getPreviousCategoryId() {
 		return previousCategoryId;
 	}
-	
-
 }

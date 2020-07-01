@@ -30,6 +30,7 @@ public class FilesRepository {
 	private static SmbFile getSmbFileObject(String url) throws Exception {
 		SmbFile res = new SmbFile(url,getAuthentication());
 		res.setConnectTimeout(10);
+		res.setReadTimeout(10);
 		return res;
 	}
 	
