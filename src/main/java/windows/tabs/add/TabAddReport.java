@@ -518,7 +518,10 @@ public class TabAddReport extends TabSuperClass {
 							if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
 							}
-							if (newParam != null) newParam = null;
+							if (newParam != null) {
+								newParam = null;
+									newParamButton.setEmptyHover();
+							}
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addDataBaseToggleButton.isSelected()) {
 						//
@@ -538,7 +541,10 @@ public class TabAddReport extends TabSuperClass {
 							ReportRelatedData.insertReport(RPT_ID, nameReport, categoryId, nameFileReport);
 							if (isExistTableParams && newParam != null) ParamsRelatedData.insertParam(paramsFromPanel, RPT_ID);
 						}
-						if (newParam != null) newParam = null;
+						if (newParam != null) {
+							newParam = null;
+							newParamButton.setEmptyHover();
+						}
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addArchiveToggleButton.isSelected()) {
 						selectedFile = fileChooser.getSelectedFile();
