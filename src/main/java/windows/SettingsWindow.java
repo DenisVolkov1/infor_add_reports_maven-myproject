@@ -28,6 +28,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Component;
@@ -55,12 +56,14 @@ public class SettingsWindow extends JDialog {
 	private JPanel repSettingsPanel;
 	private JRadioButton classicThemeRadioButton;
 	private JRadioButton windowsThemeRadioButton;
+	private SettingsWindow settingsWindow;
 	/**
 	 * Create the dialog.
 	 */
 	 public SettingsWindow() {
 		 super(MainRunWindow.getInstance(), "Settings");
 		 this.setResizable(true);
+		 this.settingsWindow = this;
 		setTitle("Settings");
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setBounds(100, 100, 550, 350);
@@ -369,6 +372,8 @@ public class SettingsWindow extends JDialog {
 						"windowsTheme", windowsThemeRadioButton.isSelected()?"true":"false"
 						);
 				DialogWindows.dialogWindowWarning("Save settings");
+					// close this Window after save settings
+					settingsWindow.dispatchEvent(new WindowEvent(settingsWindow, WindowEvent.WINDOW_CLOSING));
 			}
 		});
 		//Set saved properties
