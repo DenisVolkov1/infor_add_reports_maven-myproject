@@ -1,5 +1,5 @@
-<<<<<<< HEAD
-#
+
+
 # Project specific excludes
 #
 
@@ -98,6 +98,7 @@ target/
 .project
 /log
 *.properties
+!build this.txt
 
 # NetBeans specific
 nbproject/private/
@@ -117,4 +118,4 @@ nb-configuration.xml
 release.properties
 pom.xml.releaseBackup
 pom.xml.tag
->>>>>>> branch 'master' of https://github.com/DenisVolkov1/infor_add_reports_maven-myproject.git
+
