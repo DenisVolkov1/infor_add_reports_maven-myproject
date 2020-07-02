@@ -624,7 +624,7 @@ public class TabUpdateReport extends TabSuperClass {
 				if (RPT_ID != null) throw new InfoException("A report with the this name \""+newNameReport+"\" already exist in category \""+newCategoryId+"\".");
 			} else {
 				String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, newCategoryId);
-				if (RPT_ID != null) throw new InfoException("A report with the this name \""+newNameReport+"\" already exist in category \""+newCategoryId+"\".");
+				if (RPT_ID != null) throw new InfoException("A report with the this name \""+nameReport+"\" already exist in category \""+newCategoryId+"\".");
 			}
 		}
 	}

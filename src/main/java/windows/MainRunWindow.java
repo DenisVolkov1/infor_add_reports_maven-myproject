@@ -144,7 +144,7 @@ public class MainRunWindow extends JFrame {
 			}
 		});
 		settings.setFont(new Font("Dialog", Font.BOLD, 11));
-		settings.setBounds(542, 12, 32, 31);
+		settings.setBounds(542, 12, 36, 35);
 		contentPane.add(settings);
 		
 		JLabel lblNewLabel = new JLabel("Server:");
