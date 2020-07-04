@@ -348,7 +348,6 @@ public class TabUpdateReport extends TabSuperClass {
 					
 				} catch (InfoException e1) {
 					DialogWindows.dialogWindowError(e1);
-						e1.printStackTrace();
 						return;
 				} catch (Exception e2) {
 					DialogWindows.dialogWindowError(e2);
@@ -396,21 +395,25 @@ public class TabUpdateReport extends TabSuperClass {
 					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {
 					matchCheckingValidInputData();
+					String newRPT_ID         = null;
+					Integer newCategoryId    = null;
+					String newNameReport     = null;
+					String newNameFileReport = null;
+					Boolean newRptActive 	 = null;
 					if (updateDataBaseToggleButton.isSelected()) {
 						nameReport = nameReportField.getTextWithCheck();
 						categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
 						//
+						if (inputNewValuesReport != null) {
+							 newRPT_ID         = inputNewValuesReport.getRPT_ID();
+							 newCategoryId     = inputNewValuesReport.getCategory();
+							 newNameReport     = inputNewValuesReport.getNameReport();
+							 newNameFileReport = inputNewValuesReport.getNameFileReport();
+							 newRptActive 	   = inputNewValuesReport.getRPT_ACTIVE();
+						}
 						if (ParamsRelatedData.isExistTableParams()) {
-							String newRPT_ID         = null;
-							Integer newCategoryId    = null;
-							String newNameReport     = null;
-							String newNameFileReport = null;
 							if (isChangeRepAttr()) {
-								 newRPT_ID         = inputNewValuesReport.getRPT_ID();
-								 newCategoryId     = inputNewValuesReport.getCategory();
-								 newNameReport     = inputNewValuesReport.getNameReport();
-								 newNameFileReport = inputNewValuesReport.getNameFileReport();
-									ReportRelatedData.updateReport(nameReport, categoryId, newRPT_ID, newCategoryId, newNameReport, newNameFileReport);
+									ReportRelatedData.updateReport(nameReport, categoryId, newRPT_ID, newCategoryId, newNameReport, newNameFileReport, newRptActive);
 											inputNewValuesReport = null;
 							}
 							if(isChangeParams()) {
@@ -424,11 +427,7 @@ public class TabUpdateReport extends TabSuperClass {
 							DialogWindows.dialogWindowWarning("Report successfully update!");
 							
 						} else {
-							String newRPT_ID         = inputNewValuesReport.getRPT_ID();
-							Integer newCategoryId    = inputNewValuesReport.getCategory();
-							String newNameReport     = inputNewValuesReport.getNameReport();
-							String newNameFileReport = inputNewValuesReport.getNameFileReport();
-								ReportRelatedData.updateReport(nameReport, categoryId, newRPT_ID, newCategoryId, newNameReport, newNameFileReport);
+								ReportRelatedData.updateReport(nameReport, categoryId, newRPT_ID, newCategoryId, newNameReport, newNameFileReport, newRptActive);
 										inputNewValuesReport = null;
 										inputNewValuesButton.setEmptyHover();
 											DialogWindows.dialogWindowWarning("Report successfully update!");
@@ -580,7 +579,8 @@ public class TabUpdateReport extends TabSuperClass {
 			Integer newCategoryId = inputNewValuesReport.getCategory();
 			String newNameReport = inputNewValuesReport.getNameReport();
 			String newNameFileReport = inputNewValuesReport.getNameFileReport();
-				if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null) {
+			Boolean rptActive = inputNewValuesReport.getRPT_ACTIVE();
+				if (newRPT_ID ==null && newCategoryId ==null && newNameReport ==null && newNameFileReport ==null && rptActive ==null) {
 					return false;
 				} else return true;
 		} else return false;		
@@ -615,16 +615,18 @@ public class TabUpdateReport extends TabSuperClass {
 			if (!b) throw new InfoException("A report with the this name \""+nameReport+"\" absent.");
 	}
 	private void checkNewInputCategory() throws Exception {
-		String nameReport = nameReportField.getTextWithCheck();
-		Integer newCategoryId = inputNewValuesReport.getCategory();
-		if (newCategoryId != null) {
-			String newNameReport = inputNewValuesReport.getNameReport();
-			if (newNameReport != null) {
-				String RPT_ID = ReportRelatedData.getRPT_ID(newNameReport, newCategoryId);
-				if (RPT_ID != null) throw new InfoException("A report with the this name \""+newNameReport+"\" already exist in category \""+newCategoryId+"\".");
-			} else {
-				String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, newCategoryId);
-				if (RPT_ID != null) throw new InfoException("A report with the this name \""+nameReport+"\" already exist in category \""+newCategoryId+"\".");
+		if (inputNewValuesReport != null) {
+			String nameReport = nameReportField.getTextWithCheck();
+			Integer newCategoryId = inputNewValuesReport.getCategory();
+			if (newCategoryId != null) {
+				String newNameReport = inputNewValuesReport.getNameReport();
+				if (newNameReport != null) {
+					String RPT_ID = ReportRelatedData.getRPT_ID(newNameReport, newCategoryId);
+					if (RPT_ID != null) throw new InfoException("A report with the this name \""+newNameReport+"\" already exist in category \""+newCategoryId+"\".");
+				} else {
+					String RPT_ID = ReportRelatedData.getRPT_ID(nameReport, newCategoryId);
+					if (RPT_ID != null) throw new InfoException("A report with the this name \""+nameReport+"\" already exist in category \""+newCategoryId+"\".");
+				}
 			}
 		}
 	}
@@ -645,12 +647,12 @@ public class TabUpdateReport extends TabSuperClass {
 		//
 		Util.checkWarPathAndReportParh(fileChooser.getSelectedFile().toPath().getParent());
 	}
-	private void restoreBaseBeforeUpdate(String newRPT_ID, Integer newCategoryId, String[] oldValues) throws NumberFormatException, Exception {
-		if (newRPT_ID != null && newCategoryId != null) ReportRelatedData.updateReport(newRPT_ID, newCategoryId, oldValues[0],Integer.valueOf(oldValues[1]), oldValues[2], oldValues[3]); 
-		else if (newRPT_ID != null) ReportRelatedData.updateReport(newRPT_ID, Integer.valueOf(oldValues[1]), oldValues[0],null, oldValues[2], oldValues[3]);
-		else if (newCategoryId != null) ReportRelatedData.updateReport(oldValues[0], newCategoryId, null,Integer.valueOf(oldValues[1]), oldValues[2], oldValues[3]);
-		else ReportRelatedData.updateReport(oldValues[0], newCategoryId, null,Integer.valueOf(oldValues[1]), oldValues[2], oldValues[3]);
-	}
+//	private void restoreBaseBeforeUpdate(String newRPT_ID, Integer newCategoryId, String[] oldValues) throws NumberFormatException, Exception {
+//		if (newRPT_ID != null && newCategoryId != null) ReportRelatedData.updateReport(newRPT_ID, newCategoryId, oldValues[0],Integer.valueOf(oldValues[1]), oldValues[2], oldValues[3]); 
+//		else if (newRPT_ID != null) ReportRelatedData.updateReport(newRPT_ID, Integer.valueOf(oldValues[1]), oldValues[0],null, oldValues[2], oldValues[3]);
+//		else if (newCategoryId != null) ReportRelatedData.updateReport(oldValues[0], newCategoryId, null,Integer.valueOf(oldValues[1]), oldValues[2], oldValues[3]);
+//		else ReportRelatedData.updateReport(oldValues[0], newCategoryId, null,Integer.valueOf(oldValues[1]), oldValues[2], oldValues[3]);
+//	}
 	public static TabUpdateReport getInstance() {
 		if (TAB_UPDADE_REPORT == null) {
 			TAB_UPDADE_REPORT = new TabUpdateReport();

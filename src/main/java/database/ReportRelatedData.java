@@ -211,6 +211,23 @@ public class ReportRelatedData {
 		}
 		return result; 
 	}
+	public static Boolean getRPT_ACTIVE (String nameReport, int categoryId) throws Exception {
+		String schema = MyProperties.getProperty("schema");
+		String RPT_ID = getRPT_ID(nameReport, categoryId);
+		String getRptActive = "USE [SCPRD] "
+							 +"SELECT RPT_ACTIVE " 
+							 +"FROM ["+schema+"].PBSRPT_REPORTS " 
+							 +"WHERE RPT_ID = '"+RPT_ID+"'";	
+		String result = null;
+		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
+				Statement statement = connection.createStatement();
+						ResultSet rs = statement.executeQuery(getRptActive)) {	
+			while(rs.next()) {
+				result = rs.getString(1);
+			}
+		}
+		return result.equals("Y") ? true : false; 
+	}
 	public static String getReportFilePath(String nameReport, int categoryId) throws Exception {
 		String schema = MyProperties.getProperty("schema");
 		String RPT_ID = getRPT_ID(nameReport, categoryId);
@@ -229,11 +246,11 @@ public class ReportRelatedData {
 		return result;
 	}
 
-	public static void updateReport(String nameReport, Integer categoryId, String newRPT_ID, Integer newCategoryId, String newNameReport, String newNameFileReport) throws Exception {
+	public static void updateReport(String nameReport, Integer categoryId, String newRPT_ID, Integer newCategoryId, String newNameReport, String newNameFileReport, Boolean rptActive) throws Exception {
 		String schema = MyProperties.getProperty("schema");
 		String RPT_ID = getRPT_ID(nameReport, categoryId);
 		//
-		String setRPT_ID, setCategoryId, setNameReport, setNameFileReport = null;
+		String setRPT_ID, setCategoryId, setNameReport, setNameFileReport,setRptActive = null;
 		if (newRPT_ID != null) setRPT_ID = ",RPT_ID = '"+newRPT_ID+"' ";
 		else setRPT_ID = "";
 		//
@@ -245,7 +262,13 @@ public class ReportRelatedData {
 		//  
 		if (newNameFileReport != null) setNameFileReport = ",BIRTRPT_URL = '/frameset?__report=report/"+newNameFileReport+".rptdesign' ";
 		else setNameFileReport = "";
-		String temp = (setRPT_ID + setCategoryId + setNameReport + setNameFileReport);
+		//
+		if (rptActive != null) {
+			String YN = rptActive ? "Y" : "N";
+			setRptActive = ",RPT_ACTIVE = '"+YN+"' ";
+		} 
+		else setRptActive = "";
+		String temp = (setRPT_ID + setCategoryId + setNameReport + setNameFileReport+setRptActive);
 		String setFildsReport = temp.substring(1, temp.length());	
 		
 		String updatePBSRPT_REPORTS = "USE [SCPRD] "

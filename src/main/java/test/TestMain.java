@@ -78,7 +78,10 @@ public class TestMain {
 			System.out.println(ParamsRelatedData.getListOfParam("11111111"));
 			System.out.println("-----------------------------------------------");
 		}
-	
+		System.out.println("-----------------------------------------------");
+		System.out.println("GEt rpt active ");
+		System.out.println(ReportRelatedData.getRPT_ACTIVE("Простой отчёт", 2));
+		System.out.println(ReportRelatedData.getRPT_ACTIVE("Отчёт с парам1", 1));
 		
 		
 		

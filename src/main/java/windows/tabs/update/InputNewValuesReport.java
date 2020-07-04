@@ -40,6 +40,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JCheckBox;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class InputNewValuesReport extends JDialog {
 
@@ -51,7 +55,6 @@ public class InputNewValuesReport extends JDialog {
 	private JLabel categoryLabel;
 	private JLabel nameReportLabel;
 	private JLabel fileNameLabel;
-	private Vector<CategoryAndId> listCategoryAndCodes;
 	private JComboBox<CategoryAndId> categoriesComboBox;
 	private JLabel lblDescr;
 	private JLabel lblRptid;
@@ -62,21 +65,23 @@ public class InputNewValuesReport extends JDialog {
 	//
 	private String previousNameReport;
 	private Integer previousCategoryId;
+	private JCheckBox rptActiveCheckBox;
 	//
+	private boolean isRPTActiveUses;
 	
 	public InputNewValuesReport(String nameReport, Integer categoryId, Vector<CategoryAndId> listCategoryAndCodes) throws Exception {
 		super(MainRunWindow.getInstance(), "Input values");
 		this.previousNameReport = nameReport;
 		this.previousCategoryId = categoryId;
-		this.listCategoryAndCodes = listCategoryAndCodes;
-		//ADD OLD VALUE
+	
+		//ADD <OLD VALUE>
 		Vector<CategoryAndId> list = new Vector<CategoryAndId>(listCategoryAndCodes);
 		list.add(0, new CategoryAndId(null, "<Old value>"));
 		listCategoryAndCodes = list;
 		//
 		
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setBounds(100, 100, 815, 200);
+		setBounds(100, 100, 830, 234);
 		Point p = MainRunWindow.getInstance().getLocation();
 		p.setLocation(p.getX(), p.getY()+100);
 		this.setLocation(p);
@@ -85,10 +90,10 @@ public class InputNewValuesReport extends JDialog {
 		panel.setAlignmentX(0.0f);
 		panel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{70, 332, 360, 0};
-		gbl_panel.rowHeights = new int[]{26, 27, 27, 27, 27, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.columnWidths = new int[]{70, 342, 377};
+		gbl_panel.rowHeights = new int[]{26, 27, 27, 27, 27};
+		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 		panel.setLayout(gbl_panel);
 		
 		lblDescr = new JLabel("Descr");
@@ -284,12 +289,20 @@ public class InputNewValuesReport extends JDialog {
 		gbc_fileNameField.gridx = 2;
 		gbc_fileNameField.gridy = 4;
 		panel.add(fileNameField, gbc_fileNameField);
+		
+		rptActiveCheckBox = new JCheckBox("RPT_ACTIVE");
+	
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(4)
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(4)
+							.addComponent(panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(rptActiveCheckBox)))
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
@@ -297,6 +310,8 @@ public class InputNewValuesReport extends JDialog {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(3)
 					.addComponent(panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(rptActiveCheckBox)
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		getContentPane().setLayout(groupLayout);
@@ -322,8 +337,17 @@ public class InputNewValuesReport extends JDialog {
 				if (RPT_IDField.getText().length() >= 8) // limit textfield to 8 characters
 		            e.consume(); 
 			}
+		});	
+		rptActiveCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				isRPTActiveUses = true;
+				System.out.println(isRPTActiveUses);
+			}
 		});
 		// set data from report 
+			//set RPT_ACTIVE
+			rptActiveCheckBox.setSelected(ReportRelatedData.getRPT_ACTIVE(this.previousNameReport, this.previousCategoryId));
+			//set report attr
 			String[] reportFields = ReportRelatedData.getReportFields(this.previousNameReport, this.previousCategoryId);
 				RPT_IDLabel.setText(reportFields    [0]);
 				categoryLabel.setText(reportFields  [1]);
@@ -412,6 +436,13 @@ public class InputNewValuesReport extends JDialog {
 		if (newCategory.getCategoryId() == null) return null;
 		return newCategory.getCategoryId();
 	}
+	/**
+	 * @return - if null means don`t update this value
+	 * */
+	public Boolean getRPT_ACTIVE() {
+		if (!isRPTActiveUses) return null;
+		return rptActiveCheckBox.isSelected();
+	}
 	//private////////////
 	private String getRPT_ID_private()  {
 		if (RPT_IDField.getBackground() == Color.LIGHT_GRAY && RPT_IDField.getText().trim().equals("<Old value>")) return null;
@@ -432,9 +463,15 @@ public class InputNewValuesReport extends JDialog {
 	public JTextField getNameReportField() {
 		return nameReportField;
 	}
+	/**
+	 * @return name report for init this obj
+	 * */
 	public String getPreviousNameReport() {
 		return previousNameReport;
 	}
+	/**
+	 * @return category for init this obj
+	 * */
 	public Integer getPreviousCategoryId() {
 		return previousCategoryId;
 	}
