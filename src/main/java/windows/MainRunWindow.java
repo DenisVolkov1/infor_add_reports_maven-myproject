@@ -135,7 +135,7 @@ public class MainRunWindow extends JFrame {
 
 		final JButton settings = new JButton(ICON_SETTING);
 		settings.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		settings.setBackground(SystemColor.activeCaption);
+		settings.setBackground(Color.LIGHT_GRAY);
 		settings.setRolloverIcon(new ImageIcon(getClass().getClassLoader().getResource("icon_settings.gif")));
 		settings.setPreferredSize(new Dimension(30, 3));
 		settings.addActionListener(new ActionListener() {
