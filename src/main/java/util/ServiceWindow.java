@@ -12,9 +12,9 @@ public class ServiceWindow {
 	
 	private ServiceWindow() {}
 
-	public static void stopService(String nameService) {
+	public static void stopService(String nameService) throws Exception {
 		  String[] command = {"cmd.exe", "/c", "net", "stop", nameService}; 
-		  try {
+
 			  Process process2 = new ProcessBuilder(command).start(); 
 			  BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process2.getInputStream(), "IBM866"));
 			  StringBuilder sb = new StringBuilder();
@@ -22,14 +22,11 @@ public class ServiceWindow {
 			  while ((line = bufferedReader.readLine()) != null) {
 				  sb.append(line); 
 			  }
-		  }
-		  catch (Exception ex) {
-			  DialogWindows.dialogWindowError(ex);
-			  	LOg.logToFile(ex);
-		  }
+		  
 	}
 	public static void startService(String nameService) throws Exception {
-		  String[] command = {"cmd.exe", "/c", "net", "start", nameService}; 
+		  String[] command = {"cmd.exe", "/c", "net", "start", nameService};
+		 
 			  Process process2 = new ProcessBuilder(command).start(); 
 			  BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process2.getInputStream(), "IBM866"));
 			  StringBuilder sb = new StringBuilder();
@@ -40,6 +37,8 @@ public class ServiceWindow {
 				  while ((line = bufferedReader.readLine()) != null) {
 					  sb.append(line);
 				  }
-			  }
+			  }  
+
 	}
+	
 }
