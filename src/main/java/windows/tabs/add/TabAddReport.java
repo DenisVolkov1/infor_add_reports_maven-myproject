@@ -518,10 +518,6 @@ public class TabAddReport extends TabSuperClass {
 							if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
 							}
-							if (newParam != null) {
-								newParam = null;
-									newParamButton.setEmptyHover();
-							}
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addDataBaseToggleButton.isSelected()) {
 						//
@@ -529,7 +525,8 @@ public class TabAddReport extends TabSuperClass {
 						nameReport     = nameReportField.getTextWithCheck();
 						nameFileReport = nameReportFileField.getTextWithCheck();
 						categoryId     = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
-						paramsFromPanel = newParam.getSettingParamsPanel().getlistOfParams();
+						if (newParam != null) paramsFromPanel = newParam.getSettingParamsPanel().getlistOfParams();
+					
 						//
 						if (autoInsertCheckBox.isSelected()) {
 							ReportRelatedData.insertReport(autoRPT_ID, nameReport, categoryId, nameFileReport);
