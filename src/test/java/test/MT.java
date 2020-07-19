@@ -25,7 +25,10 @@ public class MT {
 
 	public static void main(String[] args) throws Exception {
 		
-
+		
+		String nameRptFile = "rep_2_3_Case";
+			//System.out.println("qweqwe    rep_myrep10/".matches(".*\\s{4}"+nameRptFile+"/$"));
+			System.out.println("Печать этикетки ящика    rep_2_3_Case/".replaceFirst("\\s{4}"+nameRptFile+"/$", ""));
 		 
 
 	}

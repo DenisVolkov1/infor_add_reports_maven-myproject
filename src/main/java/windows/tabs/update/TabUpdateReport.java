@@ -440,7 +440,7 @@ public class TabUpdateReport extends TabSuperClass {
 						 WarArchive.createBackup(selectedFile);
 						 	WarArchive.addOrUpdateReportFileInArchive(selectedFile);
 							if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
-								nameReport = getNameReportFromBase();
+								nameReport = FilesRepository.getNameReport(getNameRptFile(), nameProgect);
 								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
 									DialogWindows.dialogWindowWarning("Report file successfully update! For report:\r\n\n"+nameReport);
 									return;
@@ -547,9 +547,9 @@ public class TabUpdateReport extends TabSuperClass {
 		} else if (updateFileArchiveToggleButton.isSelected()) {
 			if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 				matchCheckingProjectComboBox();
-				String nameReport = getNameReportFromBase();
+				String nameRptFile = getNameRptFile();
 				String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
-				FilesRepository.isExistFolderReport(nameReport, nameProgect);
+				FilesRepository.checkExistFolderReport(nameRptFile, nameProgect);
 			}
 			matchCheckingArchive();
 		}
@@ -559,18 +559,9 @@ public class TabUpdateReport extends TabSuperClass {
 			if (foldersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
 		}
 	}
-	private String getNameReportFromBase() throws Exception {
+	private String getNameRptFile() {
 		String updateNameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
-		Vector<String> reportNames = ReportRelatedData.getListOfReportNames(updateNameFileReport);
-		if (reportNames.size() == 1) {
-			 return reportNames.get(0);
-		} else {
-			String s = "";
-			for (String name : reportNames) {
-				s += name + "\n"; 
-			}
-			throw new InfoException("There is more than one report for this file.\n" + s);
-		}
+		return updateNameFileReport.replace(".rptdesign", "");
 	}
 
 	private boolean isChangeRepAttr() throws InfoException {

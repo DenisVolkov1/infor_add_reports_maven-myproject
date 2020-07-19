@@ -187,7 +187,6 @@ public class ParamsRelatedData {
 				}
 				values.deleteCharAt(values.length()-1);	
 				insertPBSRPT_REPORTS_PARAMS = insertPBSRPT_REPORTS_PARAMS + values.toString();
-				System.out.println(insertPBSRPT_REPORTS_PARAMS);
 			
 				try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 						Statement statement = connection.createStatement();

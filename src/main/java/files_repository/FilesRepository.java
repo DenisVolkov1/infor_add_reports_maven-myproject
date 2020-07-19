@@ -142,17 +142,43 @@ public class FilesRepository {
 	 * if folder exist -nothing
 	 * ,else throw Exception
 	 * @param nameProgect - example BPYARD/ -example valid name
+	 * @param nameRptFile - name Rpt design file
 	 */
-	public static void isExistFolderReport(String nameReport, String nameProgect) throws Exception {
+	public static void checkExistFolderReport(String nameRptFile, String nameProgect) throws Exception {
 		SmbFile smbFile = getSmbFileObject(repoPathToReportsFolder(nameProgect));
 		SmbFile[] listOfFoldersReport = smbFile.listFiles();
-		boolean b = false;
+		boolean isExist = false;
+		boolean double—oincidence = false;
 		for (SmbFile fileReport : listOfFoldersReport) {
 		    if (fileReport.isDirectory()) {
-		       if (fileReport.getName().matches(nameReport+".*")) b = true;
+		    	System.out.println(fileReport.getName());
+		       if (fileReport.getName().matches(".*\\s{4}"+nameRptFile+"/$")) {
+		    	   if (isExist) double—oincidence = true;
+		    	   isExist = true;
+		       }
 		    }
 		}
-		if (!b) throw new InfoException("Report folder in storage with this name not exist.");
+		if (double—oincidence) throw new InfoException("Exist two folder in storage with this name RPT name!\r\n\n("+nameRptFile+")");
+		if (!isExist) throw new InfoException("Report folder in storage with this RPT ("+nameRptFile+") name not exist.");
+	}
+	public static String getNameReport(String nameRptFile, String nameProgect) throws Exception {
+		SmbFile smbFile = getSmbFileObject(repoPathToReportsFolder(nameProgect));
+		SmbFile[] listOfFoldersReport = smbFile.listFiles();
+		boolean isExist = false;
+		boolean double—oincidence = false;
+		String nameFolderReport = null;
+		for (SmbFile fileReport : listOfFoldersReport) {
+		    if (fileReport.isDirectory()) {
+		       if (fileReport.getName().matches(".*\\s{4}"+nameRptFile+"/$")) {
+		    	   if (isExist) double—oincidence = true;
+		    	   isExist = true;
+		    	   nameFolderReport = fileReport.getName();
+		       }
+		    }
+		}
+		if (double—oincidence) throw new InfoException("Exist double folder in storage with this RPT name!\r\n\n("+nameRptFile+")");
+		if (nameFolderReport == null) return null;
+		return nameFolderReport.replaceFirst("\\s{4}"+nameRptFile+"/$", "");
 	}
 
 	public static String repoPathToReportsFolder(String nameProgect) {

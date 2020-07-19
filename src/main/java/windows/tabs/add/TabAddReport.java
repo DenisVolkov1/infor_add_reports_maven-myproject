@@ -518,6 +518,10 @@ public class TabAddReport extends TabSuperClass {
 							if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
 							}
+							if (newParam != null) {
+								newParam = null;
+								newParamButton.setEmptyHover();
+							}
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addDataBaseToggleButton.isSelected()) {
 						//

@@ -212,7 +212,7 @@ public class TabRepositories extends TabSuperClass {
 					nameProgect    = (String)foldersProjectComboBox.getSelectedItem();
 					//
 					matchCheckingValidInputData();
-						FilesRepository.isExistFolderReport(nameReport, nameProgect);
+						FilesRepository.checkExistFolderReport(nameReport, nameProgect);
 					//
 					FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
 						foldersProjectComboBox.setSelectedIndex(-1);
