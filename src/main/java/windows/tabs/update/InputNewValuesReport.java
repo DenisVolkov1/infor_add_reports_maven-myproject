@@ -67,13 +67,11 @@ public class InputNewValuesReport extends JDialog {
 	private Integer previousCategoryId;
 	private JCheckBox rptActiveCheckBox;
 	//
-<<<<<<< Upstream, based on branch 'master' of https://github.com/DenisVolkov1/infor_add_reports_maven-myproject.git
+
 	private boolean isRPTActiveUses;
 	
 	public InputNewValuesReport(String nameReport, Integer categoryId, Vector<CategoryAndId> listCategoryAndCodes) throws Exception {
-=======
-	public InputNewValuesReport(String nameReport, Integer categoryId) throws Exception {
->>>>>>> 599ea29 а1
+
 		super(MainRunWindow.getInstance(), "Input values");
 		this.previousNameReport = nameReport;
 		this.previousCategoryId = categoryId;
