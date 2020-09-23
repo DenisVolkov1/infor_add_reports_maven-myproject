@@ -5,20 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.swing.JPanel;
-
-import org.omg.PortableServer.AdapterActivator;
+import javax.swing.SwingWorker;
 
 import database.CategoryRelatedData;
 import database.ConnectionMSSQL;
-import database.ParamsRelatedData;
-import database.ReportRelatedData;
 import exception.InfoException;
 import files_repository.FilesRepository;
 import log.LOg;
@@ -52,7 +45,15 @@ public class TabSuperClass extends JPanel {
 		adapterListProjectsNames = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
-				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+				    @Override
+				    public Void doInBackground() {
+				    	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						return null;
+				    }
+				};
+				worker.execute();
+				//
 				try {
 					boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
 					if(isSetRepo) {

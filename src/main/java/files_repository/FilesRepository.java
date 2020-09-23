@@ -2,12 +2,17 @@ package files_repository;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.lang.reflect.Field;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.SwingWorker;
 
 import exception.InfoException;
 import jcifs.smb.NtlmPasswordAuthentication;
@@ -21,7 +26,7 @@ import util.MyProperties;
 public class FilesRepository {
 	
 	private FilesRepository() {}
-	
+		
 	public static NtlmPasswordAuthentication getAuthentication() {
 		String password = MyProperties.getProperty("repPassword"); 
 		String userName = MyProperties.getProperty("repUsername"); 
@@ -29,9 +34,8 @@ public class FilesRepository {
 	}
 	private static SmbFile getSmbFileObject(String url) throws Exception {
 		SmbFile res = new SmbFile(url,getAuthentication());
-		res.setConnectTimeout(10);
-		res.setReadTimeout(10);
 		return res;
+		
 	}
 	
 	public static boolean isOpenRepo() throws Exception {
