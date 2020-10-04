@@ -234,7 +234,6 @@ public class FilesRepository {
 		    	   if (isExist) double—oincidence = true;
 		    	   isExist = true;
 		    	   nameFolderReport = fileReport.getName();
-		    	   System.out.println(nameFolderReport);
 		       }
 		    }
 		}
