@@ -550,7 +550,7 @@ public class TabUpdateReport extends TabSuperClass {
 				String nameRptFile = getNameRptFile();
 				String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
 				File selectedFile   = fileChooser.getSelectedFile();
-				FilesRepository.checkExistFolderReport(nameRptFile, nameProgect, selectedFile);
+				FilesRepository.checkExistFolderReport(FilesRepository.getNameReport(nameRptFile, nameProgect), nameProgect, selectedFile);
 			}
 			matchCheckingArchive();
 		}
