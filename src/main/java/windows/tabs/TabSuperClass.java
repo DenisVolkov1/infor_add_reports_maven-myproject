@@ -19,6 +19,7 @@ import util.CategoryAndId;
 import util.DialogWindows;
 import util.MyProperties;
 import util.ServiceWindow;
+import windows.MainRunWindow;
 import windows.SettingsWindow;
 
 public class TabSuperClass extends JPanel {
@@ -47,13 +48,14 @@ public class TabSuperClass extends JPanel {
 			public void componentShown(ComponentEvent e) {
 				SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 				    @Override
-				    public Void doInBackground() {
+				    public Void doInBackground() throws InterruptedException {
 				    	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 						return null;
 				    }
 				};
 				worker.execute();
 				//
+	
 				try {
 					boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
 					if(isSetRepo) {
@@ -61,10 +63,11 @@ public class TabSuperClass extends JPanel {
 					}
 				} catch (Exception e1) {
 					LOg.logToFile(e1);
-					return;
 				} finally {
 					setCursor(null);
+		
 				}
+			
 			}
 		};
 		this.addComponentListener(adapterListProjectsNames);
@@ -119,5 +122,6 @@ public class TabSuperClass extends JPanel {
 	public ComponentAdapter getListProjectsNamesAdapter() {
 		return adapterListProjectsNames;
 	}
+
 
 }
