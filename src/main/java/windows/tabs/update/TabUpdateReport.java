@@ -441,7 +441,7 @@ public class TabUpdateReport extends TabSuperClass {
 						 	WarArchive.addOrUpdateReportFileInArchive(selectedFile);
 							if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 								nameReport = FilesRepository.getNameReport(getNameRptFile(), nameProgect);
-								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
+								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile,FilesRepository.Type.UPDATE);
 									DialogWindows.dialogWindowWarning("Report file successfully update! For report:\r\n\n"+nameReport);
 									return;
 							}
@@ -549,7 +549,8 @@ public class TabUpdateReport extends TabSuperClass {
 				matchCheckingProjectComboBox();
 				String nameRptFile = getNameRptFile();
 				String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
-				FilesRepository.checkExistFolderReport(nameRptFile, nameProgect);
+				File selectedFile   = fileChooser.getSelectedFile();
+				FilesRepository.checkExistFolderReport(FilesRepository.getNameReport(nameRptFile, nameProgect), nameProgect, selectedFile);
 			}
 			matchCheckingArchive();
 		}

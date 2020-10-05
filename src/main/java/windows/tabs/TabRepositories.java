@@ -185,9 +185,9 @@ public class TabRepositories extends TabSuperClass {
 					nameProgect    = (String)foldersProjectComboBox.getSelectedItem();
 					//
 					matchCheckingValidInputData();
-						FilesRepository.isNotExistFolderReport(nameReport, nameProgect);
+						FilesRepository.isNotExistFolderReport(nameReport, nameProgect, selectedFile);
 					//
-					FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
+					FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile, FilesRepository.Type.CREATE);
 						foldersProjectComboBox.setSelectedIndex(-1);
 						DialogWindows.dialogWindowWarning("Report files successfully added in repositories:\n"+listFilesNameSend());
 				} catch (InfoException ie) {
@@ -212,9 +212,9 @@ public class TabRepositories extends TabSuperClass {
 					nameProgect    = (String)foldersProjectComboBox.getSelectedItem();
 					//
 					matchCheckingValidInputData();
-						FilesRepository.checkExistFolderReport(nameReport, nameProgect);
+						FilesRepository.checkExistFolderReport(nameReport, nameProgect, selectedFile);
 					//
-					FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
+					FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile,FilesRepository.Type.UPDATE);
 						foldersProjectComboBox.setSelectedIndex(-1);
 						DialogWindows.dialogWindowWarning("Report files successfully updated in repositories:\n"+listFilesNameSend());
 				} catch (InfoException ie) {

@@ -516,7 +516,7 @@ public class TabAddReport extends TabSuperClass {
 						WarArchive.createBackup(selectedFile);
 							WarArchive.addOrUpdateReportFileInArchive(selectedFile);
 							if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
-								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile);
+								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile,FilesRepository.Type.CREATE);
 							}
 							if (newParam != null) {
 								newParam = null;
@@ -577,7 +577,8 @@ public class TabAddReport extends TabSuperClass {
 				matchCheckingProjectComboBox();
 				String nameReport = nameReportField.getText().trim();
 				String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
-					FilesRepository.isNotExistFolderReport(nameReport, nameProgect);
+				File selectedFile   = fileChooser.getSelectedFile();
+					FilesRepository.isNotExistFolderReport(nameReport, nameProgect, selectedFile);
 			}
 			if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
 			matchCheckingDataBase();
