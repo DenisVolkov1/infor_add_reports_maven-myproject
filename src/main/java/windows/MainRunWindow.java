@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
@@ -124,6 +125,14 @@ public class MainRunWindow extends JFrame {
 		//Repositories tab
 		if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 		tabbedPane.addTab("Repositories", TabRepositories.getInstance());
+		
+//    	JPanel glass = (JPanel) getGlassPane();
+//    	//glass.setBounds(100, 100, 250, 80);
+//    	glass.setLayout(new GridBagLayout());
+//    	glass.add(new JLabel("LOADINGGGGGGGGGGG"));
+//    	glass.setVisible(true);
+//    	contentPane.repaint();
+		
 		}
 		
 		//////////////
