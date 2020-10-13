@@ -33,7 +33,7 @@ import util.CategoryAndId;
 import util.DialogWindows;
 import util.MyProperties;
 import util.ServiceWindow;
-import util.my_components.ConPanelLoad;
+import util.my_components.WaitPanel;
 import windows.MainRunWindow;
 import windows.SettingsWindow;
 
@@ -80,7 +80,7 @@ public class TabSuperClass extends JPanel {
 						    		//MainRunWindow.getInstance().getContentPane().get
 							    	JPanel glass = (JPanel) MainRunWindow.getInstance().getGlassPane();	
 							    	glass.setLayout(new GridBagLayout());
-							    	glass.add(new ConPanelLoad("Losd"));
+							    	glass.add(new WaitPanel("Losd"));
 							    	glass.setVisible(true);
 		
 									if (FilesRepository.isOpenRepo()) refresListNameProjects();

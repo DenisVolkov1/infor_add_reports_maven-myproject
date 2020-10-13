@@ -11,13 +11,13 @@ import javax.swing.border.BevelBorder;
 import java.awt.Color;
 import java.awt.SystemColor;
 
-public class ConPanelLoad extends JPanel {
+public class WaitPanel extends JPanel {
 	private JLabel text;
 
 	/**
 	 * Create the panel.
 	 */
-	public ConPanelLoad(String textStr) {
+	public WaitPanel(String textStr) {
 		//setBounds(100, 500, 250, 80);
 		setBorder(new BevelBorder(BevelBorder.RAISED, new Color(64, 64, 64), new Color(128, 128, 128), new Color(153, 180, 209), SystemColor.inactiveCaption));
 		text = new JLabel(textStr);
