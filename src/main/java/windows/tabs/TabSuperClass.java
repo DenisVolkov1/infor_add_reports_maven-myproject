@@ -1,29 +1,16 @@
 package windows.tabs;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
-import java.awt.Font;
-import java.awt.GridBagLayout;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.TimerTask;
 import java.util.Vector;
-import java.util.jar.Manifest;
-
-import javax.swing.GroupLayout;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.border.BevelBorder;
-
 import database.CategoryRelatedData;
 import database.ConnectionMSSQL;
 import exception.InfoException;
@@ -33,7 +20,6 @@ import util.CategoryAndId;
 import util.DialogWindows;
 import util.MyProperties;
 import util.ServiceWindow;
-import util.my_components.WaitPanel;
 import windows.MainRunWindow;
 import windows.SettingsWindow;
 
@@ -67,40 +53,41 @@ public class TabSuperClass extends JPanel {
 					
 					boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
 					if(isSetRepo) {
-						java.util.Timer timer = new java.util.Timer();
-						final TimerTask task = new TimerTask() {
-							public void run() {
-								setEnableRec(MainRunWindow.getInstance().getContentPane(), false);
-								String repPathDir = MyProperties.getProperty("repPathDir");
-						    		MainRunWindow.setVisibleGlassPanel("Cnnectoin to: "+repPathDir.substring(0,10));
-							}
-						};
-						timer.schedule( task, 1200 );// run if task undone for 1,2 seconds.
-						Thread someThread = new Thread(new Runnable(){
-						    public void run() {
-						      // new Thread 
-						    	try {
-						    		Thread.yield();						    		
-
-									if (FilesRepository.isOpenRepo()) refresListNameProjects();	//task...
-									//
-								    SwingUtilities.invokeLater(new Runnable(){
-								    	public void run() {
-								    		try {
-								    			task.cancel();
-								    		}
-								    		finally {
-								    			MainRunWindow.hideGlassPanel();
-												setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
-											}					
-								    	}
-								    });
-								} catch (Exception e) {
-									LOg.logToFile(e);
-								}	
-						  }
-						});
-						someThread.start(); 
+//						java.util.Timer timer = new java.util.Timer();
+//						final TimerTask task = new TimerTask() {
+//							public void run() {
+//								setEnableRec(MainRunWindow.getInstance().getContentPane(), false);
+//								String repPathDir = MyProperties.getProperty("repPathDir");
+//						    		MainRunWindow.setVisibleGlassPanel("Cnnectoin to: "+repPathDir.substring(0,10));
+//							}
+//						};
+//						timer.schedule( task, 1200 );// run if task undone for 1,2 seconds.
+//						Thread someThread = new Thread(new Runnable(){
+//						    public void run() {
+//						      // new Thread 
+//						    	try {
+//						    		Thread.yield();						    		
+//
+//									if (FilesRepository.isOpenRepo()) refresListNameProjects();	//task...
+//									//
+//								    SwingUtilities.invokeLater(new Runnable(){
+//								    	public void run() {
+//								    		try {
+//								    			task.cancel();
+//								    			System.out.println("task end!!!!");
+//								    		}
+//								    		finally {
+//								    			MainRunWindow.hideGlassPanel();
+//												setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
+//											}					
+//								    	}
+//								    });
+//								} catch (Exception e) {
+//									LOg.logToFile(e);
+//								}	
+//						  }
+//						});
+//						someThread.start(); 
 					}					
 				} catch (Exception e1) {
 					LOg.logToFile(e1);
@@ -138,22 +125,6 @@ public class TabSuperClass extends JPanel {
 			LOg.logToFile(e);
 			DialogWindows.dialogWindowError(e);
 		}
-	}
-	/** Disable or Enable all sub Component. 
-	 * @param container - Upper Container
-	 * @param b - enable(true) or Disable(false)
-	 * */
-	private void setEnableRec(Component container, boolean b){
-	    container.setEnabled(b);
-
-	    try {
-	        Component[] components= ((Container) container).getComponents();
-	        for (int i = 0; i < components.length; i++) {
-	            setEnableRec(components[i], b);
-	        }
-	    } catch (ClassCastException e) {
-
-	    }
 	}
 	public void refreshCategory() {
 		listCategoryAndCodes.clear();

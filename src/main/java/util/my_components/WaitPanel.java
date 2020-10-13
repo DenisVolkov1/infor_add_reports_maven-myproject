@@ -13,6 +13,15 @@ import java.awt.SystemColor;
 import javax.swing.JProgressBar;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager;
+import java.awt.FlowLayout;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+import net.miginfocom.swing.MigLayout;
 
 public class WaitPanel extends JPanel {
 	private JLabel text;
@@ -22,41 +31,32 @@ public class WaitPanel extends JPanel {
 	 */
 	public WaitPanel() {
 		//setBounds(100, 500, 250, 80);
-		setBorder(new BevelBorder(BevelBorder.RAISED, new Color(64, 64, 64), new Color(128, 128, 128), new Color(153, 180, 209), SystemColor.inactiveCaption));
+		setBorder(new BevelBorder(BevelBorder.RAISED, new Color(64, 64, 64), new Color(128, 128, 128), new Color(153, 180, 209), Color.DARK_GRAY));
+		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		text = new JLabel();
+		text.setText("444444444444444444444444444444444444");
 		text.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		add(text);
+		
+		JLabel lblEmpty = new JLabel();
+		lblEmpty.setForeground(SystemColor.control);
+		lblEmpty.setText("EMPTYEMPTY");
+		lblEmpty.setFont(new Font("Tahoma", Font.PLAIN, 5));
+		add(lblEmpty);
 		
 		JProgressBar progressBar = new JProgressBar();
-		progressBar.setForeground(Color.CYAN);
+		progressBar.setBackground(SystemColor.text);
+		progressBar.setToolTipText("");
+		progressBar.setForeground(SystemColor.activeCaption);
 		progressBar.setIndeterminate(true);
-		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(47, Short.MAX_VALUE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-							.addComponent(text)
-							.addGap(85))
-						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-							.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(43))))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap(19, Short.MAX_VALUE)
-					.addComponent(text)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 12, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap())
-		);
-		setLayout(groupLayout);
+		add(progressBar);
 		setVisible(true);
 
 	}
 
 	public void setText(String text) {
-		this.text.setText(text);
+		if(text.length() >= 36) {
+			this.text.setText(text.substring(0,32)+"...");
+		} else this.text.setText(text);
 	}
 }

@@ -10,13 +10,13 @@ public class DialogWindows {
 
 	public static void dialogWindowError(String messageError) {
 		 JOptionPane.showMessageDialog(MainRunWindow.getInstance(),
-				    messageError,
+				 DialogWindows.trimLongMessage(messageError),
 				         "Error",
 				     JOptionPane.ERROR_MESSAGE);
 	}
 	public static void dialogWindowError(String messageErrorHeader, Exception e) {
 		 JOptionPane.showMessageDialog(MainRunWindow.getInstance(),
-				  e.getMessage(),
+				 DialogWindows.trimLongMessage(e.getMessage()),
 			  messageErrorHeader,
 				     JOptionPane.ERROR_MESSAGE);
 	}
@@ -24,15 +24,20 @@ public class DialogWindows {
 		String pattern = "([à-ÿÀ-ßa-zA-Z'])(\\.)([' à-ÿÀ-ßa-zA-Z&&[^wrz]])";
 		if (e.getMessage() == null) { e.printStackTrace(); return; }
 		 JOptionPane.showMessageDialog(MainRunWindow.getInstance(),
-				    e.getMessage().replaceAll(pattern,"$1\\.\n$3"),
+				 DialogWindows.trimLongMessage(e.getMessage()).replaceAll(pattern,"$1\\.\n$3"),
 			e.getClass().getName(),
 				     JOptionPane.ERROR_MESSAGE);
 	}
 	public static void dialogWindowWarning(String message) {
 		 JOptionPane.showMessageDialog(MainRunWindow.getInstance(),
-				          message,
+				 DialogWindows.trimLongMessage(message),
 				               "",
 				     JOptionPane.WARNING_MESSAGE);
+	}
+	private static String trimLongMessage(String message) {
+		if (message.length() >= 65) {
+			return message.substring(0,43)+"...";
+		} else return message;
 	}
 	/**
 	 * @param messageQuestion 

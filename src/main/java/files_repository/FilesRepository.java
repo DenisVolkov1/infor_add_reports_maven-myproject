@@ -3,15 +3,17 @@ package files_repository;
 import java.io.File;
 import java.io.FileFilter;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.TimerTask;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import exception.InfoException;
@@ -22,8 +24,11 @@ import jcifs.smb.SmbFileOutputStream;
 import log.LOg;
 import util.DialogWindows;
 import util.MyProperties;
+import util.Util;
+import windows.MainRunWindow;
 
 public class FilesRepository {
+	static boolean noErrorAfterConnection;
 	
 	private FilesRepository() {}
 	
@@ -37,13 +42,71 @@ public class FilesRepository {
 		String userName = MyProperties.getProperty("repUsername"); 
 		return new NtlmPasswordAuthentication(null,userName,password);
 	}
-	public static SmbFile getSmbFileObject(String url) throws Exception {
+	public static SmbFile getSmbFileObject(String url) throws MalformedURLException {
 		SmbFile res = new SmbFile(url,getAuthentication());
 		return res;
 		
 	}
 	
 	public static boolean isOpenRepo() throws Exception {
+		java.util.Timer timer = new java.util.Timer();
+		final TimerTask task = new TimerTask() {
+			public void run() {
+				Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), false);
+				String repPathDir = MyProperties.getProperty("repPathDir");
+		    		MainRunWindow.setVisibleGlassPanel("Cnnectoin to: "+repPathDir.substring(0,10));
+			}
+		};
+		timer.schedule( task, 1200 );// run if task undone for 1,2 seconds.
+		Thread someThread = new Thread(new Runnable(){
+		    public void run() {
+		      // new Thread 
+		    	try {
+		    		Thread.yield();						    		
+
+		    		getSmbFileObject(repoPathToProjectsFolder()).connect();//task...
+		    		noErrorAfterConnection = true;
+					//
+				    SwingUtilities.invokeLater(new Runnable(){
+				    	public void run() {
+				    		try {
+				    			task.cancel();
+				    		}
+				    		finally {
+				    			MainRunWindow.hideGlassPanel();
+								Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
+							}					
+				    	}
+				    });
+				} catch (Exception e) {
+					LOg.logToFile(e);
+						DialogWindows.dialogWindowError(e);
+				}	
+		  }
+		});
+		someThread.start(); 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		try {
 			getSmbFileObject(repoPathToProjectsFolder()).connect();
 			return true;
@@ -55,7 +118,6 @@ public class FilesRepository {
 	}
 	/***
 	 * @param nameProgect - example BPYARD/ -example valid name
-	 *
 	 */
 	public static boolean isExistProjectFolder(String nameProgect) throws Exception {
 		try {
