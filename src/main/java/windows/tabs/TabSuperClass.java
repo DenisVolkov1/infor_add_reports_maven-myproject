@@ -75,7 +75,7 @@ public class TabSuperClass extends JPanel {
 						    		MainRunWindow.setVisibleGlassPanel("Cnnectoin to: "+repPathDir.substring(0,10));
 							}
 						};
-						timer.schedule( task, 2000 );// run if task undone for 2 seconds.
+						timer.schedule( task, 1200 );// run if task undone for 1,2 seconds.
 						Thread someThread = new Thread(new Runnable(){
 						    public void run() {
 						      // new Thread 
@@ -95,9 +95,8 @@ public class TabSuperClass extends JPanel {
 											}					
 								    	}
 								    });
-
 								} catch (Exception e) {
-									e.printStackTrace();
+									LOg.logToFile(e);
 								}	
 						  }
 						});
@@ -105,8 +104,6 @@ public class TabSuperClass extends JPanel {
 					}					
 				} catch (Exception e1) {
 					LOg.logToFile(e1);
-				} finally {
-	
 				}
 			}
 		};
