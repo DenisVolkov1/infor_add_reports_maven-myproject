@@ -1,14 +1,28 @@
 package windows.tabs;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.GridBagLayout;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.TimerTask;
 import java.util.Vector;
+import java.util.jar.Manifest;
 
+import javax.swing.GroupLayout;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.border.BevelBorder;
 
 import database.CategoryRelatedData;
 import database.ConnectionMSSQL;
@@ -19,6 +33,7 @@ import util.CategoryAndId;
 import util.DialogWindows;
 import util.MyProperties;
 import util.ServiceWindow;
+import util.my_components.ConPanelLoad;
 import windows.MainRunWindow;
 import windows.SettingsWindow;
 
@@ -30,6 +45,7 @@ public class TabSuperClass extends JPanel {
 	protected static ActionListener refreshService;
 	private ComponentAdapter adapterCategories;
 	private ComponentAdapter adapterListProjectsNames;
+	JPanel glass = null;
 	
 	public TabSuperClass() {
 		
@@ -46,25 +62,46 @@ public class TabSuperClass extends JPanel {
 		adapterListProjectsNames = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
-				SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-				    @Override
-				    public Void doInBackground() throws InterruptedException {
-				    	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-						return null;
-				    }
-				};
-				worker.execute();
-				//
-	
+
+				
 				try {
+					
 					boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
 					if(isSetRepo) {
-						if (FilesRepository.isOpenRepo()) refresListNameProjects();
+						  // Задаем время, через которое должен включиться progressBar,
+						  // Если задача еще не выполнена
+					
+						  Thread someThread = new Thread(new Runnable(){
+						    public void run() {
+						      // Тут идет обработка.
+						    	try {
+						    		Thread.yield();
+						    		setEnableRec(MainRunWindow.getInstance().getContentPane(), false);
+						    		//MainRunWindow.getInstance().getContentPane().get
+							    	JPanel glass = (JPanel) MainRunWindow.getInstance().getGlassPane();	
+							    	glass.setLayout(new GridBagLayout());
+							    	glass.add(new ConPanelLoad("Losd"));
+							    	glass.setVisible(true);
+		
+									if (FilesRepository.isOpenRepo()) refresListNameProjects();
+									if (glass != null) glass.setVisible(false);
+								
+									glass.setVisible(false);
+									setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+						    	//
+						  }
+						});
+						someThread.start(); 
 					}
+					
 				} catch (Exception e1) {
 					LOg.logToFile(e1);
 				} finally {
-					setCursor(null);
+					if (glass != null) glass.setVisible(false);
 		
 				}
 			
@@ -101,6 +138,22 @@ public class TabSuperClass extends JPanel {
 			LOg.logToFile(e);
 			DialogWindows.dialogWindowError(e);
 		}
+	}
+	/** Disable or Enable all sub Component. 
+	 * @param container - Upper Container
+	 * @param b - enable(true) or Disable(false)
+	 * */
+	private void setEnableRec(Component container, boolean b){
+	    container.setEnabled(b);
+
+	    try {
+	        Component[] components= ((Container) container).getComponents();
+	        for (int i = 0; i < components.length; i++) {
+	            setEnableRec(components[i], b);
+	        }
+	    } catch (ClassCastException e) {
+
+	    }
 	}
 	public void refreshCategory() {
 		listCategoryAndCodes.clear();
