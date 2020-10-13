@@ -67,35 +67,47 @@ public class TabSuperClass extends JPanel {
 					
 					boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
 					if(isSetRepo) {
-
-						  Thread someThread = new Thread(new Runnable(){
+						java.util.Timer timer = new java.util.Timer();
+						final TimerTask task = new TimerTask() {
+							public void run() {
+								setEnableRec(MainRunWindow.getInstance().getContentPane(), false);
+								String repPathDir = MyProperties.getProperty("repPathDir");
+						    		MainRunWindow.setVisibleGlassPanel("Cnnectoin to: "+repPathDir.substring(0,10));
+							}
+						};
+						timer.schedule( task, 2000 );// run if task undone for 2 seconds.
+						Thread someThread = new Thread(new Runnable(){
 						    public void run() {
 						      // new Thread 
 						    	try {
-						    		Thread.yield();
-						    		setEnableRec(MainRunWindow.getInstance().getContentPane(), false);
-						    		String repPathDir = MyProperties.getProperty("repPathDir");
-							    	 MainRunWindow.setVisibleGlassPanel("Cnnectoin to: "+repPathDir.substring(0,10));
-									if (FilesRepository.isOpenRepo()) refresListNameProjects();
+						    		Thread.yield();						    		
+
+									if (FilesRepository.isOpenRepo()) refresListNameProjects();	//task...
+									//
+								    SwingUtilities.invokeLater(new Runnable(){
+								    	public void run() {
+								    		try {
+								    			task.cancel();
+								    		}
+								    		finally {
+								    			MainRunWindow.hideGlassPanel();
+												setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
+											}					
+								    	}
+								    });
 
 								} catch (Exception e) {
 									e.printStackTrace();
-								} finally {
-									 MainRunWindow.hideGlassPanel();
-									 setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
-								}
+								}	
 						  }
 						});
 						someThread.start(); 
-					}
-					
+					}					
 				} catch (Exception e1) {
 					LOg.logToFile(e1);
 				} finally {
-
-		
+	
 				}
-			
 			}
 		};
 		this.addComponentListener(adapterListProjectsNames);
