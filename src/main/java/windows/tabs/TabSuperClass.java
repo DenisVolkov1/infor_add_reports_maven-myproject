@@ -45,7 +45,7 @@ public class TabSuperClass extends JPanel {
 	protected static ActionListener refreshService;
 	private ComponentAdapter adapterCategories;
 	private ComponentAdapter adapterListProjectsNames;
-	JPanel glass = null;
+
 	
 	public TabSuperClass() {
 		
@@ -63,36 +63,27 @@ public class TabSuperClass extends JPanel {
 			@Override
 			public void componentShown(ComponentEvent e) {
 
-				
 				try {
 					
 					boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
 					if(isSetRepo) {
-						  // Задаем время, через которое должен включиться progressBar,
-						  // Если задача еще не выполнена
-					
+
 						  Thread someThread = new Thread(new Runnable(){
 						    public void run() {
-						      // Тут идет обработка.
+						      // new Thread 
 						    	try {
 						    		Thread.yield();
 						    		setEnableRec(MainRunWindow.getInstance().getContentPane(), false);
-						    		//MainRunWindow.getInstance().getContentPane().get
-							    	JPanel glass = (JPanel) MainRunWindow.getInstance().getGlassPane();	
-							    	glass.setLayout(new GridBagLayout());
-							    	glass.add(new WaitPanel("Losd"));
-							    	glass.setVisible(true);
-		
+						    		String repPathDir = MyProperties.getProperty("repPathDir");
+							    	 MainRunWindow.setVisibleGlassPanel("Cnnectoin to: "+repPathDir.substring(0,10));
 									if (FilesRepository.isOpenRepo()) refresListNameProjects();
-									if (glass != null) glass.setVisible(false);
-								
-									glass.setVisible(false);
-									setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
+
 								} catch (Exception e) {
-									// TODO Auto-generated catch block
 									e.printStackTrace();
+								} finally {
+									 MainRunWindow.hideGlassPanel();
+									 setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
 								}
-						    	//
 						  }
 						});
 						someThread.start(); 
@@ -101,7 +92,7 @@ public class TabSuperClass extends JPanel {
 				} catch (Exception e1) {
 					LOg.logToFile(e1);
 				} finally {
-					if (glass != null) glass.setVisible(false);
+
 		
 				}
 			

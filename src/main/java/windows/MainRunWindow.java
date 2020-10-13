@@ -1,6 +1,5 @@
 package windows;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -8,13 +7,8 @@ import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.SystemColor;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -25,18 +19,15 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import log.LOg;
-import test.TestMain;
-import util.DialogWindows;
 import util.MyProperties;
+import util.my_components.WaitPanel;
 import windows.tabs.TabCategories;
 import windows.tabs.TabConnectionMSSQLServer;
 import windows.tabs.TabDeleteReport;
@@ -46,14 +37,13 @@ import windows.tabs.add.TabAddReport;
 import windows.tabs.update.TabUpdateReport;
 
 import java.awt.Cursor;
-import javax.swing.JToggleButton;
-import javax.swing.border.CompoundBorder;
 
 public class MainRunWindow extends JFrame {
 	private static MainRunWindow MAIN_RUN_WINDOW = null;
 	private static ImageIcon ICON_SETTING;
 	private static Image ICON_WINDOW;
 	private static JTabbedPane tabbedPane;
+	private static JPanel glassPanel;
 	{
 		try {
 			ICON_SETTING = new ImageIcon(ImageIO.read(getClass().getResource("/icon_settings.gif")));
@@ -126,13 +116,13 @@ public class MainRunWindow extends JFrame {
 		if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 		tabbedPane.addTab("Repositories", TabRepositories.getInstance());
 		
-//    	JPanel glass = (JPanel) getGlassPane();
-//    	//glass.setBounds(100, 100, 250, 80);
-//    	glass.setLayout(new GridBagLayout());
-//    	glass.add(new JLabel("LOADINGGGGGGGGGGG"));
-//    	glass.setVisible(true);
-//    	contentPane.repaint();
-		
+		// Set glass panel for top level JFrame comp.
+		glassPanel = (JPanel) getGlassPane();	
+		glassPanel.setLayout(new GridBagLayout());
+			// WaitPanel set this panel
+			glassPanel.add(new WaitPanel());
+		glassPanel.setVisible(false);
+
 		}
 		
 		//////////////
@@ -190,6 +180,14 @@ public class MainRunWindow extends JFrame {
 			}
 		
 		setVisible(true);
+	}
+	public static void setVisibleGlassPanel(String text) {
+		((WaitPanel)glassPanel.getComponent(0)).setText(text);
+		glassPanel.setVisible(true);
+	}
+	public static void hideGlassPanel() {
+		
+		glassPanel.setVisible(false);
 	}
 	public static MainRunWindow getInstance() {
 		if (MAIN_RUN_WINDOW == null) {
