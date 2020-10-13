@@ -2,26 +2,13 @@ package util.my_components;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.Font;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.BevelBorder;
 import java.awt.Color;
 import java.awt.SystemColor;
 import javax.swing.JProgressBar;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.UIManager;
 import java.awt.FlowLayout;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
-import net.miginfocom.swing.MigLayout;
+
 
 public class WaitPanel extends JPanel {
 	private JLabel text;
