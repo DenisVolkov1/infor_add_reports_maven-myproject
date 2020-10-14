@@ -60,7 +60,7 @@ public class TabSuperClass extends JPanel {
 					    		MainRunWindow.setVisibleGlassPanel("Cnnectoin to: "+repPathDir.substring(0,10));
 						}
 					};
-					timer.schedule( taskShowGlassPanel, 1000 );// run if task undone for 1 seconds.
+					timer.schedule( taskShowGlassPanel, 500 );// run if task undone for 0.5 seconds.
 					//
 					Thread someThread = new Thread(new Runnable(){
 					    public void run() {
