@@ -20,6 +20,7 @@ import util.CategoryAndId;
 import util.DialogWindows;
 import util.MyProperties;
 import util.ServiceWindow;
+import util.Util;
 import windows.MainRunWindow;
 import windows.SettingsWindow;
 
@@ -49,49 +50,50 @@ public class TabSuperClass extends JPanel {
 			@Override
 			public void componentShown(ComponentEvent e) {
 
-				try {
-					
-					boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
-					if(isSetRepo) {
-//						java.util.Timer timer = new java.util.Timer();
-//						final TimerTask task = new TimerTask() {
-//							public void run() {
-//								setEnableRec(MainRunWindow.getInstance().getContentPane(), false);
-//								String repPathDir = MyProperties.getProperty("repPathDir");
-//						    		MainRunWindow.setVisibleGlassPanel("Cnnectoin to: "+repPathDir.substring(0,10));
-//							}
-//						};
-//						timer.schedule( task, 1200 );// run if task undone for 1,2 seconds.
-//						Thread someThread = new Thread(new Runnable(){
-//						    public void run() {
-//						      // new Thread 
-//						    	try {
-//						    		Thread.yield();						    		
-//
-//									if (FilesRepository.isOpenRepo()) refresListNameProjects();	//task...
-//									//
-//								    SwingUtilities.invokeLater(new Runnable(){
-//								    	public void run() {
-//								    		try {
-//								    			task.cancel();
-//								    			System.out.println("task end!!!!");
-//								    		}
-//								    		finally {
-//								    			MainRunWindow.hideGlassPanel();
-//												setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
-//											}					
-//								    	}
-//								    });
-//								} catch (Exception e) {
-//									LOg.logToFile(e);
-//								}	
-//						  }
-//						});
-//						someThread.start(); 
-					}					
-				} catch (Exception e1) {
-					LOg.logToFile(e1);
-				}
+				boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
+				if(isSetRepo) {
+					java.util.Timer timer = new java.util.Timer();
+					final TimerTask taskShowGlassPanel = new TimerTask() {
+						public void run() {
+							Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), false);
+							String repPathDir = MyProperties.getProperty("repPathDir");
+					    		MainRunWindow.setVisibleGlassPanel("Cnnectoin to: "+repPathDir.substring(0,10));
+						}
+					};
+					timer.schedule( taskShowGlassPanel, 1000 );// run if task undone for 1 seconds.
+					//
+					Thread someThread = new Thread(new Runnable(){
+					    public void run() {
+					      // new Thread 
+					    	try {
+					    		Thread.yield();						    		
+
+					    		if(FilesRepository.isOpenRepo()) refresListNameProjects();//task...
+								//
+							    SwingUtilities.invokeLater(new Runnable(){
+							    	public void run() {
+							    		try {
+							    			taskShowGlassPanel.cancel();// 
+							    		} finally {
+							    			MainRunWindow.hideGlassPanel();
+											Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
+										}					
+							    	}
+							    });
+							} catch (Exception e) {
+								try {
+					    			taskShowGlassPanel.cancel();// 
+					    		} finally {
+					    			MainRunWindow.hideGlassPanel();
+									Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
+								}	
+								LOg.logToFile(e);
+									DialogWindows.dialogWindowError(e);
+							}	
+					  }
+					});
+					someThread.start();
+				}					
 			}
 		};
 		this.addComponentListener(adapterListProjectsNames);

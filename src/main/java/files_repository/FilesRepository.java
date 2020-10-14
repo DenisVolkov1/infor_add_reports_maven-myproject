@@ -2,6 +2,7 @@ package files_repository;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URLConnection;
@@ -28,7 +29,6 @@ import util.Util;
 import windows.MainRunWindow;
 
 public class FilesRepository {
-	static boolean noErrorAfterConnection;
 	
 	private FilesRepository() {}
 	
@@ -48,73 +48,10 @@ public class FilesRepository {
 		
 	}
 	
-	public static boolean isOpenRepo() throws Exception {
-		java.util.Timer timer = new java.util.Timer();
-		final TimerTask task = new TimerTask() {
-			public void run() {
-				Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), false);
-				String repPathDir = MyProperties.getProperty("repPathDir");
-		    		MainRunWindow.setVisibleGlassPanel("Cnnectoin to: "+repPathDir.substring(0,10));
-			}
-		};
-		timer.schedule( task, 1200 );// run if task undone for 1,2 seconds.
-		Thread someThread = new Thread(new Runnable(){
-		    public void run() {
-		      // new Thread 
-		    	try {
-		    		Thread.yield();						    		
-
-		    		getSmbFileObject(repoPathToProjectsFolder()).connect();//task...
-		    		noErrorAfterConnection = true;
-					//
-				    SwingUtilities.invokeLater(new Runnable(){
-				    	public void run() {
-				    		try {
-				    			task.cancel();
-				    		}
-				    		finally {
-				    			MainRunWindow.hideGlassPanel();
-								Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
-							}					
-				    	}
-				    });
-				} catch (Exception e) {
-					LOg.logToFile(e);
-						DialogWindows.dialogWindowError(e);
-				}	
-		  }
-		});
-		someThread.start(); 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		try {
-			getSmbFileObject(repoPathToProjectsFolder()).connect();
-			return true;
-		} catch (Exception e) {
-			LOg.logToFile(e);
-				DialogWindows.dialogWindowError(e);
-			return false;
-		}
+	public static boolean isOpenRepo() throws MalformedURLException, IOException {
+		getSmbFileObject(repoPathToProjectsFolder()).connect();
+		// -< exception like a false
+		return true;
 	}
 	/***
 	 * @param nameProgect - example BPYARD/ -example valid name
