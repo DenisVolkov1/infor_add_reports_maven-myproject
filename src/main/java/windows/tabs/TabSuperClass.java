@@ -32,7 +32,7 @@ public class TabSuperClass extends JPanel {
 	protected static ActionListener refreshService;
 	private ComponentAdapter adapterCategories;
 	private ComponentAdapter adapterListProjectsNames;
-
+	private static Thread someThread;
 	
 	public TabSuperClass() {
 		
@@ -49,7 +49,9 @@ public class TabSuperClass extends JPanel {
 		adapterListProjectsNames = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
-
+				
+				if (someThread != null && someThread.isAlive()) return;// check if thread connection task already run
+				
 				boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
 				if(isSetRepo) {
 					java.util.Timer timer = new java.util.Timer();
@@ -57,16 +59,15 @@ public class TabSuperClass extends JPanel {
 						public void run() {
 							Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), false);
 							String repPathDir = MyProperties.getProperty("repPathDir");
-					    		MainRunWindow.setVisibleGlassPanel("Cnnectoin to: "+repPathDir.substring(0,10));
+					    		MainRunWindow.setVisibleGlassPanel("Connection to: "+repPathDir.substring(0,10));
 						}
 					};
 					timer.schedule( taskShowGlassPanel, 500 );// run if task undone for 0.5 seconds.
 					//
-					Thread someThread = new Thread(new Runnable(){
+					someThread = new Thread(new Runnable(){
 					    public void run() {
 					      // new Thread 
-					    	try {
-					    		Thread.yield();						    		
+					    	try {						    		
 
 					    		if(FilesRepository.isOpenRepo()) refresListNameProjects();//task...
 								//

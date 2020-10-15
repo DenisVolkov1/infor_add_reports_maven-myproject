@@ -39,6 +39,8 @@ import windows.tabs.update.TabUpdateReport;
 import java.awt.Cursor;
 
 public class MainRunWindow extends JFrame {
+
+	private static final long serialVersionUID = 1710679467847343991L;
 	private static MainRunWindow MAIN_RUN_WINDOW = null;
 	private static ImageIcon ICON_SETTING;
 	private static Image ICON_WINDOW;
