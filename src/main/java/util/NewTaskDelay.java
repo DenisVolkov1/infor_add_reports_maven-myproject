@@ -46,11 +46,11 @@ public abstract class NewTaskDelay {
 			},nameThread);// name thread baseThread
 		System.out.println(listTheads.size());
 		for(Thread thread : listTheads) {
-			if (!thread.isAlive()) listTheads.remove(thread);
-			else {
-				System.out.println("add");
-				listTheads.add(taskThread);
-				taskThread.start();
+			if (!thread.isAlive()) {
+				System.out.println("thread=task");
+				thread = taskThread;
+				thread.start();
+				return;
 			}
 		}
 		System.out.println("add");
