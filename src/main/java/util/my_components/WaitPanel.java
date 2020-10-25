@@ -37,7 +37,7 @@ public class WaitPanel extends JPanel {
 		progressBar.setForeground(SystemColor.activeCaption);
 		progressBar.setIndeterminate(true);
 		add(progressBar);
-		setVisible(true);
+		setVisible(false);
 
 	}
 

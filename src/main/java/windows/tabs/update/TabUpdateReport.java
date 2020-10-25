@@ -76,7 +76,7 @@ public class TabUpdateReport extends TabSuperClass {
 	private JFileChooser fileChooser;
 	private MyHoverButton refreshServiceButton;
 	private MyHoverButton inputNewValuesButton;
-	private MyHoverButton paramsButton;
+	//private MyHoverButton paramsButton;
 	private JLabel ipDataSrcLabel;
 	private JComboBox<String> foldersProjectComboBox;
 	private JLabel lblProjectFolderIn;
@@ -156,9 +156,9 @@ public class TabUpdateReport extends TabSuperClass {
 		lblProjectFolderIn = new JLabel("Project folder in repositories");
 		lblProjectFolderIn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		paramsButton = new MyHoverButton("Params");
-		paramsButton.setFont(new Font("Dialog", Font.BOLD, 12));
-		paramsButton.setEmptyHover();
+		//paramsButton = new MyHoverButton("Params");
+		paramButton.setFont(new Font("Dialog", Font.BOLD, 12));
+		paramButton.setEmptyHover();
 		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
@@ -185,7 +185,7 @@ public class TabUpdateReport extends TabSuperClass {
 												.addComponent(fileReportButton, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
 											.addComponent(nameFileReportLabel, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
 										.addGroup(gl_panel.createSequentialGroup()
-											.addComponent(paramsButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(paramButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 											.addPreferredGap(ComponentPlacement.UNRELATED)
 											.addComponent(inputNewValuesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 								.addGroup(gl_panel.createSequentialGroup()
@@ -219,7 +219,7 @@ public class TabUpdateReport extends TabSuperClass {
 							.addGap(36)
 							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
 								.addComponent(inputNewValuesButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-								.addComponent(paramsButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(paramButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)))
 						.addComponent(updateDataBaseToggleButton, GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(gl_panel.createSequentialGroup()
@@ -251,8 +251,8 @@ public class TabUpdateReport extends TabSuperClass {
 		//////
 	}
 	private void primaryInit() {
-		paramsButton.setEnabled(false);
-		paramsButton.setVisible(false);
+		paramButton.setEnabled(false);
+		paramButton.setVisible(false);
 		
 		updateDataBaseToggleButton.setSelected(false);
 		
@@ -299,20 +299,20 @@ public class TabUpdateReport extends TabSuperClass {
 				}
 			}
 		});
-		 adapterParams = new ComponentAdapter() {
-				@Override
-				public void componentShown(ComponentEvent e) {
-					try {
-						if(!ConnectionMSSQL.isGoodLastsConnection) return;
-						if(!ParamsRelatedData.isExistTableParams()) paramsButton.setVisible(false);
-						else paramsButton.setVisible(true);
-						
-					} catch (ClassNotFoundException | SQLException e1) {
-						DialogWindows.dialogWindowError(e1);
-							LOg.logToFile(e1);
-					}
-				}
-			};
+//		 adapterParams = new ComponentAdapter() {
+//				@Override
+//				public void componentShown(ComponentEvent e) {
+//					try {
+//						if(!ConnectionMSSQL.isGoodLastsConnection) return;
+//						if(!ParamsRelatedData.isExistTableParams()) paramButton.setVisible(false);
+//						else paramButton.setVisible(true);
+//						
+//					} catch (ClassNotFoundException | SQLException e1) {
+//						DialogWindows.dialogWindowError(e1);
+//							LOg.logToFile(e1);
+//					}
+//				}
+//			};
 		//if change this field refresh params and input object	
 		nameReportField.addKeyListener(new KeyAdapter() {
 			@Override
@@ -328,7 +328,7 @@ public class TabUpdateReport extends TabSuperClass {
 				if (inputNewValuesReport != null) inputNewValuesReport = null;
 			}
 		});
-		paramsButton.addActionListener(new ActionListener() {
+		paramButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {	
@@ -422,7 +422,7 @@ public class TabUpdateReport extends TabSuperClass {
 																			newCategoryId != null ? newCategoryId : categoryId);
 									ParamsRelatedData.updateParam(listParamsForUpdate, RPT_ID);
 									params = null;
-										paramsButton.setEmptyHover();
+										paramButton.setEmptyHover();
 							}
 							DialogWindows.dialogWindowWarning("Report successfully update!");
 							
@@ -522,7 +522,7 @@ public class TabUpdateReport extends TabSuperClass {
 			nameReportLabel.setEnabled(true);
 			nameReportField.setEnabled(true);
 			inputNewValuesButton.setEnabled(true);
-			paramsButton.setEnabled(true);
+			paramButton.setEnabled(true);
 		} else {
 			if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 				foldersProjectComboBox.setEnabled(true);
@@ -536,7 +536,7 @@ public class TabUpdateReport extends TabSuperClass {
 			nameReportLabel.setEnabled(false);
 			nameReportField.setEnabled(false);
 			inputNewValuesButton.setEnabled(false);
-			paramsButton.setEnabled(false);
+			paramButton.setEnabled(false);
 		}
 	}
 	private void matchCheckingValidInputData() throws Exception {
@@ -669,6 +669,6 @@ public class TabUpdateReport extends TabSuperClass {
 		return adapterParams;
 	}
 	public MyHoverButton getParamsButton() {
-		return paramsButton;
+		return paramButton;
 	}
 }

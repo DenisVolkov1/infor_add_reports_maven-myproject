@@ -12,10 +12,14 @@ import java.awt.event.ActionEvent;
 import javax.swing.border.TitledBorder;
 
 import database.ConnectionMSSQL;
+import database.ParamsRelatedData;
 import log.LOg;
 import util.DialogWindows;
 import util.MyProperties;
+import util.NewTaskDelay;
+import util.Util;
 import util.my_components.MyHoverButton;
+import windows.MainRunWindow;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -42,6 +46,8 @@ public class TabConnectionMSSQLServer extends JPanel {
 	private JLabel lblNewLabel_1;
 	private MyHoverButton connectionButton;
 	private JPanel panel;
+	private NewTaskDelay connectionToBaseThread;
+	private Component panelGlass1;
 	/**
 	 * Create the panel.
 	 */
@@ -143,14 +149,59 @@ public class TabConnectionMSSQLServer extends JPanel {
 		});
 		connectionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		        try (Connection con = ConnectionMSSQL.getInstanceConneectionJDBC()) {
-		        	DialogWindows.dialogWindowWarning("Connection successful!");
-		   
-				} catch (Exception e1 ) {
-					 DialogWindows.dialogWindowError(e1);
-					 	LOg.logToFile(e1);
-				} finally {setCursor(null);}
+				//if (connectionToBaseThread != null && connectionToBaseThread.taskThread.isAlive()) return;// check if thread connection task already run
+				connectionToBaseThread = new NewTaskDelay("baseThread",200) {
+					@Override
+					public void timerTask() {
+						String ipDataBase = MyProperties.getProperty("ipDataBase");
+			    		panelGlass1 = setWindowDisable(ipDataBase);
+					}
+					@Override
+					public void taskThread() throws Exception {
+						Connection con = ConnectionMSSQL.getInstanceConneectionJDBC();
+						DialogWindows.dialogWindowWarning("Connection successful!");
+					}
+					@Override
+					public void catchTaskThread(Exception e) {
+						System.out.println(Thread.currentThread().getName());
+						LOg.logToFile(e);
+						try {
+			    			taskShowGlassPanel.cancel();// 
+			    		} finally {
+							DialogWindows.dialogWindowError(e);
+							setWindowEnable(panelGlass1);
+						}	
+					}
+					@Override
+					public void cancelTimerTask() {
+				    	try {
+			    			taskShowGlassPanel.cancel();// 
+			    		} finally {
+			    			setWindowEnable(panelGlass1);
+						}					
+					}
+				};
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+//				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+//		        try (Connection con = ConnectionMSSQL.getInstanceConneectionJDBC()) {
+//		        	DialogWindows.dialogWindowWarning("Connection successful!");
+//		   
+//				} catch (Exception e1 ) {
+//					 DialogWindows.dialogWindowError(e1);
+//					 	LOg.logToFile(e1);
+//				} finally {setCursor(null);}
 		    }
 		});
 		connectionButton.addMouseListener(new MouseAdapter() {

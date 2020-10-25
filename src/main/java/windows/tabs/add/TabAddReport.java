@@ -66,6 +66,8 @@ import javax.swing.JToggleButton;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JCheckBox;
@@ -96,7 +98,8 @@ public class TabAddReport extends TabSuperClass {
 	private JCheckBox autoInsertCheckBox;
 	private JComboBox<String> foldersProjectComboBox;
 	private JLabel lblNewLabel;
-	private MyHoverButton newParamButton;
+	//private MyHoverButton newParamButton;
+	//private Thread newParamButtonThread;
 
 	protected ParamsPanelAdd newParam;
 
@@ -188,9 +191,9 @@ public class TabAddReport extends TabSuperClass {
 		lblNewLabel = new JLabel("Project folder in repositories");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		newParamButton = new MyHoverButton("New Param");
-		newParamButton.setFont(new Font("Dialog", Font.BOLD, 12));
-		newParamButton.setEmptyHover();
+		//newParamButton = new MyHoverButton("New Param");
+		paramButton.setFont(new Font("Dialog", Font.BOLD, 12));
+		paramButton.setEmptyHover();
 	
 		
 		GroupLayout gl_addReportPanel = new GroupLayout(addReportPanel);
@@ -239,7 +242,7 @@ public class TabAddReport extends TabSuperClass {
 																.addPreferredGap(ComponentPlacement.RELATED)
 																.addComponent(autoInsertCheckBox)
 																.addPreferredGap(ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
-																.addComponent(newParamButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+																.addComponent(paramButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 															.addComponent(nameReportField, GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
 															.addComponent(nameReportFileField, GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE))))))))
 								.addComponent(foldersProjectComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE))
@@ -270,7 +273,7 @@ public class TabAddReport extends TabSuperClass {
 									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 									.addComponent(nameReportLabel))
 								.addGroup(gl_addReportPanel.createSequentialGroup()
-									.addComponent(newParamButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+									.addComponent(paramButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 									.addGap(8)))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
@@ -314,8 +317,8 @@ public class TabAddReport extends TabSuperClass {
 		nameReportFileField.setEnabled(false);
 		nameReportFileField.setEditable(false);
 		nameFileReportLabelTF.setEnabled(false);
-		newParamButton.setEnabled(false);
-		newParamButton.setVisible(false);
+		paramButton.setEnabled(false);
+		paramButton.setVisible(false);
 		RPT_IDField.setEnabled(false);
 		RPT_IDField.setEditable(false);
 		
@@ -344,20 +347,42 @@ public class TabAddReport extends TabSuperClass {
 		            e.consume(); 
 			}
 		});
-		 adapterNewParams = new ComponentAdapter() {
-			@Override
-			public void componentShown(ComponentEvent e) {
-				try {
-					if(!ConnectionMSSQL.isGoodLastsConnection) return;
-					if(!ParamsRelatedData.isExistTableParams()) newParamButton.setVisible(false);
-					else newParamButton.setVisible(true);
-					
-				} catch (ClassNotFoundException | SQLException e1) {
-					DialogWindows.dialogWindowError(e1);
-						LOg.logToFile(e1);
-				}
-			}
-		};
+//		 adapterNewParams = new ComponentAdapter() {
+//			@Override
+//			public void componentShown(ComponentEvent e) {
+//				
+//				newParamButtonThread = new Thread(new Runnable(){
+//					public void run() {
+//				
+//							//System.out.println("here");
+//							try {
+//								Thread.sleep(150);
+//							} catch (InterruptedException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//							System.out.println("here1");
+//							SwingUtilities.invokeLater(new Runnable(){
+//						    	public void run() {
+//						    		try {
+//										System.out.println("here2");
+//										if(!ConnectionMSSQL.isGoodLastsConnection) return;
+//										if(!ParamsRelatedData.isExistTableParams()) newParamButton.setVisible(false);
+//										else newParamButton.setVisible(true);
+//									} catch (ClassNotFoundException | SQLException e1) {
+//							DialogWindows.dialogWindowError(e1);
+//								LOg.logToFile(e1);
+//						}
+//						    	}
+//							});	
+//							
+//						
+//					}
+//				});
+//				newParamButtonThread.start();
+//			}
+//				
+//		};
 		fileReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -374,7 +399,7 @@ public class TabAddReport extends TabSuperClass {
 				}
 			}
 		});
-		newParamButton.addActionListener(new ActionListener() {
+		paramButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (newParam == null) newParam = new ParamsPanelAdd();
 				else newParam.setVisible(true);
@@ -406,7 +431,7 @@ public class TabAddReport extends TabSuperClass {
 					nameReportFileField.setEnabled(false);
 					nameReportFileField.setEditable(false);
 					nameFileReportLabelTF.setEnabled(false);
-					newParamButton.setEnabled(false);
+					paramButton.setEnabled(false);
 		
 					autoInsertCheckBox.setEnabled(false);
 					rptIdLabel.setEnabled(false);
@@ -437,7 +462,7 @@ public class TabAddReport extends TabSuperClass {
 						nameReportFileField.setEnabled(true);
 						nameReportFileField.setEditable(true);
 						nameFileReportLabelTF.setEnabled(true);
-						newParamButton.setEnabled(true);
+						paramButton.setEnabled(true);
 					}
 				}
 			}
@@ -450,13 +475,13 @@ public class TabAddReport extends TabSuperClass {
 					fileReportButton.setEnabled(false);
 					nameFileReportLabel.setEnabled(false);
 					fileReportLabel.setEnabled(false);
-					newParamButton.setEnabled(false);
+					paramButton.setEnabled(false);
 					ipDataSrcLabel.setVisible(false);
 					if (addDataBaseToggleButton.isSelected()) {
 						nameReportFileField.setEnabled(true);
 						nameReportFileField.setEditable(true);
 						nameFileReportLabelTF.setEnabled(true);
-						newParamButton.setEnabled(true);
+						paramButton.setEnabled(true);
 					}
 				} else {
 					if (addDataBaseToggleButton.isSelected()) {
@@ -473,14 +498,12 @@ public class TabAddReport extends TabSuperClass {
 						nameReportFileField.setEnabled(false);
 						nameReportFileField.setEditable(false);
 						nameFileReportLabelTF.setEnabled(false);
-						newParamButton.setEnabled(false);
+						paramButton.setEnabled(false);
 					}
 					
 				}
 			}
 		});
-		
-	
 		addReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String RPT_ID , nameReport = null , nameFileReport = null , nameProgect = null;
@@ -494,8 +517,8 @@ public class TabAddReport extends TabSuperClass {
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {
 					matchCheckingValidInputData();
-					isExistTableParams = ParamsRelatedData.isExistTableParams();
 					if(addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
+						isExistTableParams = ParamsRelatedData.isExistTableParams();
 						//
 						RPT_ID         = RPT_IDField.getTextWithCheck();
 						nameReport     = nameReportField.getTextWithCheck();
@@ -520,10 +543,11 @@ public class TabAddReport extends TabSuperClass {
 							}
 							if (newParam != null) {
 								newParam = null;
-								newParamButton.setEmptyHover();
+								paramButton.setEmptyHover();
 							}
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addDataBaseToggleButton.isSelected()) {
+						isExistTableParams = ParamsRelatedData.isExistTableParams();
 						//
 						RPT_ID         = RPT_IDField.getTextWithCheck();
 						nameReport     = nameReportField.getTextWithCheck();
@@ -544,7 +568,7 @@ public class TabAddReport extends TabSuperClass {
 						}
 						if (newParam != null) {
 							newParam = null;
-							newParamButton.setEmptyHover();
+							paramButton.setEmptyHover();
 						}
 								DialogWindows.dialogWindowWarning("Report successfully added!");
 					} else if (addArchiveToggleButton.isSelected()) {
@@ -654,7 +678,7 @@ public class TabAddReport extends TabSuperClass {
 		return addArchiveToggleButton;
 	}
 	public MyHoverButton getNewParamButton() {
-		return newParamButton;
+		return paramButton;
 	}
 	public ComponentAdapter getAdapterNewParams() {
 		return adapterNewParams;

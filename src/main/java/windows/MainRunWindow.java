@@ -1,8 +1,10 @@
 package windows;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -45,7 +47,7 @@ public class MainRunWindow extends JFrame {
 	private static ImageIcon ICON_SETTING;
 	private static Image ICON_WINDOW;
 	private static JTabbedPane tabbedPane;
-	private static JPanel glassPanel;
+	private static JPanel glassPanel;	
 	{
 		try {
 			ICON_SETTING = new ImageIcon(ImageIO.read(getClass().getResource("/icon_settings.gif")));
@@ -101,7 +103,7 @@ public class MainRunWindow extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		//tabbedPane.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		//Tabs
 		//Connection tab
 		TabConnectionMSSQLServer tabConnectionMSSQLServer = new TabConnectionMSSQLServer();
@@ -115,17 +117,21 @@ public class MainRunWindow extends JFrame {
 		//Categories tab
 		tabbedPane.addTab("Categories", TabCategories.getInstance());
 		//Repositories tab
-		if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
-		tabbedPane.addTab("Repositories", TabRepositories.getInstance());
+		if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) tabbedPane.addTab("Repositories", TabRepositories.getInstance());
 		
 		// Set glass panel for top level JFrame comp.
-		glassPanel = (JPanel) getGlassPane();	
-		glassPanel.setLayout(new GridBagLayout());
-			// WaitPanel set this panel
-			glassPanel.add(new WaitPanel());
-		glassPanel.setVisible(false);
-
-		}
+				glassPanel = (JPanel) getGlassPane();	
+				
+				glassPanel.setLayout(null);
+				
+					// WaitPanel set this panel
+				WaitPanel waitPanel = new WaitPanel();
+				waitPanel.setBounds(72, 202, 454, 30);
+				glassPanel.add(waitPanel);
+				WaitPanel waitPanel_1 = new WaitPanel();
+				waitPanel_1.setBounds(72, 242, 454, 30);
+				glassPanel.add(waitPanel_1);
+				glassPanel.setVisible(true);
 		
 		//////////////
 		tabbedPane.setLocation(0, 60);
@@ -183,13 +189,24 @@ public class MainRunWindow extends JFrame {
 		
 		setVisible(true);
 	}
-	public static void setVisibleGlassPanel(String text) {
-		((WaitPanel)glassPanel.getComponent(0)).setText(text);
-		glassPanel.setVisible(true);
-	}
-	public static void hideGlassPanel() {
+	public static synchronized Component addPanelToGlassPanel(String text) {
 		
-		glassPanel.setVisible(false);
+		for (Component iterable_element : glassPanel.getComponents()) {
+			if (!iterable_element.isVisible()) {
+				WaitPanel waitPanel = (WaitPanel) iterable_element;
+				waitPanel.setText(text);
+				waitPanel.setVisible(true);
+				return (Component)waitPanel;
+			}
+		}
+		return null;
+	}
+	public static synchronized void hideGlassPanel(Component panel) {
+		for (Component iterable_element : glassPanel.getComponents()) {
+			if (panel == iterable_element) {
+				panel.setVisible(false);
+			}
+		}
 	}
 	public static MainRunWindow getInstance() {
 		if (MAIN_RUN_WINDOW == null) {
