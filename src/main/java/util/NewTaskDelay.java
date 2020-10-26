@@ -15,14 +15,17 @@ public abstract class NewTaskDelay {
 	private static List<Thread> listTheads = new ArrayList<Thread>();
 
 	public NewTaskDelay(String nameThread, long delay) {
-		System.out.println(nameThread+" delay="+delay);
+		for(Thread thread : listTheads) {
+			if (thread.isAlive() && thread.getName().equals(nameThread)) return; // check if thread task already run.
+		}
+		//System.out.println(nameThread+" delay="+delay);
 		java.util.Timer timer = new java.util.Timer();
 	    taskShowGlassPanel = new TimerTask() {
 			public void run() {
 				timerTask();
 			}
 		};
-		timer.schedule(taskShowGlassPanel, delay);// run if task undone for delay milisecond.
+		timer.schedule(taskShowGlassPanel, delay);// run if task undone for delay millisecond.
 		
 		taskThread = new Thread(new Runnable(){
 		    public void run() {
@@ -39,6 +42,7 @@ public abstract class NewTaskDelay {
 					}	
 			  }
 			},nameThread);// name thread baseThread
+		//
 		//System.out.println(listTheads.size());
 		int indexDeadThread = -1;
 		for(Thread thread : listTheads) {
@@ -72,8 +76,7 @@ public abstract class NewTaskDelay {
 				}
 			}
 		}
-		Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
-		
+		Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), true);		
 //		if(Thread.currentThread().getName().equals("repoThread")) {
 //			System.out.println("repoThread");
 //			if (connectionToBaseThread.taskThread.isAlive()) return;
@@ -85,6 +88,7 @@ public abstract class NewTaskDelay {
 //		}
 //		Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
 	}
+	
 	public abstract void timerTask();
 	public abstract void taskThread() throws Exception;
 	public abstract void cancelTimerTask();

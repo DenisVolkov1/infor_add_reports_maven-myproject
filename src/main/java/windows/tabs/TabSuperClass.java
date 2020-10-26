@@ -55,7 +55,7 @@ public class TabSuperClass extends JPanel {
 					listCategoryAndCodes.clear();
 					return;
 				}
-				if (connectionToBaseThread != null && connectionToBaseThread.taskThread.isAlive()) return;// check if thread connection task already run
+				//if (connectionToBaseThread != null && connectionToBaseThread.taskThread.isAlive()) return;// check if thread connection task already run
 				connectionToBaseThread = new NewTaskDelay("baseThread",200) {
 					@Override
 					public void timerTask() {
@@ -139,7 +139,7 @@ public class TabSuperClass extends JPanel {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				
-				if (connectionToRepoThread != null && connectionToRepoThread.taskThread.isAlive()) return;// check if thread connection task already run
+				//if (connectionToRepoThread != null && connectionToRepoThread.taskThread.isAlive()) return;// check if thread connection task already run
 				connectionToRepoThread = new NewTaskDelay("repoThread",200) {
 					@Override
 					public void timerTask() {

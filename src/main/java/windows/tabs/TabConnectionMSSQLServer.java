@@ -150,7 +150,7 @@ public class TabConnectionMSSQLServer extends JPanel {
 		connectionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//if (connectionToBaseThread != null && connectionToBaseThread.taskThread.isAlive()) return;// check if thread connection task already run
-				connectionToBaseThread = new NewTaskDelay("baseThread",500) {
+				connectionToBaseThread = new NewTaskDelay("baseThread",200) {
 					@Override
 					public void timerTask() {
 						String ipDataBase = MyProperties.getProperty("ipDataBase");
