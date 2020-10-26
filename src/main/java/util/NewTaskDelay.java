@@ -80,6 +80,7 @@ public abstract class NewTaskDelay {
 				}
 			}
 		}
+		//System.out.println("EnableWindows");
 		Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
 	}
 	

@@ -187,7 +187,7 @@ public class MainRunWindow extends JFrame {
 		
 		setVisible(true);
 	}
-	public static synchronized Component addPanelToGlassPanel(String text) {
+	public static Component addPanelToGlassPanel(String text) {
 		
 		for (Component iterable_element : glassPanel.getComponents()) {
 			if (!iterable_element.isVisible()) {
@@ -199,7 +199,7 @@ public class MainRunWindow extends JFrame {
 		}
 		return null;
 	}
-	public static synchronized void hideGlassPanel(Component panel) {
+	public static void hideGlassPanel(Component panel) {
 		for (Component iterable_element : glassPanel.getComponents()) {
 			if (panel == iterable_element) {
 				panel.setVisible(false);

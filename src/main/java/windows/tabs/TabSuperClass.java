@@ -51,7 +51,7 @@ public class TabSuperClass extends JPanel {
 					return;
 				}
 				
-				connectionToBaseThread = new NewTaskDelay("baseThread",300L) {
+				connectionToBaseThread = new NewTaskDelay("baseThread",400L) {
 					@Override
 					public void timerTask() {
 						String ipDataBase = MyProperties.getProperty("ipDataBase");
