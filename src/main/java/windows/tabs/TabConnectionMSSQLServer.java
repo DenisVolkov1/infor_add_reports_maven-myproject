@@ -150,7 +150,7 @@ public class TabConnectionMSSQLServer extends JPanel {
 		connectionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//if (connectionToBaseThread != null && connectionToBaseThread.taskThread.isAlive()) return;// check if thread connection task already run
-				connectionToBaseThread = new NewTaskDelay("baseThread",200) {
+				connectionToBaseThread = new NewTaskDelay("baseThread",500) {
 					@Override
 					public void timerTask() {
 						String ipDataBase = MyProperties.getProperty("ipDataBase");
@@ -158,12 +158,11 @@ public class TabConnectionMSSQLServer extends JPanel {
 					}
 					@Override
 					public void taskThread() throws Exception {
-						Connection con = ConnectionMSSQL.getInstanceConneectionJDBC();
+						ConnectionMSSQL.getInstanceConneectionJDBC();
 						DialogWindows.dialogWindowWarning("Connection successful!");
 					}
 					@Override
 					public void catchTaskThread(Exception e) {
-						System.out.println(Thread.currentThread().getName());
 						LOg.logToFile(e);
 						try {
 			    			taskShowGlassPanel.cancel();// 
@@ -181,19 +180,6 @@ public class TabConnectionMSSQLServer extends JPanel {
 						}					
 					}
 				};
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 //				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 //		        try (Connection con = ConnectionMSSQL.getInstanceConneectionJDBC()) {
 //		        	DialogWindows.dialogWindowWarning("Connection successful!");

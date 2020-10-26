@@ -4,11 +4,7 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
-
 import javax.swing.SwingUtilities;
-
-import database.ParamsRelatedData;
-import log.LOg;
 import windows.MainRunWindow;
 
 
@@ -26,7 +22,7 @@ public abstract class NewTaskDelay {
 				timerTask();
 			}
 		};
-		timer.schedule(taskShowGlassPanel, delay);// run if task undone for 0.2 seconds.
+		timer.schedule(taskShowGlassPanel, delay);// run if task undone for delay milisecond.
 		
 		taskThread = new Thread(new Runnable(){
 		    public void run() {
@@ -38,22 +34,24 @@ public abstract class NewTaskDelay {
 					    		cancelTimerTask();
 					    	}
 					    });
-					    
 			    	} catch (Exception e) {
 			    		catchTaskThread(e);
 					}	
 			  }
 			},nameThread);// name thread baseThread
-		System.out.println(listTheads.size());
+		//System.out.println(listTheads.size());
+		int indexDeadThread = -1;
 		for(Thread thread : listTheads) {
 			if (!thread.isAlive()) {
-				System.out.println("thread=task");
-				thread = taskThread;
-				thread.start();
-				return;
+				indexDeadThread = listTheads.indexOf(thread);
+				//System.out.println("thread=task");
+				break;
 			}
 		}
-		System.out.println("add");
+		if (indexDeadThread != -1) {
+			//System.out.println("addReplace");
+			listTheads.remove(indexDeadThread);
+		} 
 		listTheads.add(taskThread);
 		taskThread.start();
 		
@@ -64,12 +62,14 @@ public abstract class NewTaskDelay {
     		return MainRunWindow.addPanelToGlassPanel("Connection to: "+text);
 	}
 	protected void setWindowEnable(Component panel) {
-		System.out.println(Thread.currentThread().getName());
+		//System.out.println(Thread.currentThread().getName());
 		MainRunWindow.hideGlassPanel(panel);
 		for (Thread thread : listTheads) {
 			if (thread != taskThread) {
-				System.out.println("thread.IsAlive returne");
-				if (thread.isAlive()) return;
+				if (thread.isAlive()) {
+					System.out.println("thread.IsAlive return");
+					return;
+				}
 			}
 		}
 		Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
@@ -89,5 +89,4 @@ public abstract class NewTaskDelay {
 	public abstract void taskThread() throws Exception;
 	public abstract void cancelTimerTask();
 	public abstract void catchTaskThread(Exception e);
-
 }
