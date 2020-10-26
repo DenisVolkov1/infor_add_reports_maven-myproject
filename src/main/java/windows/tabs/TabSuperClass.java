@@ -1,17 +1,14 @@
 package windows.tabs;
 
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
-import java.util.TimerTask;
 import java.util.Vector;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import database.CategoryRelatedData;
 import database.ConnectionMSSQL;
 import database.ParamsRelatedData;
@@ -23,9 +20,7 @@ import util.DialogWindows;
 import util.MyProperties;
 import util.NewTaskDelay;
 import util.ServiceWindow;
-import util.Util;
 import util.my_components.MyHoverButton;
-import windows.MainRunWindow;
 import windows.SettingsWindow;
 
 public class TabSuperClass extends JPanel {
@@ -55,8 +50,8 @@ public class TabSuperClass extends JPanel {
 					listCategoryAndCodes.clear();
 					return;
 				}
-				//if (connectionToBaseThread != null && connectionToBaseThread.taskThread.isAlive()) return;// check if thread connection task already run
-				connectionToBaseThread = new NewTaskDelay("baseThread",200) {
+				
+				connectionToBaseThread = new NewTaskDelay("baseThread",300L) {
 					@Override
 					public void timerTask() {
 						String ipDataBase = MyProperties.getProperty("ipDataBase");
@@ -72,7 +67,7 @@ public class TabSuperClass extends JPanel {
 					public void catchTaskThread(Exception e) {
 						LOg.logToFile(e);
 						try {
-			    			taskShowGlassPanel.cancel();// 
+			    			timerTask.cancel();// 
 			    		} finally {
 							DialogWindows.dialogWindowError(e);
 							setWindowEnable(panelGlass1);
@@ -81,7 +76,7 @@ public class TabSuperClass extends JPanel {
 					@Override
 					public void cancelTimerTask() {
 				    	try {
-			    			taskShowGlassPanel.cancel();// 
+			    			timerTask.cancel();// 
 			    		} finally {
 			    			setWindowEnable(panelGlass1);
 						}					
@@ -135,36 +130,38 @@ public class TabSuperClass extends JPanel {
 		adapterListProjectsNames = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
-				//if (connectionToRepoThread != null && connectionToRepoThread.taskThread.isAlive()) return;// check if thread connection task already run
-				connectionToRepoThread = new NewTaskDelay("repoThread",200) {
-					@Override
-					public void timerTask() {
-						String repPathDir = MyProperties.getProperty("repPathDir");
-			    		panelGlass2 = setWindowDisable(repPathDir);
-					}
-					@Override
-					public void taskThread() throws Exception {
-						if(FilesRepository.isOpenRepo()) refresListNameProjects();//task...
-					}
-					@Override
-					public void catchTaskThread(Exception e) {
-						LOg.logToFile(e);
-						try {
-			    			taskShowGlassPanel.cancel();// 
-			    		} finally {
-							DialogWindows.dialogWindowError(e);
-							setWindowEnable(panelGlass2);
-						}	
-					}
-					@Override
-					public void cancelTimerTask() {
-				    	try {
-			    			taskShowGlassPanel.cancel();// 
-			    		} finally {
-			    			setWindowEnable(panelGlass2);
-						}					
-					}
-				};
+				boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
+				if(isSetRepo) {
+					connectionToRepoThread = new NewTaskDelay("repoThread",300L) {
+						@Override
+						public void timerTask() {
+							String repPathDir = MyProperties.getProperty("repPathDir");
+				    		panelGlass2 = setWindowDisable(repPathDir);
+						}
+						@Override
+						public void taskThread() throws Exception {
+							if(FilesRepository.isOpenRepo()) refresListNameProjects();//task...
+						}
+						@Override
+						public void catchTaskThread(Exception e) {
+							LOg.logToFile(e);
+							try {
+				    			timerTask.cancel();// 
+				    		} finally {
+								DialogWindows.dialogWindowError(e);
+								setWindowEnable(panelGlass2);
+							}	
+						}
+						@Override
+						public void cancelTimerTask() {
+					    	try {
+				    			timerTask.cancel();// 
+				    		} finally {
+				    			setWindowEnable(panelGlass2);
+							}					
+						}
+					};
+			
 				
 //				System.out.println("connectionToRepoThread");
 //				boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
@@ -206,7 +203,7 @@ public class TabSuperClass extends JPanel {
 //					  }
 //					},"repoThread");//name thread
 //					connectionToRepoThread.start();
-//				}					
+				}					
 			}
 		};
 		this.addComponentListener(adapterListProjectsNames);

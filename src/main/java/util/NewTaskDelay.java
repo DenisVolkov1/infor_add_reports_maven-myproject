@@ -7,11 +7,10 @@ import java.util.TimerTask;
 import javax.swing.SwingUtilities;
 import windows.MainRunWindow;
 
-
 public abstract class NewTaskDelay {
 	
-	public Thread taskThread;
-	public TimerTask taskShowGlassPanel;
+	private Thread taskThread;
+	protected TimerTask timerTask;
 	private static List<Thread> listTheads = new ArrayList<Thread>();
 
 	public NewTaskDelay(String nameThread, long delay) {
@@ -20,12 +19,12 @@ public abstract class NewTaskDelay {
 		}
 		//System.out.println(nameThread+" delay="+delay);
 		java.util.Timer timer = new java.util.Timer();
-	    taskShowGlassPanel = new TimerTask() {
+		timerTask = new TimerTask() {
 			public void run() {
 				timerTask();
 			}
 		};
-		timer.schedule(taskShowGlassPanel, delay);// run if task undone for delay millisecond.
+		timer.schedule(timerTask, delay);// run if task undone for delay millisecond.
 		
 		taskThread = new Thread(new Runnable(){
 		    public void run() {
@@ -37,6 +36,7 @@ public abstract class NewTaskDelay {
 					    		cancelTimerTask();
 					    	}
 					    });
+					    afterTask();
 			    	} catch (Exception e) {
 			    		catchTaskThread(e);
 					}	
@@ -60,6 +60,10 @@ public abstract class NewTaskDelay {
 		taskThread.start();
 		
 	}
+	protected void afterTask() {
+		// if needs
+		
+	}
 	protected Component setWindowDisable(String text) {
 		text = (text.length() <= 10) ? text : text.substring(0,10);
 		Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), false);
@@ -71,22 +75,12 @@ public abstract class NewTaskDelay {
 		for (Thread thread : listTheads) {
 			if (thread != taskThread) {
 				if (thread.isAlive()) {
-					System.out.println("thread.IsAlive return");
+					//System.out.println("thread.IsAlive return");
 					return;
 				}
 			}
 		}
-		Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), true);		
-//		if(Thread.currentThread().getName().equals("repoThread")) {
-//			System.out.println("repoThread");
-//			if (connectionToBaseThread.taskThread.isAlive()) return;
-//		} else if (Thread.currentThread().getName().equals("baseThread")) {
-//			System.out.println("baseThread");
-//			if (connectionToRepoThread.taskThread.isAlive()) return;	
-//		} else {
-//			if ((connectionToRepoThread != null && connectionToRepoThread.taskThread.isAlive()) || (connectionToBaseThread != null && connectionToBaseThread.taskThread.isAlive())) return;	
-//		}
-//		Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
+		Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
 	}
 	
 	public abstract void timerTask();

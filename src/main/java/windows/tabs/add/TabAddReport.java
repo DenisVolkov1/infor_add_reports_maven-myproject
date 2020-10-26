@@ -347,42 +347,7 @@ public class TabAddReport extends TabSuperClass {
 		            e.consume(); 
 			}
 		});
-//		 adapterNewParams = new ComponentAdapter() {
-//			@Override
-//			public void componentShown(ComponentEvent e) {
-//				
-//				newParamButtonThread = new Thread(new Runnable(){
-//					public void run() {
-//				
-//							//System.out.println("here");
-//							try {
-//								Thread.sleep(150);
-//							} catch (InterruptedException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							}
-//							System.out.println("here1");
-//							SwingUtilities.invokeLater(new Runnable(){
-//						    	public void run() {
-//						    		try {
-//										System.out.println("here2");
-//										if(!ConnectionMSSQL.isGoodLastsConnection) return;
-//										if(!ParamsRelatedData.isExistTableParams()) newParamButton.setVisible(false);
-//										else newParamButton.setVisible(true);
-//									} catch (ClassNotFoundException | SQLException e1) {
-//							DialogWindows.dialogWindowError(e1);
-//								LOg.logToFile(e1);
-//						}
-//						    	}
-//							});	
-//							
-//						
-//					}
-//				});
-//				newParamButtonThread.start();
-//			}
-//				
-//		};
+
 		fileReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {

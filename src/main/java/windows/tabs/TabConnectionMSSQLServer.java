@@ -3,8 +3,6 @@ package windows.tabs;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
-
 import javax.swing.UIManager;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -12,19 +10,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.border.TitledBorder;
 
 import database.ConnectionMSSQL;
-import database.ParamsRelatedData;
 import log.LOg;
 import util.DialogWindows;
 import util.MyProperties;
 import util.NewTaskDelay;
-import util.Util;
 import util.my_components.MyHoverButton;
-import windows.MainRunWindow;
-
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.sql.Connection;
 import javax.swing.JTextField;
 import javax.imageio.ImageIO;
 import javax.swing.GroupLayout;
@@ -37,7 +28,6 @@ import javax.swing.border.EtchedBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import javax.swing.JToggleButton;
 
 public class TabConnectionMSSQLServer extends JPanel {
 	
@@ -149,8 +139,7 @@ public class TabConnectionMSSQLServer extends JPanel {
 		});
 		connectionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//if (connectionToBaseThread != null && connectionToBaseThread.taskThread.isAlive()) return;// check if thread connection task already run
-				connectionToBaseThread = new NewTaskDelay("baseThread",200) {
+				connectionToBaseThread = new NewTaskDelay("baseThread",300L) {
 					@Override
 					public void timerTask() {
 						String ipDataBase = MyProperties.getProperty("ipDataBase");
@@ -159,13 +148,16 @@ public class TabConnectionMSSQLServer extends JPanel {
 					@Override
 					public void taskThread() throws Exception {
 						ConnectionMSSQL.getInstanceConneectionJDBC();
+					}
+					@Override
+					protected void afterTask() {
 						DialogWindows.dialogWindowWarning("Connection successful!");
 					}
 					@Override
 					public void catchTaskThread(Exception e) {
 						LOg.logToFile(e);
 						try {
-			    			taskShowGlassPanel.cancel();// 
+			    			timerTask.cancel();// 
 			    		} finally {
 							DialogWindows.dialogWindowError(e);
 							setWindowEnable(panelGlass1);
@@ -174,20 +166,12 @@ public class TabConnectionMSSQLServer extends JPanel {
 					@Override
 					public void cancelTimerTask() {
 				    	try {
-			    			taskShowGlassPanel.cancel();// 
+			    			timerTask.cancel();// 
 			    		} finally {
 			    			setWindowEnable(panelGlass1);
 						}					
 					}
 				};
-//				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-//		        try (Connection con = ConnectionMSSQL.getInstanceConneectionJDBC()) {
-//		        	DialogWindows.dialogWindowWarning("Connection successful!");
-//		   
-//				} catch (Exception e1 ) {
-//					 DialogWindows.dialogWindowError(e1);
-//					 	LOg.logToFile(e1);
-//				} finally {setCursor(null);}
 		    }
 		});
 		connectionButton.addMouseListener(new MouseAdapter() {

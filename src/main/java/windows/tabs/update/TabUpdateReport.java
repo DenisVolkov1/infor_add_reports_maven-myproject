@@ -299,20 +299,7 @@ public class TabUpdateReport extends TabSuperClass {
 				}
 			}
 		});
-//		 adapterParams = new ComponentAdapter() {
-//				@Override
-//				public void componentShown(ComponentEvent e) {
-//					try {
-//						if(!ConnectionMSSQL.isGoodLastsConnection) return;
-//						if(!ParamsRelatedData.isExistTableParams()) paramButton.setVisible(false);
-//						else paramButton.setVisible(true);
-//						
-//					} catch (ClassNotFoundException | SQLException e1) {
-//						DialogWindows.dialogWindowError(e1);
-//							LOg.logToFile(e1);
-//					}
-//				}
-//			};
+
 		//if change this field refresh params and input object	
 		nameReportField.addKeyListener(new KeyAdapter() {
 			@Override

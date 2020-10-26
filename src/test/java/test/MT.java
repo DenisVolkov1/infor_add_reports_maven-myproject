@@ -29,32 +29,46 @@ import windows.param.ParamFromParamsPanel;
 import static files_repository.FilesRepository.*;
 
 public class MT {
+	
+	private static class Y {
+		public final Long long1;
+		public Y(final Long long1) {
+			this.long1 = long1;
+		}
+	}
 
 	public static void main(String[] args) throws Exception {
 		
+		Y y1 = new Y(1L);
+		Y y2 = new Y(2L);
+		Y y3 = new Y(3L);
+		Y y4 = new Y(4L);
+		Y y5 = new Y(5L);
+		Y y6 = new Y(6L);
+		Y y7 = new Y(7L);
 		
-			//String nameRptFile = "rep_2_3_Case";
-			//System.out.println("qweqwe    rep_myrep10/".matches(".*\\s{4}"+nameRptFile+"/$"));
-			//System.out.println("Печать этикетки ящика    rep_2_3_Case/".replaceFirst("\\s{4}"+nameRptFile+"/$", ""));
-			//char s = '\u0020';
-			//System.out.println("Печать этикетки ящика" +'\u0020'+'\u0020'+'\u0020'+'\u0020'+ "rep_2_3_Case" );
-
-			SmbFile reportsFolder = getSmbFileObject(repoPathToReportsFolder("BOYARD/"));
-			SmbFile[] listOfFiles = reportsFolder.listFiles();
-			for (SmbFile smbFile : listOfFiles) {
-				//String s2= "Печать этикетки ящика    rep_2_3_Case    dnm/";
-				Matcher m2 = Pattern.compile("^(.+)" +'\u0020'+'\u0020'+'\u0020'+'\u0020'+ "(.+)" +'\u0020'+'\u0020'+'\u0020'+'\u0020'+".+/$").matcher(smbFile.getName());
-				//Matcher m = Pattern.compile("(.+)"+'\u0020'+'\u0020'+'\u0020'+'\u0020'+".+/$").matcher("Печать этикетки ящика    rep_2_3_Case    dnm/");
-				if (m2.find()) {
-					if (m2.group(1).equals("Печать этикетки ящика") && m2.group(2).equals("rep_2_3_Case")) {
-						
-						SmbFile folderVersionReport = getSmbFileObject(smbFile.toString()+ m2.group(1)+'\u0020'+'\u0020'+'\u0020'+'\u0020'+m2.group(2)+'\u0020'+'\u0020'+'\u0020'+'\u0020'+getNextVersion(smbFile));
-						System.out.println(folderVersionReport);
-					}
-					
-				
-				}
+		List<Y> list = new ArrayList<MT.Y>();
+		list.add(y1);
+		list.add(y2);
+		list.add(y3);
+		list.add(y4);
+		
+		for(Y y : list) {
+			if(y == y2) {
+				list.add(list.indexOf(y), y7);
 			}
+		}
+		
+		for(Y y : list) {
+			System.out.println(y.long1);
+		}
+		
+		
+		
+		
+		
+		
+		
 	
 			
 	}

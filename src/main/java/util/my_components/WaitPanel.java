@@ -8,6 +8,13 @@ import java.awt.Color;
 import java.awt.SystemColor;
 import javax.swing.JProgressBar;
 import java.awt.FlowLayout;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.UIManager;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 
 
 public class WaitPanel extends JPanel {
@@ -17,26 +24,41 @@ public class WaitPanel extends JPanel {
 	 * Create the panel.
 	 */
 	public WaitPanel() {
-		//setBounds(100, 500, 250, 80);
-		setBorder(new BevelBorder(BevelBorder.RAISED, new Color(64, 64, 64), new Color(128, 128, 128), new Color(153, 180, 209), Color.DARK_GRAY));
-		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		setBackground(SystemColor.controlHighlight);
+		setBounds(100, 500, 450, 45);
+		setBorder(new CompoundBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(191, 205, 219)), new BevelBorder(BevelBorder.LOWERED, new Color(100, 100, 100), new Color(0, 0, 0), new Color(153, 180, 209), new Color(191, 205, 219))));
 		text = new JLabel();
 		text.setText("444444444444444444444444444444444444");
 		text.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		add(text);
-		
-		JLabel lblEmpty = new JLabel();
-		lblEmpty.setForeground(SystemColor.control);
-		lblEmpty.setText("EMPTYEMPTY");
-		lblEmpty.setFont(new Font("Tahoma", Font.PLAIN, 5));
-		add(lblEmpty);
 		
 		JProgressBar progressBar = new JProgressBar();
 		progressBar.setBackground(SystemColor.text);
 		progressBar.setToolTipText("");
 		progressBar.setForeground(SystemColor.activeCaption);
 		progressBar.setIndeterminate(true);
-		add(progressBar);
+		GroupLayout groupLayout = new GroupLayout(this);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(text)
+					.addGap(18, 18, Short.MAX_VALUE)
+					.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)
+					.addGap(24))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(18)
+							.addComponent(text, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(15)
+							.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		setLayout(groupLayout);
 		setVisible(false);
 
 	}
