@@ -46,7 +46,7 @@ public class TabSuperClass extends JPanel {
 	
 	public TabSuperClass() {
 		paramButton = new MyHoverButton("New Param");
-		
+		//
 		adapterCategories = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
@@ -64,15 +64,12 @@ public class TabSuperClass extends JPanel {
 					}
 					@Override
 					public void taskThread() throws Exception {
-			    		System.out.println(Thread.currentThread().getName());
 			    		refreshCategory();//task...
-			    		System.out.println("newParamButton task");
 			    		if(!ParamsRelatedData.isExistTableParams()) paramButton.setVisible(false);
 			    		else paramButton.setVisible(true);
 					}
 					@Override
 					public void catchTaskThread(Exception e) {
-						System.out.println(Thread.currentThread().getName());
 						LOg.logToFile(e);
 						try {
 			    			taskShowGlassPanel.cancel();// 
@@ -138,7 +135,6 @@ public class TabSuperClass extends JPanel {
 		adapterListProjectsNames = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
-				
 				//if (connectionToRepoThread != null && connectionToRepoThread.taskThread.isAlive()) return;// check if thread connection task already run
 				connectionToRepoThread = new NewTaskDelay("repoThread",200) {
 					@Override
@@ -148,12 +144,10 @@ public class TabSuperClass extends JPanel {
 					}
 					@Override
 					public void taskThread() throws Exception {
-						System.out.println(Thread.currentThread().getName());
 						if(FilesRepository.isOpenRepo()) refresListNameProjects();//task...
 					}
 					@Override
 					public void catchTaskThread(Exception e) {
-						System.out.println(Thread.currentThread().getName());
 						LOg.logToFile(e);
 						try {
 			    			taskShowGlassPanel.cancel();// 
