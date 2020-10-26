@@ -17,12 +17,12 @@ public class TabScrollable extends JScrollPane {
 		  setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		  setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		  
-		if (tabPanel.getClass() == TabAddReport.class) {
-			this.addComponentListener(((TabAddReport)tabPanel).getAdapterNewParams());
-		}
-		if (tabPanel.getClass() == TabUpdateReport.class) {
-			this.addComponentListener(((TabUpdateReport)tabPanel).getAdapterParams());
-		}
+//		if (tabPanel.getClass() == TabAddReport.class) {
+//			this.addComponentListener(((TabAddReport)tabPanel).getAdapterNewParams());
+//		}
+//		if (tabPanel.getClass() == TabUpdateReport.class) {
+//			this.addComponentListener(((TabUpdateReport)tabPanel).getAdapterParams());
+//		}
 		
 		
 		this.addComponentListener(tabPanel.getCategoriesAdapter());

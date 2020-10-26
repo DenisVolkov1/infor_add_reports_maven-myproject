@@ -29,8 +29,8 @@ public class TabSuperClass extends JPanel {
 	public static Vector<CategoryAndId> listCategoryAndCodes = new Vector<>();
 	protected static Vector<String> listNamesFoldersProject = new Vector<>();
 	protected static ActionListener refreshService;
-	private ComponentAdapter adapterCategories;
-	private ComponentAdapter adapterListProjectsNames;
+	private static ComponentAdapter adapterCategories;
+	private static ComponentAdapter adapterListProjectsNames;
 	//private static Thread connectionToRepoThread;
 	//private static Thread connectionToBaseThread;
 	protected MyHoverButton paramButton;
@@ -41,6 +41,7 @@ public class TabSuperClass extends JPanel {
 	
 	public TabSuperClass() {
 		paramButton = new MyHoverButton("New Param");
+		//paramButton.setEnabled(false);
 		//
 		adapterCategories = new ComponentAdapter() {
 			@Override

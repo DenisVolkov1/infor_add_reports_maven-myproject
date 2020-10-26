@@ -100,10 +100,8 @@ public class TabAddReport extends TabSuperClass {
 	private JLabel lblNewLabel;
 	//private MyHoverButton newParamButton;
 	//private Thread newParamButtonThread;
-
 	protected ParamsPanelAdd newParam;
 
-	protected ComponentAdapter adapterNewParams;
 
 	/**
 	 * Create the panel.
@@ -195,7 +193,6 @@ public class TabAddReport extends TabSuperClass {
 		paramButton.setFont(new Font("Dialog", Font.BOLD, 12));
 		paramButton.setEmptyHover();
 	
-		
 		GroupLayout gl_addReportPanel = new GroupLayout(addReportPanel);
 		gl_addReportPanel.setHorizontalGroup(
 			gl_addReportPanel.createParallelGroup(Alignment.LEADING)
@@ -645,7 +642,5 @@ public class TabAddReport extends TabSuperClass {
 	public MyHoverButton getNewParamButton() {
 		return paramButton;
 	}
-	public ComponentAdapter getAdapterNewParams() {
-		return adapterNewParams;
-	}
+
 }
