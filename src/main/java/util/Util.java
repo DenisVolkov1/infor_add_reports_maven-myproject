@@ -43,13 +43,14 @@ public class Util {
 	public static void setActivitySubComponents(Component container, boolean b) {
 		//
 		if (b) {
-			container.setEnabled(saveActivityComponents.get(container) != null ? saveActivityComponents.get(container) : false);
+			//container.setEnabled(saveActivityComponents.get(container) != null ? saveActivityComponents.get(container) : false);
+			container.setEnabled(saveActivityComponents.get(container));
 	
 	        Component[] components= ((Container) container).getComponents();
 	        for (int i = 0; i < components.length; i++) {
 	            setActivitySubComponents(components[i], true);
 	        }
-	
+	        saveActivityComponents.clear();
 		} else {
 			saveActivityComponents.put(container, container.isEnabled());
 			container.setEnabled(false);
@@ -58,6 +59,7 @@ public class Util {
 	        for (int i = 0; i < components.length; i++) {
 	            setActivitySubComponents(components[i], false);
 	        }
+	        
 		}
 	}
 	
