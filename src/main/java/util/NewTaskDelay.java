@@ -66,7 +66,7 @@ public abstract class NewTaskDelay {
 	}
 	protected Component setWindowDisable(String text) {
 		text = (text.length() <= 10) ? text : text.substring(0,10);
-		Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), false);
+		Util.setActivitySubComponents(MainRunWindow.getInstance().getContentPane(), false);
     		return MainRunWindow.addPanelToGlassPanel("Connection to: "+text);
 	}
 	protected void setWindowEnable(Component panel) {
@@ -81,7 +81,7 @@ public abstract class NewTaskDelay {
 			}
 		}
 		//System.out.println("EnableWindows");
-		Util.setEnableRec(MainRunWindow.getInstance().getContentPane(), true);
+		Util.setActivitySubComponents(MainRunWindow.getInstance().getContentPane(), true);
 	}
 	
 	public abstract void timerTask();

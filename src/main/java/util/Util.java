@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.TimerTask;
 
 import javax.swing.JLabel;
@@ -16,6 +17,7 @@ import log.LOg;
 import windows.MainRunWindow;
 
 public class Util {
+	private static HashMap<Component, Boolean> saveActivityComponents = new HashMap<Component, Boolean>();
 	
 	private Util() {}
 	
@@ -34,20 +36,36 @@ public class Util {
 	}
 	
 	/** Disable or Enable all sub Component. 
+	 * 
 	 * @param container - Upper Container
 	 * @param b - enable(true) or Disable(false)
 	 * */
-	public static void setEnableRec(Component container, boolean b){
-	    container.setEnabled(b);
-	    try {
-	        Component[] components= ((Container) container).getComponents();
-	        for (int i = 0; i < components.length; i++) {
-	            setEnableRec(components[i], b);
-	        }
+	public static void setActivitySubComponents(Component container, boolean b) {
+		//
+		try {
+			if (b) {
+				container.setEnabled(saveActivityComponents.get(container) != null ? saveActivityComponents.get(container) : false);
+		
+		        Component[] components= ((Container) container).getComponents();
+		        for (int i = 0; i < components.length; i++) {
+		            setActivitySubComponents(components[i], true);
+		        }
+		
+			} else {
+				saveActivityComponents.put(container, container.isEnabled());
+				container.setEnabled(false);
+
+		        Component[] components= ((Container) container).getComponents();
+		        for (int i = 0; i < components.length; i++) {
+		            setActivitySubComponents(components[i], false);
+		        }
+			}
 	    } catch (ClassCastException e) {
 	    	e.printStackTrace();
 	    }
+
 	}
+
 
 
 	
