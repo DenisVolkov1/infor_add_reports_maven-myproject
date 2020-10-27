@@ -42,31 +42,23 @@ public class Util {
 	 * */
 	public static void setActivitySubComponents(Component container, boolean b) {
 		//
-		try {
-			if (b) {
-				container.setEnabled(saveActivityComponents.get(container) != null ? saveActivityComponents.get(container) : false);
-		
-		        Component[] components= ((Container) container).getComponents();
-		        for (int i = 0; i < components.length; i++) {
-		            setActivitySubComponents(components[i], true);
-		        }
-		
-			} else {
-				saveActivityComponents.put(container, container.isEnabled());
-				container.setEnabled(false);
+		if (b) {
+			container.setEnabled(saveActivityComponents.get(container) != null ? saveActivityComponents.get(container) : false);
+	
+	        Component[] components= ((Container) container).getComponents();
+	        for (int i = 0; i < components.length; i++) {
+	            setActivitySubComponents(components[i], true);
+	        }
+	
+		} else {
+			saveActivityComponents.put(container, container.isEnabled());
+			container.setEnabled(false);
 
-		        Component[] components= ((Container) container).getComponents();
-		        for (int i = 0; i < components.length; i++) {
-		            setActivitySubComponents(components[i], false);
-		        }
-			}
-	    } catch (ClassCastException e) {
-	    	e.printStackTrace();
-	    }
-
+	        Component[] components= ((Container) container).getComponents();
+	        for (int i = 0; i < components.length; i++) {
+	            setActivitySubComponents(components[i], false);
+	        }
+		}
 	}
-
-
-
 	
 }
