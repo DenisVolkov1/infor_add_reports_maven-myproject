@@ -40,33 +40,51 @@ public class Util {
 	 * @param container - Upper Container
 	 * @param b - enable(true) or Disable(false)
 	 * */
-	public static void setActivitySubComponents(Component container, boolean b) {
+	static int t = 0;
+	static int t1 = 0;
+	public static synchronized void setActivitySubComponents(Component container, boolean b) {
 		//
 		if (b) {
 			if (saveActivityComponents.isEmpty()) {
-				   System.out.println("saveActivityComponents.Empty");
+				   System.out.println("saveActivityComponents.EMPTY");
 				   return;
+			} else {
+				setEnabledGETRec(container, b);
+				System.out.println("saveActivityComponents.GET t1="+t1);
+				System.out.println();
 			}
-			//container.setEnabled(saveActivityComponents.get(container) != null ? saveActivityComponents.get(container) : false);
-			container.setEnabled(saveActivityComponents.get(container));
-			saveActivityComponents.remove(container);
-			//
-	        System.out.println("saveActivityComponents.GET");
-	        Component[] components= ((Container) container).getComponents();
-	        for (int i = 0; i < components.length; i++) {
-	            setActivitySubComponents(components[i], true);
-	        }
 		} else {
-			System.out.println("saveActivityComponents.PUT");
-			saveActivityComponents.put(container, container.isEnabled());
-			container.setEnabled(false);
-
-	        Component[] components= ((Container) container).getComponents();
-	        for (int i = 0; i < components.length; i++) {
-	            setActivitySubComponents(components[i], false);
-	        }
-	        
+			if (!saveActivityComponents.isEmpty()) {
+				   System.out.println("saveActivityComponents.NOT_EMPTY");
+				   return;
+			} else {
+				t = 0;
+				setDisabledPUTRec(container, b);
+				System.out.println("saveActivityComponents.PUT t="+t);
+				System.out.println();
+			}
 		}
+	}
+  
+	private static void setEnabledGETRec(Component container, boolean b) {
+		//container.setEnabled(saveActivityComponents.get(container) != null ? saveActivityComponents.get(container) : false);
+		container.setEnabled(saveActivityComponents.get(container));
+		saveActivityComponents.remove(container);
+		//
+		t1++;
+        Component[] components= ((Container) container).getComponents();
+        for (int i = 0; i < components.length; i++) {
+        	setEnabledGETRec(components[i], true);
+        }
+	}
+	private static void setDisabledPUTRec(Component container, boolean b) {
+		saveActivityComponents.put(container, container.isEnabled());
+		container.setEnabled(false);
+		t++;
+        Component[] components= ((Container) container).getComponents();
+        for (int i = 0; i < components.length; i++) {
+        	setDisabledPUTRec(components[i], false);
+        }
 	}
 	
 }

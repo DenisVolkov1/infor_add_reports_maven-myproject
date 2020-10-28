@@ -322,7 +322,16 @@ public class SettingsWindow extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 			
 				for (Component c : contentPanel.getComponents()) {
-					if (c instanceof JTextField) {
+					if (c instanceof JTextField ) {
+						String field = ((JTextField)c).getText().trim();
+						if (field.isEmpty()) {
+							DialogWindows.dialogWindowError("Field is empty.");
+							return;
+						}
+					}
+				}
+				for (Component c : repSettingsPanel.getComponents()) {
+					if (c instanceof JTextField ) {
 						String field = ((JTextField)c).getText().trim();
 						if (field.isEmpty()) {
 							DialogWindows.dialogWindowError("Field is empty.");
