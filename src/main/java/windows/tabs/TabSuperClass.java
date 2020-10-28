@@ -40,7 +40,7 @@ public class TabSuperClass extends JPanel {
 	private NewTaskDelay connectionToRepoThread;
 	
 	public TabSuperClass() {
-		paramButton = new MyHoverButton("New Param");
+		paramButton = new MyHoverButton();
 		//paramButton.setEnabled(false);
 		//
 		adapterCategories = new ComponentAdapter() {
@@ -60,7 +60,7 @@ public class TabSuperClass extends JPanel {
 					}
 					@Override
 					public void taskThread() throws Exception {
-			    		refreshCategory();//task...
+			    		refreshCategory();
 			    		if(!ParamsRelatedData.isExistTableParams()) paramButton.setVisible(false);
 			    		else paramButton.setVisible(true);
 					}
@@ -82,8 +82,7 @@ public class TabSuperClass extends JPanel {
 			    			setWindowEnable(panelGlass1);
 						}					
 					}
-				};
-				
+				};				
 //				System.out.println("connectionToBaseThread");
 //				java.util.Timer timer = new java.util.Timer();
 //				final TimerTask taskShowGlassPanel = new TimerTask() {

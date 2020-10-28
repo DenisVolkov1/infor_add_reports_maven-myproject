@@ -157,6 +157,7 @@ public class TabUpdateReport extends TabSuperClass {
 		lblProjectFolderIn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		//paramsButton = new MyHoverButton("Params");
+		paramButton.setText("Params");
 		paramButton.setFont(new Font("Dialog", Font.BOLD, 12));
 		paramButton.setEmptyHover();
 		

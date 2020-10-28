@@ -41,7 +41,7 @@ public abstract class NewTaskDelay {
 			    		catchTaskThread(e);
 					}	
 			  }
-			},nameThread);// name thread baseThread
+			},nameThread);// name thread 
 		//
 		//System.out.println(listTheads.size());
 		int indexDeadThread = -1;
@@ -84,8 +84,8 @@ public abstract class NewTaskDelay {
 		Util.setActivitySubComponents(MainRunWindow.getInstance().getContentPane(), true);
 	}
 	
-	public abstract void timerTask();
-	public abstract void taskThread() throws Exception;
-	public abstract void cancelTimerTask();
-	public abstract void catchTaskThread(Exception e);
+	protected abstract void timerTask();
+	protected abstract void taskThread() throws Exception;
+	protected abstract void cancelTimerTask();
+	protected abstract void catchTaskThread(Exception e);
 }

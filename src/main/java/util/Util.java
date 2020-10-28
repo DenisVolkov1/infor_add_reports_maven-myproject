@@ -43,15 +43,21 @@ public class Util {
 	public static void setActivitySubComponents(Component container, boolean b) {
 		//
 		if (b) {
+			if (saveActivityComponents.isEmpty()) {
+				   System.out.println("saveActivityComponents.Empty");
+				   return;
+			}
 			//container.setEnabled(saveActivityComponents.get(container) != null ? saveActivityComponents.get(container) : false);
 			container.setEnabled(saveActivityComponents.get(container));
-	
+			saveActivityComponents.remove(container);
+			//
+	        System.out.println("saveActivityComponents.GET");
 	        Component[] components= ((Container) container).getComponents();
 	        for (int i = 0; i < components.length; i++) {
 	            setActivitySubComponents(components[i], true);
 	        }
-	        saveActivityComponents.clear();
 		} else {
+			System.out.println("saveActivityComponents.PUT");
 			saveActivityComponents.put(container, container.isEnabled());
 			container.setEnabled(false);
 

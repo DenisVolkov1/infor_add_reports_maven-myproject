@@ -190,6 +190,7 @@ public class TabAddReport extends TabSuperClass {
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		//newParamButton = new MyHoverButton("New Param");
+		paramButton.setText("New Param");
 		paramButton.setFont(new Font("Dialog", Font.BOLD, 12));
 		paramButton.setEmptyHover();
 	
