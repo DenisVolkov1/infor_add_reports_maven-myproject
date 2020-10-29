@@ -292,6 +292,7 @@ public class TabUpdateReport extends TabSuperClass {
 					if (result == JFileChooser.APPROVE_OPTION) {
 						fileReportLabel.setText(fileChooser.getSelectedFile().getName().replace(".rptdesign",""));
 						ipDataSrcLabel.setText(ReadXML.getIpDataSource(fileChooser.getSelectedFile()));
+						ipDataSrcLabel.setToolTipText(ReadXML.getIpDataSource(fileChooser.getSelectedFile()));
 						Util.changeColorErrDataSource(ReadXML.getIpDataSource(fileChooser.getSelectedFile()), ipDataSrcLabel);
 					}
 				} catch (Exception e2) {

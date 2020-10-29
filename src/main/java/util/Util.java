@@ -35,8 +35,7 @@ public class Util {
 		
 	}
 	
-	/** Disable or Enable all sub Component. 
-	 * 
+	/** Disable or Enable all sub Component.
 	 * @param container - Upper Container
 	 * @param b - enable(true) or Disable(false)
 	 * */
@@ -49,6 +48,7 @@ public class Util {
 				   System.out.println("saveActivityComponents.EMPTY");
 				   return;
 			} else {
+				t1 = 0;
 				setEnabledGETRec(container, b);
 				System.out.println("saveActivityComponents.GET t1="+t1);
 				System.out.println();
@@ -65,7 +65,6 @@ public class Util {
 			}
 		}
 	}
-  
 	private static void setEnabledGETRec(Component container, boolean b) {
 		//container.setEnabled(saveActivityComponents.get(container) != null ? saveActivityComponents.get(container) : false);
 		container.setEnabled(saveActivityComponents.get(container));
@@ -86,5 +85,4 @@ public class Util {
         	setDisabledPUTRec(components[i], false);
         }
 	}
-	
 }

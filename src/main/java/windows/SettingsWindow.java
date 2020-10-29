@@ -385,7 +385,9 @@ public class SettingsWindow extends JDialog {
 					settingsWindow.dispatchEvent(new WindowEvent(settingsWindow, WindowEvent.WINDOW_CLOSING));
 			}
 		});
-		//Set saved properties
+		
+		//
+		//Set saved properties in interface
 		schemaField.setText(MyProperties.getProperty("schema"));
 		pathArchiveField.setText(MyProperties.getProperty("pathArchiveWar"));
 		ipBaseField.setText(MyProperties.getProperty("ipDataBase"));

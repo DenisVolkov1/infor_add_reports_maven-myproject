@@ -333,8 +333,6 @@ public class TabAddReport extends TabSuperClass {
 		final ListCellRendererCategory listCellRendererCategory = new ListCellRendererCategory(); 
 		categoriesComboBox.setRenderer(listCellRendererCategory);
 		
-		
-		
 		final DefaultComboBoxModel<String> model2 = new DefaultComboBoxModel(listNamesFoldersProject);
 		foldersProjectComboBox.setModel(model2);
 		
@@ -354,6 +352,7 @@ public class TabAddReport extends TabSuperClass {
 					if (result == JFileChooser.APPROVE_OPTION) {
 						fileReportLabel.setText(fileChooser.getSelectedFile().getName().replace(".rptdesign",""));
 						ipDataSrcLabel.setText(ReadXML.getIpDataSource(fileChooser.getSelectedFile()));
+						ipDataSrcLabel.setToolTipText(ReadXML.getIpDataSource(fileChooser.getSelectedFile()));
 							Util.changeColorErrDataSource(ReadXML.getIpDataSource(fileChooser.getSelectedFile()), ipDataSrcLabel);
 					}
 				} catch (Exception e2) {
