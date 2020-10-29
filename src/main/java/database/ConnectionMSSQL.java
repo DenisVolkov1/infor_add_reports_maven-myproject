@@ -11,7 +11,7 @@ import util.MyProperties;
 import windows.tabs.TabConnectionMSSQLServer;
 
 public class ConnectionMSSQL {
-	public static boolean isGoodLastsConnection = true;
+	public static boolean isGoodLastsConnection = false;
 	
 private ConnectionMSSQL() {}	
 	
