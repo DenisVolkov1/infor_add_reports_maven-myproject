@@ -17,6 +17,7 @@ import files_repository.FilesRepository;
 import log.LOg;
 import util.CategoryAndId;
 import util.DialogWindows;
+import util.DisplayConnectionDelay;
 import util.MyProperties;
 import util.NewTaskDelay;
 import util.ServiceWindow;
@@ -36,8 +37,7 @@ public class TabSuperClass extends JPanel {
 	protected MyHoverButton paramButton;
 	private Component panelGlass1;
 	private Component panelGlass2;
-	private NewTaskDelay connectionToBaseThread;
-	private NewTaskDelay connectionToRepoThread;
+
 	
 	public TabSuperClass() {
 		paramButton = new MyHoverButton();
@@ -51,38 +51,48 @@ public class TabSuperClass extends JPanel {
 					listCategoryAndCodes.clear();
 					return;
 				}
-				
-				connectionToBaseThread = new NewTaskDelay("baseThread",400L) {
+				new DisplayConnectionDelay("baseThread","ipDataBase", 400L) {
+					
 					@Override
-					public void timerTask() {
-						String ipDataBase = MyProperties.getProperty("ipDataBase");
-			    		panelGlass1 = setWindowDisable(ipDataBase);
+					protected Object taskThread() throws Exception {
+				    		refreshCategory();
+				    		if(!ParamsRelatedData.isExistTableParams()) paramButton.setVisible(false);
+				    		else paramButton.setVisible(true);
+						return null;
 					}
-					@Override
-					public void taskThread() throws Exception {
-			    		refreshCategory();
-			    		if(!ParamsRelatedData.isExistTableParams()) paramButton.setVisible(false);
-			    		else paramButton.setVisible(true);
-					}
-					@Override
-					public void catchTaskThread(Exception e) {
-						LOg.logToFile(e);
-						try {
-			    			timerTask.cancel();// 
-			    		} finally {
-							DialogWindows.dialogWindowError(e);
-							setWindowEnable(panelGlass1);
-						}	
-					}
-					@Override
-					public void cancelTimerTask() {
-				    	try {
-			    			timerTask.cancel();// 
-			    		} finally {
-			    			setWindowEnable(panelGlass1);
-						}					
-					}
-				};				
+				};
+//				connectionToBaseThread = new NewTaskDelay("baseThread",400L) {
+//					@Override
+//					public void timerTask() {
+//						String ipDataBase = MyProperties.getProperty("ipDataBase");
+//			    		panelGlass1 = setWindowDisable(ipDataBase);
+//					}
+//					@Override
+//					public void taskThread() throws Exception {
+//			    		refreshCategory();
+//			    		if(!ParamsRelatedData.isExistTableParams()) paramButton.setVisible(false);
+//			    		else paramButton.setVisible(true);
+//					}
+//					@Override
+//					public void catchTaskThread(Exception e) {
+//						LOg.logToFile(e);
+//						try {
+//			    			timerTask.cancel();// 
+//			    		} finally {
+//							DialogWindows.dialogWindowError(e);
+//							setWindowEnable(panelGlass1);
+//						}	
+//					}
+//					@Override
+//					public void cancelTimerTask() {
+//				    	try {
+//			    			timerTask.cancel();// 
+//			    		} finally {
+//			    			setWindowEnable(panelGlass1);
+//						}					
+//					}
+//				};	
+/////////
 //				System.out.println("connectionToBaseThread");
 //				java.util.Timer timer = new java.util.Timer();
 //				final TimerTask taskShowGlassPanel = new TimerTask() {
@@ -130,39 +140,49 @@ public class TabSuperClass extends JPanel {
 		adapterListProjectsNames = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
+				
 				boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
 				if(isSetRepo) {
-					connectionToRepoThread = new NewTaskDelay("repoThread",300L) {
+					new DisplayConnectionDelay("repoThread","repPathDir", 400L) {
+						
 						@Override
-						public void timerTask() {
-							String repPathDir = MyProperties.getProperty("repPathDir");
-				    		panelGlass2 = setWindowDisable(repPathDir);
-						}
-						@Override
-						public void taskThread() throws Exception {
+						protected Object taskThread() throws Exception {
 							if(FilesRepository.isOpenRepo()) refresListNameProjects();//task...
-						}
-						@Override
-						public void catchTaskThread(Exception e) {
-							LOg.logToFile(e);
-							try {
-				    			timerTask.cancel();// 
-				    		} finally {
-								DialogWindows.dialogWindowError(e);
-								setWindowEnable(panelGlass2);
-							}	
-						}
-						@Override
-						public void cancelTimerTask() {
-					    	try {
-				    			timerTask.cancel();// 
-				    		} finally {
-				    			setWindowEnable(panelGlass2);
-							}					
+							return null;
 						}
 					};
+					
+//					connectionToRepoThread = new NewTaskDelay("repoThread",300L) {
+//						@Override
+//						public void timerTask() {
+//							String repPathDir = MyProperties.getProperty("repPathDir");
+//				    		panelGlass2 = setWindowDisable(repPathDir);
+//						}
+//						@Override
+//						public void taskThread() throws Exception {
+//							if(FilesRepository.isOpenRepo()) refresListNameProjects();//task...
+//						}
+//						@Override
+//						public void catchTaskThread(Exception e) {
+//							LOg.logToFile(e);
+//							try {
+//				    			timerTask.cancel();// 
+//				    		} finally {
+//								DialogWindows.dialogWindowError(e);
+//								setWindowEnable(panelGlass2);
+//							}	
+//						}
+//						@Override
+//						public void cancelTimerTask() {
+//					    	try {
+//				    			timerTask.cancel();// 
+//				    		} finally {
+//				    			setWindowEnable(panelGlass2);
+//							}					
+//						}
+//					};
 			
-				
+/////////////				
 //				System.out.println("connectionToRepoThread");
 //				boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
 //				if(isSetRepo) {

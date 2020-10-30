@@ -10,8 +10,10 @@ import java.awt.event.ActionEvent;
 import javax.swing.border.TitledBorder;
 
 import database.ConnectionMSSQL;
+import database.ParamsRelatedData;
 import log.LOg;
 import util.DialogWindows;
+import util.DisplayConnectionDelay;
 import util.MyProperties;
 import util.NewTaskDelay;
 import util.my_components.MyHoverButton;
@@ -139,39 +141,50 @@ public class TabConnectionMSSQLServer extends JPanel {
 		});
 		connectionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				connectionToBaseThread = new NewTaskDelay("baseThread",300L) {
+				new DisplayConnectionDelay("baseThread","ipDataBase", 400L) {
 					@Override
-					public void timerTask() {
-						String ipDataBase = MyProperties.getProperty("ipDataBase");
-			    		panelGlass1 = setWindowDisable(ipDataBase);
-					}
-					@Override
-					public void taskThread() throws Exception {
+					protected Object taskThread() throws Exception {
 						ConnectionMSSQL.getInstanceConneectionJDBC();
+						return null;
 					}
 					@Override
 					protected void afterTask() {
 						DialogWindows.dialogWindowWarning("Connection successful!");
 					}
-					@Override
-					public void catchTaskThread(Exception e) {
-						LOg.logToFile(e);
-						try {
-			    			timerTask.cancel();// 
-			    		} finally {
-							DialogWindows.dialogWindowError(e);
-							setWindowEnable(panelGlass1);
-						}	
-					}
-					@Override
-					public void cancelTimerTask() {
-				    	try {
-			    			timerTask.cancel();// 
-			    		} finally {
-			    			setWindowEnable(panelGlass1);
-						}					
-					}
 				};
+//				connectionToBaseThread = new NewTaskDelay("baseThread",300L) {
+//					@Override
+//					public void timerTask() {
+//						String ipDataBase = MyProperties.getProperty("ipDataBase");
+//			    		panelGlass1 = setWindowDisable(ipDataBase);
+//					}
+//					@Override
+//					public void taskThread() throws Exception {
+//						ConnectionMSSQL.getInstanceConneectionJDBC();
+//					}
+//					@Override
+//					protected void afterTask() {
+//						DialogWindows.dialogWindowWarning("Connection successful!");
+//					}
+//					@Override
+//					public void catchTaskThread(Exception e) {
+//						LOg.logToFile(e);
+//						try {
+//			    			timerTask.cancel();// 
+//			    		} finally {
+//							DialogWindows.dialogWindowError(e);
+//							setWindowEnable(panelGlass1);
+//						}	
+//					}
+//					@Override
+//					public void cancelTimerTask() {
+//				    	try {
+//			    			timerTask.cancel();// 
+//			    		} finally {
+//			    			setWindowEnable(panelGlass1);
+//						}					
+//					}
+//				};
 		    }
 		});
 		connectionButton.addMouseListener(new MouseAdapter() {
