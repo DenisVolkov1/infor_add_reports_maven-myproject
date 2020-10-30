@@ -49,7 +49,7 @@ public class Util {
 				   return;
 			} else {
 				t1 = 0;
-				setEnabledGETRec(container, b);
+				setEnabledGETRec(container);
 				System.out.println("saveActivityComponents.GET t1="+t1);
 				System.out.println();
 			}
@@ -59,13 +59,13 @@ public class Util {
 				   return;
 			} else {
 				t = 0;
-				setDisabledPUTRec(container, b);
+				setDisabledPUTRec(container);
 				System.out.println("saveActivityComponents.PUT t="+t);
 				System.out.println();
 			}
 		}
 	}
-	private static void setEnabledGETRec(Component container, boolean b) {
+	private static void setEnabledGETRec(Component container) {
 		//container.setEnabled(saveActivityComponents.get(container) != null ? saveActivityComponents.get(container) : false);
 		container.setEnabled(saveActivityComponents.get(container));
 		saveActivityComponents.remove(container);
@@ -73,16 +73,16 @@ public class Util {
 		t1++;
         Component[] components= ((Container) container).getComponents();
         for (int i = 0; i < components.length; i++) {
-        	setEnabledGETRec(components[i], true);
+        	setEnabledGETRec(components[i]);
         }
 	}
-	private static void setDisabledPUTRec(Component container, boolean b) {
+	private static void setDisabledPUTRec(Component container) {
 		saveActivityComponents.put(container, container.isEnabled());
 		container.setEnabled(false);
 		t++;
         Component[] components= ((Container) container).getComponents();
         for (int i = 0; i < components.length; i++) {
-        	setDisabledPUTRec(components[i], false);
+        	setDisabledPUTRec(components[i]);
         }
 	}
 }

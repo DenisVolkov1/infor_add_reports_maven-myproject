@@ -8,7 +8,7 @@ import util.MyProperties;
 import windows.tabs.TabConnectionMSSQLServer;
 
 public class ConnectionMSSQL {
-	public static boolean isGoodLastsConnection = false;
+	public static boolean isGoodLastsConnection = true;
 	
 private ConnectionMSSQL() {}	
 	

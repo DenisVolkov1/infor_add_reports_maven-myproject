@@ -9,14 +9,14 @@ import windows.MainRunWindow;
 
 public abstract class DisplayConnectionDelay extends NewTaskDelay {
 	
-	private  Component panelGlass1;
+	private Component panelGlass1;
 	private static List<Thread> listTheads = new ArrayList<Thread>();
 	private String propertiesConnection;
 	
 	public DisplayConnectionDelay(String nameThread,String propertiesConnection, long delay) {
 		super(nameThread, delay);
 		this.propertiesConnection = propertiesConnection;
-		
+		System.out.println("ttttttttttttttttt");
 		for(Thread thread : listTheads) {
 			if (thread.isAlive() && thread.getName().equals(nameThread)) return; // check if thread task already run.
 		}
@@ -25,8 +25,8 @@ public abstract class DisplayConnectionDelay extends NewTaskDelay {
 		int indexDeadThread = -1;
 		for(Thread thread : listTheads) {
 			if (!thread.isAlive()) {
-				indexDeadThread = listTheads.indexOf(thread);
-				//System.out.println("thread=task");
+				//indexDeadThread = listTheads.indexOf(thread);
+				System.out.println("thread=task");
 				break;
 			}
 		}
@@ -36,7 +36,6 @@ public abstract class DisplayConnectionDelay extends NewTaskDelay {
 		} 
 		listTheads.add(taskThread);
 		startTask();
-		
 	}
 	protected Component setWindowDisable(String text) {
 		text = (text.length() <= 10) ? text : text.substring(0,10);
@@ -66,7 +65,7 @@ public abstract class DisplayConnectionDelay extends NewTaskDelay {
 	public void catchTaskThread(Exception e) {
 		LOg.logToFile(e);
 		try {
-			timerTask.cancel();// 
+			timerTask.cancel();//
 		} finally {
 			DialogWindows.dialogWindowError(e);
 			setWindowEnable(panelGlass1);
@@ -75,10 +74,10 @@ public abstract class DisplayConnectionDelay extends NewTaskDelay {
 	@Override
 	public void cancelTimerTask() {
     	try {
-			timerTask.cancel();// 
+			timerTask.cancel();//
 		} finally {
 			setWindowEnable(panelGlass1);
-		}					
+		}
 	}
 
 	protected abstract Object taskThread() throws Exception;

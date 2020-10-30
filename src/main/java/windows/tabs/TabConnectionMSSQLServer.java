@@ -38,8 +38,8 @@ public class TabConnectionMSSQLServer extends JPanel {
 	private JLabel lblNewLabel_1;
 	private MyHoverButton connectionButton;
 	private JPanel panel;
-	private NewTaskDelay connectionToBaseThread;
-	private Component panelGlass1;
+
+
 	/**
 	 * Create the panel.
 	 */
