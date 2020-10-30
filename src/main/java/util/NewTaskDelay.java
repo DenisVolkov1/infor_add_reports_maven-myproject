@@ -4,14 +4,15 @@ import java.util.TimerTask;
 import javax.swing.SwingUtilities;
 
 public abstract class NewTaskDelay {
-	private long delay;
+	private long delayTimerTask;
 	protected Thread taskThread;
-	private java.util.Timer timer;
 	protected TimerTask timerTask;
+	private java.util.Timer timer;
+
 	//private static List<Thread> listTheads = new ArrayList<Thread>();
 
-	public NewTaskDelay(String nameThread, long delay) {
-		this.delay = delay;
+	public NewTaskDelay(String nameThread, long delayTimerTask) {
+		this.delayTimerTask = delayTimerTask;
 		//
 //		for(Thread thread : listTheads) {
 //			if (thread.isAlive() && thread.getName().equals(nameThread)) return; // check if thread task already run.
@@ -60,9 +61,12 @@ public abstract class NewTaskDelay {
 		taskThread.start();
 	}
 	protected final void startTimerTask() {
-		timer.schedule(timerTask, delay);
+		timer.schedule(timerTask, delayTimerTask);
 	}
 	protected void afterTask() {
+		// if needs
+	}
+	protected void catchTaskThread(Exception e) {
 		// if needs
 	}
 //	protected Component setWindowDisable(String text) {
@@ -87,5 +91,4 @@ public abstract class NewTaskDelay {
 	protected abstract void timerTask();
 	protected abstract Object taskThread() throws Exception;
 	protected abstract void cancelTimerTask();
-	protected abstract void catchTaskThread(Exception e);
 }
