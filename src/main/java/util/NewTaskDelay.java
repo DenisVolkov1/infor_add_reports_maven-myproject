@@ -5,8 +5,8 @@ import javax.swing.SwingUtilities;
 
 public abstract class NewTaskDelay {
 	private long delayTimerTask;
-	protected Thread taskThread;
-	protected TimerTask timerTask;
+	private Thread taskThread;
+	private TimerTask timerTask;
 	private java.util.Timer timer;
 
 	//private static List<Thread> listTheads = new ArrayList<Thread>();
@@ -91,4 +91,11 @@ public abstract class NewTaskDelay {
 	protected abstract void timerTask();
 	protected abstract Object taskThread() throws Exception;
 	protected abstract void cancelTimerTask();
+	
+	protected Thread getTaskThread() {
+		return taskThread;
+	}
+	protected TimerTask getTimerTask() {
+		return timerTask;
+	}
 }

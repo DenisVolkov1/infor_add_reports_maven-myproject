@@ -4,19 +4,20 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import log.LOg;
 import windows.MainRunWindow;
 
 public abstract class DisplayConnectionDelay extends NewTaskDelay {
 	
 	private Component panelGlass1;
-	private static List<Thread> listTheads = new ArrayList<Thread>();
+	private static List<Thread> listTheads = new ArrayList<Thread>(2);
 	private String propertiesConnection;
 	
 	public DisplayConnectionDelay(String nameThread,String propertiesConnection, long delay) {
 		super(nameThread, delay);
 		this.propertiesConnection = propertiesConnection;
-		System.out.println("ttttttttttttttttt");
 		for(Thread thread : listTheads) {
 			if (thread.isAlive() && thread.getName().equals(nameThread)) return; // check if thread task already run.
 		}
@@ -34,7 +35,7 @@ public abstract class DisplayConnectionDelay extends NewTaskDelay {
 			//System.out.println("addReplace");
 			listTheads.remove(indexDeadThread);
 		} 
-		listTheads.add(taskThread);
+		listTheads.add(getTaskThread());
 		startTask();
 	}
 	protected Component setWindowDisable(String text) {
@@ -46,7 +47,7 @@ public abstract class DisplayConnectionDelay extends NewTaskDelay {
 		//System.out.println(Thread.currentThread().getName());
 		MainRunWindow.hideGlassPanel(panel);
 		for (Thread thread : listTheads) {
-			if (thread != taskThread) {
+			if (thread != getTaskThread()) {
 				if (thread.isAlive()) {
 					//System.out.println("thread.IsAlive return");
 					return;
@@ -65,16 +66,15 @@ public abstract class DisplayConnectionDelay extends NewTaskDelay {
 	public void catchTaskThread(Exception e) {
 		LOg.logToFile(e);
 		try {
-			timerTask.cancel();//
+			getTimerTask().cancel();//
 		} finally {
-			DialogWindows.dialogWindowError(e);
 			setWindowEnable(panelGlass1);
 		}	
 	}
 	@Override
 	public void cancelTimerTask() {
     	try {
-			timerTask.cancel();//
+			getTimerTask().cancel();//
 		} finally {
 			setWindowEnable(panelGlass1);
 		}

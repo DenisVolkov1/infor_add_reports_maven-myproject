@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.TimerTask;
 
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
@@ -64,11 +65,18 @@ public class Util {
 				System.out.println();
 			}
 		}
+		container.repaint();
+		container.revalidate();
+		
 	}
 	private static void setEnabledGETRec(Component container) {
 		//container.setEnabled(saveActivityComponents.get(container) != null ? saveActivityComponents.get(container) : false);
-		container.setEnabled(saveActivityComponents.get(container));
-		saveActivityComponents.remove(container);
+		if (container instanceof JComboBox) {
+			container.setVisible(true);
+		} else {
+			container.setEnabled(saveActivityComponents.get(container));
+			saveActivityComponents.remove(container);
+		}
 		//
 		t1++;
         Component[] components= ((Container) container).getComponents();
@@ -77,8 +85,12 @@ public class Util {
         }
 	}
 	private static void setDisabledPUTRec(Component container) {
-		saveActivityComponents.put(container, container.isEnabled());
-		container.setEnabled(false);
+		if (container instanceof JComboBox) {
+			container.setVisible(false);
+		} else {
+			saveActivityComponents.put(container, container.isEnabled());
+			container.setEnabled(false);
+		}
 		t++;
         Component[] components= ((Container) container).getComponents();
         for (int i = 0; i < components.length; i++) {
