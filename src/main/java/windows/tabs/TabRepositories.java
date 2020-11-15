@@ -25,6 +25,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import exception.InfoException;
+import exception.WarningException;
 import files_repository.FilesRepository;
 import log.LOg;
 import parce_rptdesign.ReadXML;
@@ -291,8 +292,10 @@ public class TabRepositories extends TabSuperClass {
 				throw new InfoException("Filename on this pattern '"+lastInputPattern+"' is absent.");
 			}
 			
+		} catch (WarningException we) {
+			DialogWindows.dialogWindowWarning(we);
 		} catch (InfoException ie) {
-			DialogWindows.dialogWindowWarning(ie);
+			DialogWindows.dialogWindowError(ie);
 		} catch (Exception e) {
 			DialogWindows.dialogWindowError(e);
 			LOg.logToFile(e);
