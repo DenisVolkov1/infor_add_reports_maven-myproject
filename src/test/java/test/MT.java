@@ -8,7 +8,9 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.TimeZone;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -30,41 +32,34 @@ import static files_repository.FilesRepository.*;
 
 public class MT {
 	
-	private static class Y {
-		public final Long long1;
-		public Y(final Long long1) {
-			this.long1 = long1;
-		}
-	}
 
+	
 	public static void main(String[] args) throws Exception {
 		
-		Y y1 = new Y(1L);
-		Y y2 = new Y(2L);
-		Y y3 = new Y(3L);
-		Y y4 = new Y(4L);
-		Y y5 = new Y(5L);
-		Y y6 = new Y(6L);
-		Y y7 = new Y(7L);
+	
 		
-		List<Y> list = new ArrayList<MT.Y>();
-		list.add(y1);
-		list.add(y2);
-		list.add(y3);
-		list.add(y4);
-		
-		for(Y y : list) {
-			if(y == y2) {
-				list.add(list.indexOf(y), y7);
-			}
-		}
-		
-		for(Y y : list) {
-			System.out.println(y.long1);
-		}
+//		List<String> listNameReports = new ArrayList<String>();
+//		SmbFile smbFileReportFolders = getSmbFileObject(repoPathToReportsFolder("Lukoil/"));
+//		SmbFile[] listOfFoldersReport = smbFileReportFolders.listFiles();
+//		for (SmbFile smbFile : listOfFoldersReport) {
+//			Matcher m = Pattern.compile("^(.+" +'\u0020'+'\u0020'+'\u0020'+'\u0020'+ ".+)" +'\u0020'+'\u0020'+'\u0020'+'\u0020'+".+/$").matcher(smbFile.getName());
+//			if (m.find()) listNameReports.add(m.group(1));
+//		}
+//		String inputPattern = "по дням";
+//		
+//		
+//		Queue<String> listFindPatterns = new LinkedList<String>();
+//		for (String reportsNames : listNameReports) {
+//			if (reportsNames.matches(".*"+inputPattern+".*")) {
+//				listFindPatterns.add(reportsNames.replaceFirst(""+'\u0020'+'\u0020'+'\u0020'+'\u0020'+".*$", ""));
+//			}
+//		}
+		System.out.println("Состояние склада по объекту    rep_sostoyanie_sklada_po_object".replaceFirst(""+'\u0020'+'\u0020'+'\u0020'+'\u0020'+".*$", ""));
 		
 		
 		
+		
+
 		
 		
 		
@@ -72,5 +67,6 @@ public class MT {
 	
 			
 	}
+	
 
 }

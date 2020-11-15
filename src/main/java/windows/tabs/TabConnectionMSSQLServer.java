@@ -16,6 +16,7 @@ import util.DialogWindows;
 import util.DisplayConnectionDelay;
 import util.MyProperties;
 import util.NewTaskDelay;
+import util.DisplayConnectionDelay.TypeConnection;
 import util.my_components.MyHoverButton;
 import java.awt.event.ActionListener;
 import javax.swing.JTextField;
@@ -141,7 +142,7 @@ public class TabConnectionMSSQLServer extends JPanel {
 		});
 		connectionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new DisplayConnectionDelay("baseThread","ipDataBase", 400L) {
+				new DisplayConnectionDelay(TypeConnection.REPO_CONNECTION,"ipDataBase", 400L) {
 					@Override
 					protected Object taskThread() throws Exception {
 						ConnectionMSSQL.getInstanceConneectionJDBC();
@@ -152,39 +153,6 @@ public class TabConnectionMSSQLServer extends JPanel {
 						DialogWindows.dialogWindowWarning("Connection successful!");
 					}
 				};
-//				connectionToBaseThread = new NewTaskDelay("baseThread",300L) {
-//					@Override
-//					public void timerTask() {
-//						String ipDataBase = MyProperties.getProperty("ipDataBase");
-//			    		panelGlass1 = setWindowDisable(ipDataBase);
-//					}
-//					@Override
-//					public void taskThread() throws Exception {
-//						ConnectionMSSQL.getInstanceConneectionJDBC();
-//					}
-//					@Override
-//					protected void afterTask() {
-//						DialogWindows.dialogWindowWarning("Connection successful!");
-//					}
-//					@Override
-//					public void catchTaskThread(Exception e) {
-//						LOg.logToFile(e);
-//						try {
-//			    			timerTask.cancel();// 
-//			    		} finally {
-//							DialogWindows.dialogWindowError(e);
-//							setWindowEnable(panelGlass1);
-//						}	
-//					}
-//					@Override
-//					public void cancelTimerTask() {
-//				    	try {
-//			    			timerTask.cancel();// 
-//			    		} finally {
-//			    			setWindowEnable(panelGlass1);
-//						}					
-//					}
-//				};
 		    }
 		});
 		connectionButton.addMouseListener(new MouseAdapter() {

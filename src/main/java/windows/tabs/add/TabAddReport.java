@@ -478,6 +478,7 @@ public class TabAddReport extends TabSuperClass {
 				String autoRPT_ID = new DateTime().toString("ddHHmmss");
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {
+					checkConnection();
 					matchCheckingValidInputData();
 					if(addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
 						isExistTableParams = ParamsRelatedData.isExistTableParams();
@@ -559,6 +560,7 @@ public class TabAddReport extends TabSuperClass {
 
 	private void matchCheckingValidInputData() throws Exception {
 		if (addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
+			checkConnection();
 			if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
 				matchCheckingProjectComboBox();
 				String nameReport = nameReportField.getText().trim();
@@ -570,6 +572,7 @@ public class TabAddReport extends TabSuperClass {
 			matchCheckingDataBase();
 				matchCheckingArchive();
 		} else if (addDataBaseToggleButton.isSelected()) {
+			
 			if (categoriesComboBox.getSelectedItem() == null) throw new InfoException("Choose a category.");
 			matchCheckingInputValueFileName();
 				matchCheckingDataBase();
@@ -595,9 +598,9 @@ public class TabAddReport extends TabSuperClass {
 		}
 	}
 	private void matchCheckingProjectComboBox() throws Exception {
-		if (FilesRepository.isOpenRepo()) {
-			if (foldersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
-		}
+
+		if (foldersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
+		
 	}
 
 	private void matchCheckingDataBase() throws Exception {

@@ -25,8 +25,8 @@ public class TabScrollable extends JScrollPane {
 //		}
 		
 		
-		this.addComponentListener(tabPanel.getCategoriesAdapter());
-		this.addComponentListener(tabPanel.getListProjectsNamesAdapter());
+		this.addComponentListener(tabPanel.getAdapterDataBase());
+		this.addComponentListener(tabPanel.getAdapterRepositories());
 		setViewportView(tabPanel);
 	}
 }

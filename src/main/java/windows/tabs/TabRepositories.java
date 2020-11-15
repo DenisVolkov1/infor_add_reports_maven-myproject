@@ -33,7 +33,13 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.sql.Connection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.awt.event.ActionEvent;
+import java.awt.Insets;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class TabRepositories extends TabSuperClass {
 	/**
@@ -49,6 +55,10 @@ public class TabRepositories extends TabSuperClass {
 	private MyHoverButton createToRepositoriesButton;
 	private JFileChooser fileChooser;
 	private MyHoverButton updateToRepositoriesButton;
+	private final MyHoverButton upButton = new MyHoverButton(Character.toString('\u2191')); 
+	private LinkedList<String> listFindPatterns = new LinkedList<String>();
+	private String lastNameProgect;
+	private String lastInputPattern;
 
 	/**
 	 * Create the panel.
@@ -61,7 +71,7 @@ public class TabRepositories extends TabSuperClass {
 	
 		add(panel);
 		
-		panel.setBounds(55, 0, 481, 288);
+		panel.setBounds(55, 0, 437, 288);
 		
 		foldersProjectComboBox = new JComboBox<String>();
 		foldersProjectComboBox.setMaximumRowCount(10);
@@ -83,6 +93,7 @@ public class TabRepositories extends TabSuperClass {
 		fileReportButton.setFont(new Font("Dialog", Font.BOLD, 12));
 		
 		nameReportField = new JTextField();
+		nameReportField.setToolTipText("press '\u2191'-up arrow to find on pattern like(sql) '%+(your input)+%'");
 		nameReportField.setFont(new Font("Dialog", Font.PLAIN, 14));
 		nameReportField.setColumns(10);
 		
@@ -143,6 +154,10 @@ public class TabRepositories extends TabSuperClass {
 					.addContainerGap(29, Short.MAX_VALUE))
 		);
 		panel.setLayout(gl_panel);
+		upButton.setToolTipText("find name rep like(sql) '%+(your input in field)+%'");
+		upButton.setMargin(new Insets(2, 2, 2, 2));
+		upButton.setBounds(495, 97, 25, 26);
+		add(upButton);
 		/////////////Code
 		///////
 		primaryInit();
@@ -173,7 +188,27 @@ public class TabRepositories extends TabSuperClass {
 				}
 			}
 		});
-		//CREATE folder report in repositories
+		//
+		
+		//UP LISTENER focus name Report field , click button 'up arrow'. 
+		nameReportField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode()==KeyEvent.VK_UP) {
+					upListener();
+				}
+			}
+			@Override
+			public void keyTyped(KeyEvent e) {
+				lastInputPattern = null;
+			}
+		});
+		upButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				upListener();
+			}
+		});
+		//CREATE folder report in repositories 
 		createToRepositoriesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String nameReport = null , nameProgect = null;
@@ -228,6 +263,47 @@ public class TabRepositories extends TabSuperClass {
 			}
 		});
 	}
+	private String findNameReportOnPattern(String nameProgect, String inputPattern) throws Exception {
+		if ((!nameProgect.equals(lastNameProgect)) || (lastInputPattern == null)) {// if field keyTyped then lastInputPattern = null
+			listFindPatterns.clear();
+			listFindPatterns.addAll(FilesRepository.getNameReportsAndRepdesign(nameProgect));
+			lastInputPattern = inputPattern;
+			lastNameProgect = nameProgect;
+			System.out.println(listFindPatterns);
+		}
+		while(!listFindPatterns.isEmpty()) {
+			String res = listFindPatterns.pollFirst();
+			if (res.matches(".*"+lastInputPattern+".*")) {
+				return res.replaceFirst(""+'\u0020'+'\u0020'+'\u0020'+'\u0020'+".+$", "");
+			}
+		}
+		return null;
+	}
+	private void upListener() {
+		try {
+			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			matchCheckingNameRepAndNameProj();
+			String inputPattern = nameReportField.getText().trim();
+			String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
+			String findOnPatternNameRep = findNameReportOnPattern(nameProgect, inputPattern);
+			if (findOnPatternNameRep != null) {
+				System.out.println(findOnPatternNameRep);
+				nameReportField.setText(findOnPatternNameRep);
+			} else {
+				throw new InfoException("Filename on this pattern '"+lastInputPattern+"' is absent.");
+			}
+			
+		} catch (InfoException ie) {
+			DialogWindows.dialogWindowError(ie);
+		} catch (Exception e) {
+			DialogWindows.dialogWindowError(e);
+			LOg.logToFile(e);
+		} finally {
+			setCursor(null);
+		}
+
+		
+	}
 	private String listFilesNameSend() {
 		File selectedFile   = fileChooser.getSelectedFile();
 		File[] files = selectedFile.getParentFile().listFiles(new FileFilter() {
@@ -242,15 +318,18 @@ public class TabRepositories extends TabSuperClass {
 		}
 		return res;
 	}
-	private void matchCheckingValidInputData() throws Exception {
+	private void matchCheckingNameRepAndNameProj() throws Exception {
 		String nameReport = nameReportField.getText().trim();
-		if (FilesRepository.isOpenRepo()) {
-			if (foldersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
-		}
+		if (foldersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
 		if (nameReport.isEmpty()) throw new InfoException("Field name report is empty.");
-		
+	}
+	private void matchCheckingFile() throws Exception {
 		if (fileChooser.getSelectedFile() == null) throw new InfoException("Select report file.");
-			if (!fileChooser.getSelectedFile().exists()) throw new InfoException("File not found.");
+		if (!fileChooser.getSelectedFile().exists()) throw new InfoException("File not found.");
+	}
+	private void matchCheckingValidInputData() throws Exception {
+		matchCheckingNameRepAndNameProj();
+		matchCheckingFile();
 	}
 	public static TabRepositories getInstance() {
 		if (TAB_TO_REPOSITORIES == null) {

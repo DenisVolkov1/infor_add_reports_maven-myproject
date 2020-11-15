@@ -1,5 +1,8 @@
 package files_repository;
 
+import static files_repository.FilesRepository.getSmbFileObject;
+import static files_repository.FilesRepository.repoPathToReportsFolder;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -9,6 +12,7 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.TimerTask;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
@@ -45,14 +49,8 @@ public class FilesRepository {
 	public static SmbFile getSmbFileObject(String url) throws MalformedURLException {
 		SmbFile res = new SmbFile(url,getAuthentication());
 		return res;
-		
 	}
 	
-	public static boolean isOpenRepo() throws MalformedURLException, IOException {
-		getSmbFileObject(repoPathToProjectsFolder()).connect();
-		// -< exception like a false
-		return true;
-	}
 	/***
 	 * @param nameProgect - example BPYARD/ -example valid name
 	 */
@@ -123,7 +121,6 @@ public class FilesRepository {
 				
 				break;
 			case UPDATE:
-				System.out.println("sout");
 				SmbFile reportsFolder = getSmbFileObject(repoPathToReportsFolder(nameProgect));
 				SmbFile[] listOfFiles = reportsFolder.listFiles();
 				for (SmbFile smbFile : listOfFiles) {
@@ -146,7 +143,7 @@ public class FilesRepository {
 		
 	}
 	
-	public static String getNextVersion(SmbFile smbFile) throws SmbException {
+	private static String getNextVersion(SmbFile smbFile) throws SmbException {
 		SmbFile[] listOfFiles = smbFile.listFiles();
 		Vector<Integer> v = new Vector<Integer>();
 		for (SmbFile file : listOfFiles) {
@@ -220,6 +217,19 @@ public class FilesRepository {
 		}
 		if (double—oincidence) throw new InfoException("Exist two or more folder in storage with this name!\r\n\n"+nameReport+"    "+nameFileReport);
 		if (!isExist) throw new InfoException("Report folder in storage with this name not exist.\r\n\n"+nameReport+"    "+nameFileReport);
+	}
+	 /**
+	 * @param nameProgect - example BPYARD/ -example valid name
+	 */
+	public static List<String> getNameReportsAndRepdesign(String nameProgect) throws Exception {
+		List<String> listNameReportsAndRepdesign = new ArrayList<String>();
+		SmbFile smbFileReportFolders = getSmbFileObject(repoPathToReportsFolder(nameProgect));
+		SmbFile[] listOfFoldersReport = smbFileReportFolders.listFiles();
+		for (SmbFile smbFile : listOfFoldersReport) {
+			Matcher m = Pattern.compile("^(.+" +'\u0020'+'\u0020'+'\u0020'+'\u0020'+ ".+)" +'\u0020'+'\u0020'+'\u0020'+'\u0020'+".+/$").matcher(smbFile.getName());
+			if (m.find()) listNameReportsAndRepdesign.add(m.group(1));
+		}
+		return listNameReportsAndRepdesign;
 	}
 	public static String getNameReport(String nameRptFile, String nameProgect) throws Exception {
 		SmbFile smbFile = getSmbFileObject(repoPathToReportsFolder(nameProgect));

@@ -65,8 +65,6 @@ public class Util {
 				System.out.println();
 			}
 		}
-		container.repaint();
-		container.revalidate();
 		
 	}
 	private static void setEnabledGETRec(Component container) {

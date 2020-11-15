@@ -545,9 +545,7 @@ public class TabUpdateReport extends TabSuperClass {
 		}
 	}
 	private void matchCheckingProjectComboBox() throws Exception {
-		if (FilesRepository.isOpenRepo()) {
-			if (foldersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
-		}
+		if (foldersProjectComboBox.getSelectedItem() == null) throw new InfoException("Choose a project folder.");
 	}
 	private String getNameRptFile() {
 		String updateNameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();

@@ -15,24 +15,29 @@ public abstract class DisplayConnectionDelay extends NewTaskDelay {
 	private static List<Thread> listTheads = new ArrayList<Thread>(2);
 	private String propertiesConnection;
 	
-	public DisplayConnectionDelay(String nameThread,String propertiesConnection, long delay) {
-		super(nameThread, delay);
+	public enum TypeConnection {
+		BASE_CONNECTION,
+		REPO_CONNECTION
+	}
+	
+	public DisplayConnectionDelay(TypeConnection nameThread,String propertiesConnection, long delay) {
+		super(nameThread.toString(), delay);
 		this.propertiesConnection = propertiesConnection;
 		for(Thread thread : listTheads) {
-			if (thread.isAlive() && thread.getName().equals(nameThread)) return; // check if thread task already run.
+			if (thread.isAlive() && thread.getName().equals(nameThread.toString())) return; // check if thread task already run.
 		}
 		startTimerTask();
 		//System.out.println(listTheads.size());
 		int indexDeadThread = -1;
 		for(Thread thread : listTheads) {
 			if (!thread.isAlive()) {
-				//indexDeadThread = listTheads.indexOf(thread);
-				System.out.println("thread=task");
+				indexDeadThread = listTheads.indexOf(thread);
+				System.out.println("indexDeadThread ="+indexDeadThread);
 				break;
 			}
 		}
 		if (indexDeadThread != -1) {
-			//System.out.println("addReplace");
+			System.out.println("addReplace");
 			listTheads.remove(indexDeadThread);
 		} 
 		listTheads.add(getTaskThread());
@@ -69,6 +74,7 @@ public abstract class DisplayConnectionDelay extends NewTaskDelay {
 			getTimerTask().cancel();//
 		} finally {
 			setWindowEnable(panelGlass1);
+			DialogWindows.dialogWindowError(e);
 		}	
 	}
 	@Override
