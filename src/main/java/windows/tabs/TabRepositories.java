@@ -56,7 +56,7 @@ public class TabRepositories extends TabSuperClass {
 	private JFileChooser fileChooser;
 	private MyHoverButton updateToRepositoriesButton;
 	private final MyHoverButton upButton = new MyHoverButton(Character.toString('\u2191')); 
-	private LinkedList<String> listFindPatterns = new LinkedList<String>();
+	private LinkedList<String> listNamereports = new LinkedList<String>();
 	private String lastNameProgect;
 	private String lastInputPattern;
 
@@ -265,14 +265,13 @@ public class TabRepositories extends TabSuperClass {
 	}
 	private String findNameReportOnPattern(String nameProgect, String inputPattern) throws Exception {
 		if ((!nameProgect.equals(lastNameProgect)) || (lastInputPattern == null)) {// if field keyTyped then lastInputPattern = null
-			listFindPatterns.clear();
-			listFindPatterns.addAll(FilesRepository.getNameReportsAndRepdesign(nameProgect));
+			listNamereports.clear();
+			listNamereports.addAll(FilesRepository.getNameReportsAndRepdesign(nameProgect));
 			lastInputPattern = inputPattern;
 			lastNameProgect = nameProgect;
-			System.out.println(listFindPatterns);
 		}
-		while(!listFindPatterns.isEmpty()) {
-			String res = listFindPatterns.pollFirst();
+		while(!listNamereports.isEmpty()) {
+			String res = listNamereports.pollFirst();
 			if (res.matches(".*"+lastInputPattern+".*")) {
 				return res.replaceFirst(""+'\u0020'+'\u0020'+'\u0020'+'\u0020'+".+$", "");
 			}
@@ -287,14 +286,13 @@ public class TabRepositories extends TabSuperClass {
 			String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
 			String findOnPatternNameRep = findNameReportOnPattern(nameProgect, inputPattern);
 			if (findOnPatternNameRep != null) {
-				System.out.println(findOnPatternNameRep);
 				nameReportField.setText(findOnPatternNameRep);
 			} else {
 				throw new InfoException("Filename on this pattern '"+lastInputPattern+"' is absent.");
 			}
 			
 		} catch (InfoException ie) {
-			DialogWindows.dialogWindowError(ie);
+			DialogWindows.dialogWindowWarning(ie);
 		} catch (Exception e) {
 			DialogWindows.dialogWindowError(e);
 			LOg.logToFile(e);

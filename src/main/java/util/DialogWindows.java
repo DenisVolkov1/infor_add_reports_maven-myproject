@@ -34,6 +34,14 @@ public class DialogWindows {
 				               "",
 				     JOptionPane.WARNING_MESSAGE);
 	}
+	public static void dialogWindowWarning(Exception e) {
+		String pattern = "([à-ÿÀ-ßa-zA-Z'])(\\.)([' à-ÿÀ-ßa-zA-Z&&[^wrz]])";
+		if (e.getMessage() == null) { e.printStackTrace(); return; }
+		 JOptionPane.showMessageDialog(MainRunWindow.getInstance(),
+				 DialogWindows.trimLongMessage(e.getMessage()).replaceAll(pattern,"$1\\.\n$3"),
+			e.getClass().getName(),
+				     JOptionPane.WARNING_MESSAGE);
+	}
 	private static String trimLongMessage(String message) {
 		if (message.length() >= 65) {
 			return message.substring(0,43)+"...";
