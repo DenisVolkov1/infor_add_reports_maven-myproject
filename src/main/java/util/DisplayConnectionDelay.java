@@ -27,24 +27,22 @@ public abstract class DisplayConnectionDelay extends NewTaskDelay {
 			if (thread.isAlive() && thread.getName().equals(nameThread.toString())) return; // check if thread task already run.
 		}
 		startTimerTask();
-		//System.out.println(listTheads.size());
+
 		int indexDeadThread = -1;
 		for(Thread thread : listTheads) {
 			if (!thread.isAlive()) {
 				indexDeadThread = listTheads.indexOf(thread);
-				System.out.println("indexDeadThread ="+indexDeadThread);
 				break;
 			}
 		}
 		if (indexDeadThread != -1) {
-			System.out.println("addReplace");
 			listTheads.remove(indexDeadThread);
 		} 
 		listTheads.add(getTaskThread());
 		startTask();
 	}
 	protected Component setWindowDisable(String text) {
-		text = (text.length() <= 10) ? text : text.substring(0,10);
+		text = (text.length() <= 11) ? text : text.substring(0,11);
 		Util.setActivitySubComponents(MainRunWindow.getInstance().getContentPane(), false);
 			return MainRunWindow.addPanelToGlassPanel("Connection to: "+text);
 	}

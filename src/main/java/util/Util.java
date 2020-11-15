@@ -46,29 +46,26 @@ public class Util {
 		//
 		if (b) {
 			if (saveActivityComponents.isEmpty()) {
-				   System.out.println("saveActivityComponents.EMPTY");
 				   return;
 			} else {
 				t1 = 0;
 				setEnabledGETRec(container);
-				System.out.println("saveActivityComponents.GET t1="+t1);
+				//System.out.println("saveActivityComponents.GET t1="+t1);
 				System.out.println();
 			}
 		} else {
 			if (!saveActivityComponents.isEmpty()) {
-				   System.out.println("saveActivityComponents.NOT_EMPTY");
 				   return;
 			} else {
 				t = 0;
 				setDisabledPUTRec(container);
-				System.out.println("saveActivityComponents.PUT t="+t);
-				System.out.println();
+				//System.out.println("saveActivityComponents.PUT t="+t);
+				//System.out.println();
 			}
 		}
 		
 	}
 	private static void setEnabledGETRec(Component container) {
-		//container.setEnabled(saveActivityComponents.get(container) != null ? saveActivityComponents.get(container) : false);
 		if (container instanceof JComboBox) {
 			container.setVisible(true);
 		} else {
