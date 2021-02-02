@@ -98,8 +98,6 @@ public class TabAddReport extends TabSuperClass {
 	private JCheckBox autoInsertCheckBox;
 	private JComboBox<String> foldersProjectComboBox;
 	private JLabel lblNewLabel;
-	//private MyHoverButton newParamButton;
-	//private Thread newParamButtonThread;
 	protected ParamsPanelAdd newParam;
 
 
