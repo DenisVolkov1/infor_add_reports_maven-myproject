@@ -39,7 +39,6 @@ public class TabSuperClass extends JPanel {
 	private static final long serialVersionUID = 1L;
 	public static Vector<CategoryAndId> listCategoryAndCodes = new Vector<>();
 	protected static Vector<String> listNamesFoldersProject = new Vector<>();
-	private static MouseListener[] mouseListenersTabbedPane;
 	
 	protected static ActionListener refreshService;
 	private static ComponentAdapter adapterDataBase;
@@ -82,7 +81,6 @@ public class TabSuperClass extends JPanel {
 						@Override
 						protected Object taskThread() throws Exception {
 							refresListNameProjects();//task...
-								//enableAllTabbedMouseListeners();
 							return null;
 						}
 					};
