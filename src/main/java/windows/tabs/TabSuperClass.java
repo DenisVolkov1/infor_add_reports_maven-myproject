@@ -44,7 +44,7 @@ public class TabSuperClass extends JPanel {
 	protected static ActionListener refreshService;
 	private static ComponentAdapter adapterDataBase;
 	private static ComponentAdapter adapterRepositories;
-	private static ComponentAdapter forDisableAllTabbedMouseListeners;
+	
 	
 	protected MyHoverButton paramButton;
 
@@ -58,14 +58,13 @@ public class TabSuperClass extends JPanel {
 				listCategoryAndCodes.clear();
 				if(!ConnectionMSSQL.isGoodLastsConnection) return;
 				
-				new DisplayConnectionDelay(TypeConnection.BASE_CONNECTION,"ipDataBase", 400L) {
+				new DisplayConnectionDelay(TypeConnection.BASE_CONNECTION,"ipDataBase", 470L) {
 					
 					@Override
 					protected Object taskThread() throws Exception {
 				    		refreshCategory();
 				    		if(!ParamsRelatedData.isExistTableParams()) paramButton.setVisible(false);
 				    		else paramButton.setVisible(true);
-				    			enableAllTabbedMouseListeners();
 						return null;
 					}
 				};
@@ -78,26 +77,22 @@ public class TabSuperClass extends JPanel {
 				
 				boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
 				if(isSetRepo) {
-					new DisplayConnectionDelay(TypeConnection.REPO_CONNECTION,"repPathDir", 400L) {
+					new DisplayConnectionDelay(TypeConnection.REPO_CONNECTION,"repPathDir", 470L) {
 						
 						@Override
 						protected Object taskThread() throws Exception {
 							refresListNameProjects();//task...
-								enableAllTabbedMouseListeners();
+								//enableAllTabbedMouseListeners();
 							return null;
 						}
 					};
 				}
 			}
 		};
-		forDisableAllTabbedMouseListeners = new ComponentAdapter() {
-			@Override
-			public void componentShown(ComponentEvent e) { disableAllTabbedMouseListeners();}
-		};
 		// add adapter listeners
 		this.addComponentListener(adapterRepositories);
 		this.addComponentListener(adapterDataBase);
-		this.addComponentListener(forDisableAllTabbedMouseListeners);
+		
 		
 		refreshService = new ActionListener() { 
 			@Override									
@@ -119,7 +114,6 @@ public class TabSuperClass extends JPanel {
 	}
 	protected void refresListNameProjects() {
 		listNamesFoldersProject.clear();
-		System.out.println("listNamesFoldersProject.clear()");
 		Vector<String> listNameProject;
 		try {
 			listNameProject = FilesRepository.listNamesFolderProject();
@@ -141,25 +135,6 @@ public class TabSuperClass extends JPanel {
 			setCursor(null);
 		}
 	}
-	
-	private void disableAllTabbedMouseListeners() {
-		mouseListenersTabbedPane = MainRunWindow.getTabbedPane().getMouseListeners();
-		if (mouseListenersTabbedPane.length > 0) {
-			for(MouseListener leListener : mouseListenersTabbedPane) {
-				MainRunWindow.getTabbedPane().removeMouseListener(leListener);
-			}
-		}
-		System.out.println(mouseListenersTabbedPane);
-	}
-	private synchronized void enableAllTabbedMouseListeners() {
-		if(mouseListenersTabbedPane != null && mouseListenersTabbedPane.length > 0) {
-			for(MouseListener leListener : mouseListenersTabbedPane) {
-				MainRunWindow.getTabbedPane().addMouseListener(leListener);
-			}
-			System.out.println(mouseListenersTabbedPane);
-		}
-	}
-	
 	
 	protected void checkBaseConnection() throws ClassNotFoundException, SQLException {
 		ConnectionMSSQL.getInstanceConneectionJDBC();
