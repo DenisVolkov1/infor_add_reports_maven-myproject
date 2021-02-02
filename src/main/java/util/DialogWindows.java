@@ -43,8 +43,8 @@ public class DialogWindows {
 				     JOptionPane.WARNING_MESSAGE);
 	}
 	private static String trimLongMessage(String message) {
-		if (message.length() >= 65) {
-			return message.substring(0,43)+"...";
+		if (message.length() >= 130) {
+			return message.substring(0,130)+"...";
 		} else return message;
 	}
 	/**

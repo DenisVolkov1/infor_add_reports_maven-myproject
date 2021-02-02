@@ -33,7 +33,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class TabConnectionMSSQLServer extends JPanel {
-	
+	private static TabConnectionMSSQLServer TAB_CONNECTION_SQL_REPORT = null;
 	private static JTextField loginField;
 	private static JPasswordField passwordField;
 	private JLabel lblNewLabel_1;
@@ -171,6 +171,14 @@ public class TabConnectionMSSQLServer extends JPanel {
 		if (saveLogin != "" && savePassword != "") {
 			loginField.setText(saveLogin);
 			passwordField.setText(savePassword);
+		}
+	}
+	public static TabConnectionMSSQLServer getInstance() {
+		if (TAB_CONNECTION_SQL_REPORT == null) {
+			TAB_CONNECTION_SQL_REPORT = new TabConnectionMSSQLServer();
+			return TAB_CONNECTION_SQL_REPORT;
+		} else {
+			return TAB_CONNECTION_SQL_REPORT;
 		}
 	}
 	public static JTextField getLoginField() {		return loginField;

@@ -103,7 +103,6 @@ public class MainRunWindow extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		//tabbedPane.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		//Tabs
 		//Connection tab
 		TabConnectionMSSQLServer tabConnectionMSSQLServer = new TabConnectionMSSQLServer();

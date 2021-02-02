@@ -34,7 +34,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 
 public class TabCategories extends TabSuperClass {
-	private static TabCategories TAB_CATWGORY_REPORT = null;
+	private static TabCategories TAB_CATEGORY_REPORT = null;
 	
 	private MyField nameCategoryTextField;
 	private MyField newNameCategoryTextField;
@@ -193,11 +193,11 @@ public class TabCategories extends TabSuperClass {
 	}
 
 	public static TabCategories getInstance() {
-		if (TAB_CATWGORY_REPORT == null) {
-			TAB_CATWGORY_REPORT = new TabCategories();
-			return TAB_CATWGORY_REPORT;
+		if (TAB_CATEGORY_REPORT == null) {
+			TAB_CATEGORY_REPORT = new TabCategories();
+			return TAB_CATEGORY_REPORT;
 		} else {
-			return TAB_CATWGORY_REPORT;
+			return TAB_CATEGORY_REPORT;
 		}
 	}
 }

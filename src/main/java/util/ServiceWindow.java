@@ -22,6 +22,7 @@ public class ServiceWindow {
 			  while ((line = bufferedReader.readLine()) != null) {
 				  sb.append(line); 
 			  }
+		Thread.sleep(1000L);
 		  
 	}
 	public static void startService(String nameService) throws Exception {
