@@ -19,7 +19,6 @@ public abstract class DisplayConnectionDelay extends NewTaskDelay {
 		BASE_CONNECTION,
 		REPO_CONNECTION
 	}
-	
 	public DisplayConnectionDelay(TypeConnection nameThread,String propertiesConnection, long delay) {
 		super(nameThread.toString(), delay);
 		this.propertiesConnection = propertiesConnection;
@@ -47,17 +46,14 @@ public abstract class DisplayConnectionDelay extends NewTaskDelay {
 			return MainRunWindow.addPanelToGlassPanel("Connection to: "+text);
 	}
 	protected void setWindowEnable(Component panel) {
-		//System.out.println(Thread.currentThread().getName());
 		MainRunWindow.hideGlassPanel(panel);
 		for (Thread thread : listTheads) {
 			if (thread != getTaskThread()) {
 				if (thread.isAlive()) {
-					//System.out.println("thread.IsAlive return");
 					return;
 				}
 			}
 		}
-		//System.out.println("EnableWindows");
 		Util.setActivitySubComponents(MainRunWindow.getInstance().getContentPane(), true);
 	}
 	@Override
@@ -83,6 +79,5 @@ public abstract class DisplayConnectionDelay extends NewTaskDelay {
 			setWindowEnable(panelGlass1);
 		}
 	}
-
 	protected abstract Object taskThread() throws Exception;
 }
