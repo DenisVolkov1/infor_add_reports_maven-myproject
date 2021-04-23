@@ -76,7 +76,7 @@ public class TabSuperClass extends JPanel {
 				
 				boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
 				if(isSetRepo) {
-					new DisplayConnectionDelay(TypeConnection.REPO_CONNECTION,"repPathDir", 470L) {
+					new DisplayConnectionDelay(TypeConnection.REPO_CONNECTION,"repPathDir", 370L) {
 						
 						@Override
 						protected Object taskThread() throws Exception {
@@ -98,7 +98,7 @@ public class TabSuperClass extends JPanel {
 				//Infor SCE Reports Server scprd-reports1 - default
 				String nameServiceReport = MyProperties.getProperty("nameServiceReport"); 
 				try {	
-					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					
 						ServiceWindow.stopService(nameServiceReport);
 						ServiceWindow.startService(nameServiceReport);
 				} catch (InfoException e1) {
@@ -106,7 +106,7 @@ public class TabSuperClass extends JPanel {
 				} catch (Exception e2) {
 					DialogWindows.dialogWindowError(e2);
 						LOg.logToFile(e2);
-				} finally {setCursor(null);}
+				}
 			}
 		};
 	}
