@@ -123,10 +123,10 @@ public class MainRunWindow extends JFrame {
 				glassPanel.setLayout(null);
 					// WaitPanel set this panel
 				WaitPanel waitPanel = new WaitPanel();
-				waitPanel.setBounds(72, 202, 454, 45);
+				waitPanel.setBounds(72, 202, 450, 55);//setBounds(100, 500, 450, 55);
 				glassPanel.add(waitPanel);
 				WaitPanel waitPanel_1 = new WaitPanel();
-				waitPanel_1.setBounds(72, 257, 454, 45);
+				waitPanel_1.setBounds(72, 257, 450, 55);
 				glassPanel.add(waitPanel_1);
 				glassPanel.setVisible(true);
 		

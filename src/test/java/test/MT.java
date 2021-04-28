@@ -16,6 +16,7 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
+import java.util.concurrent.Phaser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,34 +36,67 @@ import static files_repository.FilesRepository.*;
 
 public class MT {
 	
-	 final static  TimerTask uploadCheckerTimerTask = new TimerTask(){
-
-			File targetWarArchiveFile = Paths.get("C:\\rep\\OOOO\\scprd_scereports.war.isdeploying").toFile();
-			 public void run() {
-				 System.out.println("EXSIST::C:\\\\rep\\\\OOOO\\\\scprd_scereports.war.isdeploying");
-				 if(!targetWarArchiveFile.exists()) {
-					 System.out.println("NOT EXSIST!::C:\\\\rep\\\\OOOO\\\\scprd_scereports.war.isdeploying");
-					 uploadCheckerTimerTask.cancel();
+ //	 final static  TimerTask uploadCheckerTimerTask = new TimerTask(){
+//
+//			File targetWarArchiveFile = Paths.get("C:\\rep\\OOOO\\scprd_scereports.war.isdeploying").toFile();
+//			 public void run() {
+//				 System.out.println("EXSIST::C:\\\\rep\\\\OOOO\\\\scprd_scereports.war.isdeploying");
+//				 if(!targetWarArchiveFile.exists()) {
+//					 System.out.println("NOT EXSIST!::C:\\\\rep\\\\OOOO\\\\scprd_scereports.war.isdeploying");
+//					 uploadCheckerTimerTask.notify();
+//					 uploadCheckerTimerTask.cancel();
+//					 
+//				 }
+//				 
+//			 }
+//		};
+static  Phaser phaser = new Phaser(1);
+		 final static  TimerTask uploadCheckerTimerTask = new TimerTask(){
+			 
+			  {
+				 phaser.register();
 				 }
-				 
-			 }
-		};
+			 
+				int n = 0;
+				 public void run() {
+					 
+					 System.out.println("N = "+n);
+					 
+					 if(n > 10) {
+						 System.out.println("END!!");
+						   System.out.println(uploadCheckerTimerTask.getClass().getName() + " выполняет фазу " + phaser.getPhase());
+					        phaser.arriveAndDeregister(); // сообщаем о завершении фаз и удаляем с регистрации объекты 
+						 uploadCheckerTimerTask.cancel();
+						 
+					 }
+					 n++;
+				 }
+			};
+			
+			
+			
 	
 	public static void main(String[] args) throws Exception {
-	
+		
+		  //phaser = new Phaser(1);
+		  
 			Timer uploadCheckerTimer = new Timer(true);
 			uploadCheckerTimer.scheduleAtFixedRate(uploadCheckerTimerTask, 0, 600L );
 			
+		      // ждем завершения фазы 0
+	        int phase = phaser.getPhase();
+	        phaser.arriveAndAwaitAdvance();
+	        System.out.println("Фаза " + phase + " завершена");
 			
 			
 			
-//			File targetWarArchiveFile = Paths.get("C:\\rep\\OOOO\\scprd_scereports.war.isdeploying").toFile();
-//			if(!targetWarArchiveFile.exists()) {
-//				
-//			}
-//			///C:\rep\OOOO
-			//Thread.currentThread().w
-			Thread.sleep(10_222_222);
+			
+		
+			
+			
+
+			System.out.println(" 10_222_222 ");
+			//Thread.sleep(10_222_222);
 			
 	}
 	

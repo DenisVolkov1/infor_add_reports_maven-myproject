@@ -15,6 +15,9 @@ import javax.swing.UIManager;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
+import java.awt.Dimension;
+import net.miginfocom.swing.MigLayout;
+import javax.swing.SwingConstants;
 
 
 public class WaitPanel extends JPanel {
@@ -25,11 +28,12 @@ public class WaitPanel extends JPanel {
 	 */
 	public WaitPanel() {
 		setBackground(SystemColor.controlHighlight);
-		setBounds(100, 500, 450, 45);
+		setBounds(100, 500, 450, 55);
+		setPreferredSize(new Dimension(450,55));
 		setBorder(new CompoundBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(191, 205, 219)), new BevelBorder(BevelBorder.LOWERED, new Color(100, 100, 100), new Color(0, 0, 0), new Color(153, 180, 209), new Color(191, 205, 219))));
 		text = new JLabel();
-		text.setText("444444444444444444444444444444444444");
-		text.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		text.setText("<html>Deploying scprd_scereports.war <br> archive please wait.</html>");
+		text.setFont(text.getFont().deriveFont(text.getFont().getStyle() | Font.BOLD, 13f));
 		
 		JProgressBar progressBar = new JProgressBar();
 		progressBar.setBackground(SystemColor.text);
@@ -40,23 +44,22 @@ public class WaitPanel extends JPanel {
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(text)
-					.addGap(18, 18, Short.MAX_VALUE)
-					.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)
-					.addGap(24))
+					.addGap(7)
+					.addComponent(text, GroupLayout.PREFERRED_SIZE, 252, GroupLayout.PREFERRED_SIZE)
+					.addGap(14)
+					.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 164, GroupLayout.PREFERRED_SIZE))
 		);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+					.addGap(1)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(text, GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(18)
-							.addComponent(text, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(15)
-							.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+							.addGap(16)
+							.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 15, Short.MAX_VALUE)
+							.addGap(16)))
+					.addGap(1))
 		);
 		setLayout(groupLayout);
 		setVisible(false);
@@ -64,8 +67,7 @@ public class WaitPanel extends JPanel {
 	}
 
 	public void setText(String text) {
-		if(text.length() >= 36) {
-			this.text.setText(text.substring(0,32)+"...");
-		} else this.text.setText(text);
+		
+		 this.text.setText(text);
 	}
 }

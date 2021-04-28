@@ -8,10 +8,15 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
+import java.util.concurrent.Phaser;
 
 import javax.swing.JPanel;
 
@@ -25,10 +30,12 @@ import log.LOg;
 import util.CategoryAndId;
 import util.DialogWindows;
 import util.DisplayConnectionDelay;
+import util.DisplayWaitingForWorkingTask;
 import util.DisplayConnectionDelay.TypeConnection;
 import util.MyProperties;
 import util.ServiceWindow;
 import util.my_components.MyHoverButton;
+import war.WarArchive;
 import windows.MainRunWindow;
 import windows.SettingsWindow;
 import windows.tabs.add.TabAddReport;
@@ -92,23 +99,96 @@ public class TabSuperClass extends JPanel {
 		this.addComponentListener(adapterDataBase);
 		
 		
+//		refreshService = new ActionListener() { 
+//			@Override									
+//			public void actionPerformed(ActionEvent e) {
+//				//Infor SCE Reports Server scprd-reports1 - default
+//				
+//				String nameServiceReport = MyProperties.getProperty("nameServiceReport"); 
+//				try {	
+//					
+//						ServiceWindow.stopService(nameServiceReport);
+//						ServiceWindow.startService(nameServiceReport);
+//				} catch (InfoException e1) {
+//					DialogWindows.dialogWindowError(e1);			
+//				} catch (Exception e2) {
+//					DialogWindows.dialogWindowError(e2);
+//						LOg.logToFile(e2);
+//				}
+//			}
+//		};
+		
 		refreshService = new ActionListener() { 
-			@Override									
-			public void actionPerformed(ActionEvent e) {
-				//Infor SCE Reports Server scprd-reports1 - default
-				String nameServiceReport = MyProperties.getProperty("nameServiceReport"); 
-				try {	
-					
+		@Override									
+		public void actionPerformed(ActionEvent e) {
+			//Infor SCE Reports Server scprd-reports1 - default
+			new DisplayWaitingForWorkingTask("<html>Deploying scprd_scereports.war <br> archive please wait.</html>") {
+				Phaser phaser = new Phaser(1);// Waiting until scprd_scereports.war.isdeploying file is disappear.
+				 final TimerTask uploadCheckerTimerTask = new TimerTask(){
+					 
+					  {
+						 phaser.register();// register our phase
+					  }
+					 
+						//int n = 0;
+					  
+						File targetWarArchiveFile = Paths.get(MyProperties.getProperty("pathArchiveWar")+"\\scprd_scereports.war.isdeploying").toFile();
+						 public void run() {
+							 
+//							 System.out.println("N = "+n);
+//							 
+//							 if(n > 10) {
+//								 System.out.println("END!!");
+//								   System.out.println(uploadCheckerTimerTask.getClass().getName() + " выполняет фазу " + phaser.getPhase());
+//							        phaser.arriveAndDeregister(); // сообщаем о завершении фаз и удаляем с регистрации объекты 
+//								 uploadCheckerTimerTask.cancel();
+//								 
+//							 }
+//							 n++;
+							 
+							 if(!targetWarArchiveFile.exists()) {
+								 phaser.arriveAndDeregister();
+								 	uploadCheckerTimerTask.cancel();
+							 }
+						 }
+					};
+				
+				@Override
+				public Object taskThread() throws Exception {
+					String nameServiceReport = MyProperties.getProperty("nameServiceReport"); 
+					try {	
+						WarArchive.checkPathArchive();
 						ServiceWindow.stopService(nameServiceReport);
+							Thread.sleep(800L);// Delay between finish service and start
 						ServiceWindow.startService(nameServiceReport);
-				} catch (InfoException e1) {
-					DialogWindows.dialogWindowError(e1);			
-				} catch (Exception e2) {
-					DialogWindows.dialogWindowError(e2);
-						LOg.logToFile(e2);
+							Thread.sleep(4000L);// Delay after start
+						Timer uploadCheckerTimer = new Timer(true);
+						uploadCheckerTimer.scheduleAtFixedRate(uploadCheckerTimerTask, 0, 900L );
+						
+					    // ждем завершения фазы 0
+//				        int phase = phaser.getPhase();
+				        phaser.arriveAndAwaitAdvance();
+//				        System.out.println("Фаза " + phase + " завершена");
+//				        System.out.println("Продолжаем работу!");
+					
+						
+					} catch (InfoException e1) {
+						hideWaitPanel();
+						DialogWindows.dialogWindowError(e1);			
+					} catch (Exception e2) {
+						hideWaitPanel();
+						DialogWindows.dialogWindowError(e2);
+							LOg.logToFile(e2);
+							
+					}
+				return null;
 				}
-			}
-		};
+			};
+			
+
+		}
+	};
+		
 	}
 	protected void refresListNameProjects() {
 		listNamesFoldersProject.clear();

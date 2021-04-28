@@ -1,2 +1,2 @@
-1) Maven Build -> Goals -> package
+1) Maven Build -> Goals -> package for java 1.7_055
 2) Wrap (target\infor_add_reports_maven-myproject-0.0.1-SNAPSHOT-jar-with-dependencies.jar) with support program Launch4j 3.12 free soft.
