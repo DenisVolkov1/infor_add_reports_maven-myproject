@@ -80,13 +80,21 @@ static  Phaser phaser = new Phaser(1);
 		
 		  //phaser = new Phaser(1);
 		  
-			Timer uploadCheckerTimer = new Timer(true);
-			uploadCheckerTimer.scheduleAtFixedRate(uploadCheckerTimerTask, 0, 600L );
-			
-		      // ждем завершения фазы 0
-	        int phase = phaser.getPhase();
-	        phaser.arriveAndAwaitAdvance();
-	        System.out.println("Фаза " + phase + " завершена");
+//			Timer uploadCheckerTimer = new Timer(true);
+//			uploadCheckerTimer.scheduleAtFixedRate(uploadCheckerTimerTask, 0, 600L );
+//			
+//		      // ждем завершения фазы 0
+//	        int phase = phaser.getPhase();
+//	        phaser.arriveAndAwaitAdvance();
+//	        System.out.println("Фаза " + phase + " завершена");
+		
+		
+		  for (ParamFromRptDesign p : ReadXML.getListOfParamsFromRptDesign(new File("C:\\rep_TransportSbornayaSticker.rptdesign"))) {
+			 //if (p.getPARAM_TYPE() != null && p.getPARAM_LABEL() != null && p.getPARAM_NAME() != null) ParamsRelatedData.insertParam("27130616", p.getPARAM_NAME(), p.getPARAM_LABEL(), p.getPARAM_TYPE(), p.getPARAM_CONTENTS()).commit();
+			  System.out.println(p);
+			 
+			  
+		  }
 			
 			
 			
@@ -95,7 +103,7 @@ static  Phaser phaser = new Phaser(1);
 			
 			
 
-			System.out.println(" 10_222_222 ");
+	
 			//Thread.sleep(10_222_222);
 			
 	}

@@ -109,11 +109,12 @@ public class TestMain {
 		//ParamsRelatedData.insertParam("11111111", "p_OrderID3", "Номер 3", "Text", "").commit();
 	
 	
-//		  for (ParamFromRptDesign p : ReadXML.getListOfParamsFromRptDesign(new File("C:\\FacilityUserActivity.rptdesign"))) {
-//			 if (p.getPARAM_TYPE() != null && p.getPARAM_LABEL() != null && p.getPARAM_NAME() != null) ParamsRelatedData.insertParam("27130616", p.getPARAM_NAME(), p.getPARAM_LABEL(), p.getPARAM_TYPE(), p.getPARAM_CONTENTS()).commit(); 
-//			 
-//			  
-//		  }
+		  for (ParamFromRptDesign p : ReadXML.getListOfParamsFromRptDesign(new File("C:\\rep_TransportSbornayaSticker.rptdesign"))) {
+			 //if (p.getPARAM_TYPE() != null && p.getPARAM_LABEL() != null && p.getPARAM_NAME() != null) ParamsRelatedData.insertParam("27130616", p.getPARAM_NAME(), p.getPARAM_LABEL(), p.getPARAM_TYPE(), p.getPARAM_CONTENTS()).commit();
+			  System.out.println(p);
+			 
+			  
+		  }
 		
 		
 		//List<ParamFromRptDesign> params = ReadXML.getListOfParamsFromRptDesign(new File("C:\\reports\\rep_2_2_monitoring_operacii\\rep_2_2_monitoring_operacii.rptdesign"));

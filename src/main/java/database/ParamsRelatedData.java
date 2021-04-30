@@ -33,9 +33,10 @@ public class ParamsRelatedData {
 	 * @param PARAM_TYPE - CONST 'Date' or 'Dropdown' or 'MultiSelect' or 'Number' or 'Text' or 'Boolean' or 'Time'
 	 * @param PARAM_CONTENTS -  null acceptable
 	 * @param PARAM_LABEL - Rus name
+	 * @param PARAM_ISREQUIRED - '0'-false '1'-true
 	 * */
 
-	public static void insertParam(String RPT_ID, String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS) throws ClassNotFoundException, SQLException {
+	public static void insertParam(String RPT_ID, String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS,String PARAM_ISREQUIRED) throws ClassNotFoundException, SQLException {
 		String schema = MyProperties.getProperty("schema");
 		String PARAM_CONTENTS_TYPE = "NULL";
 		if(PARAM_CONTENTS == null) PARAM_CONTENTS = "NULL";
@@ -73,7 +74,7 @@ public class ParamsRelatedData {
 		        "   1,                   "+
 		        "   NULL,                "+
 		        "   NULL,                "+
-		        "   '1'                  "+
+		        "   '"+PARAM_ISREQUIRED+"'"+
 				")";
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();
@@ -129,10 +130,11 @@ public class ParamsRelatedData {
 		String schema = MyProperties.getProperty("schema");
 		String PARAM_CONTENTS_TYPE = "NULL";
 		
-		 String PARAM_NAME   	= null;
-		 String PARAM_LABEL  	= null;
-		 String PARAM_TYPE   	= null;
-		 String PARAM_CONTENTS  = null;
+		 String PARAM_NAME   	  = null;
+		 String PARAM_LABEL  	  = null;
+		 String PARAM_TYPE   	  = null;
+		 String PARAM_CONTENTS    = null;
+		 String PARAM_ISREQUIRED  = null;
 			
 			String insertPBSRPT_REPORTS_PARAMS = ""
 					+ "USE [SCPRD] "
@@ -160,6 +162,7 @@ public class ParamsRelatedData {
 				    PARAM_LABEL	 = listParams.get(i).getPARAM_LABEL();
 				    PARAM_TYPE 	 = listParams.get(i).getPARAM_TYPE();
 				    PARAM_CONTENTS = listParams.get(i).getPARAM_CONTENTS();
+				    PARAM_ISREQUIRED = listParams.get(i).getPARAM_ISREQUIRED();
 				
 				  if(PARAM_CONTENTS == null) {
 					  PARAM_CONTENTS = "NULL";
@@ -181,7 +184,7 @@ public class ParamsRelatedData {
 			        "   1,                   "+
 			        "   NULL,                "+
 			        "   NULL,                "+
-			        "   '1'                  "+
+			        "   '"+PARAM_ISREQUIRED+"' "+
 					"),"//+"\n"
 			        );
 				}

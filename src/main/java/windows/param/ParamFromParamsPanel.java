@@ -4,7 +4,7 @@ import util.Params;
 
 public class ParamFromParamsPanel implements Params {
 	
-	private String PARAM_NAME, PARAM_LABEL, PARAM_TYPE, PARAM_CONTENTS;
+	private String PARAM_NAME, PARAM_LABEL, PARAM_TYPE, PARAM_CONTENTS, PARAM_ISREQUIRED;
 
 	public ParamFromParamsPanel(String pARAM_NAME, String pARAM_LABEL, String pARAM_TYPE, String pARAM_CONTENTS) {
 		super();
@@ -93,5 +93,10 @@ public class ParamFromParamsPanel implements Params {
 		} else if (!PARAM_TYPE.equals(other.PARAM_TYPE))
 			return false;
 		return true;
+	}
+	@Override
+	public String getPARAM_ISREQUIRED() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -21,28 +21,34 @@ public class ParamFromRptDesign implements Params {
 	 *  'list-box' or 'text-box' or 'check-box' or 'radio-button'
 	 */
 	private String controlType;
-
+	/**
+	 * RptDesignValues
+	 *  'false' or 'true' in base '0' or '1'
+	 */
+	private String isRequired;
 	private String queryText;
 	private String dataSetName;
 	
 	
-	public ParamFromRptDesign(String name, String promptText, String dataType, String paramType, String controlType,String dataSetName) {
+	public ParamFromRptDesign(String name, String promptText, String dataType, String paramType, String controlType,String isRequired,String dataSetName) {
 		super();
 		this.name = name;
 		this.promptText = promptText;
 		this.dataType = dataType;
 		this.paramType = paramType;
 		this.controlType = controlType;
+		this.isRequired = isRequired;
 		this.dataSetName = dataSetName;
 	}
 	
-	public ParamFromRptDesign(String name, String promptText, String dataType, String paramType, String controlType,String dataSetName, String queryText) {
+	public ParamFromRptDesign(String name, String promptText, String dataType, String paramType, String controlType,String isRequired, String dataSetName, String queryText) {
 		super();
 		this.name = name;
 		this.promptText = promptText;
 		this.dataType = dataType;
 		this.paramType = paramType;
 		this.controlType = controlType;
+		this.isRequired = isRequired;
 		this.queryText = queryText;
 		this.dataSetName = dataSetName;
 	}
@@ -57,6 +63,10 @@ public class ParamFromRptDesign implements Params {
 
 	public String getPARAM_LABEL() {
 		return (promptText == null) ? "" : promptText;
+	}
+	public String getPARAM_ISREQUIRED() {
+		if(isRequired == null) return null;
+		return (isRequired.equals("true")) ? "1" : "0";
 	}
 
 	public String getPARAM_TYPE() {
@@ -84,6 +94,7 @@ public class ParamFromRptDesign implements Params {
 		return "PARAM_NAME = "+ getPARAM_NAME() + "\n" + 
 			   "PARAM_LABEL = "+ getPARAM_LABEL() + "\n"+
 			   "PARAM_TYPE = "+ getPARAM_TYPE()+ "\n"+
+			   "PARAM_ISREQUIRED = "+ getPARAM_ISREQUIRED()+"\n"+
 			   "PARAM_CONTENTS = "+ getPARAM_CONTENTS()+ "\n"+
 			   "DataSetName = "+ getDataSetName();
 		

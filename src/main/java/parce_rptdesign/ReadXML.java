@@ -51,7 +51,6 @@ public class ReadXML {
 		return res;
 	}
 	/**
-	 * 
 	 * @param file .rptdesign file
 	 * @return map: key DataSet , value QueryText = 'select s.STORERKEY from wmwhse1.STORER s where s.TYPE = ''1'''
 	 * @throws ParserConfigurationException 
@@ -95,7 +94,10 @@ public class ReadXML {
 		return res;
 		
 	}
-	
+	/**
+	 * 
+	 *
+	 */
 	public static List<ParamFromRptDesign> getListOfParamsFromRptDesign(File file) throws ParserConfigurationException, SAXException, IOException  {
 		
 		Vector<ParamFromRptDesign> listParams = new Vector<ParamFromRptDesign>();
@@ -107,6 +109,7 @@ public class ReadXML {
 			String dataSetName = null;
 			String queryText = null;
 			String hidden = null;
+			String isRequired = null;
 			ParamFromRptDesign param = null;
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();  
@@ -118,7 +121,7 @@ public class ReadXML {
 		
 		NEXT_PARAMETR :
 			for (int itr = 0; itr < nodeList.getLength(); itr++) {  
-				 name = null; promptText = null; dataType = null; paramType = null; controlType = null; dataSetName = null; queryText = null;hidden = null;
+				 name = null; promptText = null; dataType = null; paramType = null; controlType = null; dataSetName = null; queryText = null;hidden = null;isRequired= null;
 				 
 				Node node = nodeList.item(itr);  
 				if (node.getNodeType() == Node.ELEMENT_NODE) {  
@@ -147,7 +150,11 @@ public class ReadXML {
 												break;
 											case "dataSetName": 
 												dataSetName = eElement2.getTextContent();
-												break;	
+												break;
+											case "isRequired": 
+												isRequired = eElement2.getTextContent();
+												break;
+												
 										}
 									}
 							}
@@ -167,6 +174,7 @@ public class ReadXML {
 						dataType,
 						paramType,
 						controlType,
+						isRequired,
 						dataSetName);
 				listParams.add(param);
 				//end loop
