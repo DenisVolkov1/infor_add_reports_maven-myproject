@@ -48,8 +48,8 @@ public class TabSuperClass extends JPanel {
 	protected static Vector<String> listNamesFoldersProject = new Vector<>();
 	
 	protected static ActionListener refreshService;
-	private static ComponentAdapter adapterDataBase;
-	private static ComponentAdapter adapterRepositories;
+	private static ComponentAdapter adapterForWaitingPanels;
+	//private static ComponentAdapter adapterRepositories;
 	
 	
 	protected MyHoverButton paramButton;
@@ -58,7 +58,7 @@ public class TabSuperClass extends JPanel {
 	public TabSuperClass() {
 		paramButton = new MyHoverButton();
 		//
-		adapterDataBase = new ComponentAdapter() {
+		adapterForWaitingPanels = new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				listCategoryAndCodes.clear();
@@ -74,11 +74,8 @@ public class TabSuperClass extends JPanel {
 						return null;
 					}
 				};
-			}
-		};
-		adapterRepositories = new ComponentAdapter() {
-			@Override
-			public void componentShown(ComponentEvent e) {
+				try { Thread.currentThread().sleep(80); } catch (InterruptedException e1) {}
+				
 				listNamesFoldersProject.clear();
 				
 				boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
@@ -95,8 +92,8 @@ public class TabSuperClass extends JPanel {
 			}
 		};
 		// add adapter listeners
-		this.addComponentListener(adapterRepositories);
-		this.addComponentListener(adapterDataBase);
+		//this.addComponentListener(adapterRepositories);
+		this.addComponentListener(adapterForWaitingPanels);
 		
 		
 //		refreshService = new ActionListener() { 
@@ -229,10 +226,10 @@ public class TabSuperClass extends JPanel {
 		checkBaseConnection();
 		checkRepoConnection();
 	}
-	public ComponentAdapter getAdapterDataBase() {
-		return adapterDataBase;
+	public ComponentAdapter getAdapterForWaitingPanels() {
+		return adapterForWaitingPanels;
 	}
-	public ComponentAdapter getAdapterRepositories() {
-		return adapterRepositories;
-	}
+//	public ComponentAdapter getAdapterRepositories() {
+//		return adapterRepositories;
+//	}
 }
