@@ -65,7 +65,7 @@ public class ParamFromRptDesign implements Params {
 		return (promptText == null) ? "" : promptText;
 	}
 	public String getPARAM_ISREQUIRED() {
-		if(isRequired == null) return null;
+		if(isRequired == null) return "1";
 		return (isRequired.equals("true")) ? "1" : "0";
 	}
 

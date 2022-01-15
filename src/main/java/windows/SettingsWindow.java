@@ -248,7 +248,7 @@ public class SettingsWindow extends JDialog {
 		
 			}
 			
-			JLabel lblNewLabel = new JLabel("Version 1.1");
+			JLabel lblNewLabel = new JLabel("Version 1.02");
 			lblNewLabel.setForeground(Color.GRAY);
 			GroupLayout gl_buttonPane = new GroupLayout(buttonPane);
 			gl_buttonPane.setHorizontalGroup(

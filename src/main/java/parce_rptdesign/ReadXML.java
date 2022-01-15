@@ -168,6 +168,9 @@ public class ReadXML {
 									}
 							}		
 				}
+				
+				isRequired = (isRequired == null) ? "true" : isRequired; // bug property name="isRequired" maybe is not exists.
+				
 				param = new ParamFromRptDesign(
 						name,
 						promptText,
@@ -187,6 +190,7 @@ public class ReadXML {
 				p.setQueryText(queryString);
 			}
 		}
+
 		return listParams;
 	}
 }
