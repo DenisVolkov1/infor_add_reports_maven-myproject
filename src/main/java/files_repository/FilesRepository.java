@@ -169,6 +169,8 @@ public class FilesRepository {
 		String nameFileReport = selectedFile.toPath().getFileName().toString();
 		Matcher m = Pattern.compile("(.+)\\.rptdesign$").matcher(nameFileReport);
 		if (m.find()) nameFileReport = m.group(1);
+		Matcher m2 = Pattern.compile("(.+)\\.rptdesign$").matcher(nameFileReport);
+		if (m2.find()) nameFileReport = m2.group(1);
 		//
 		SmbFile[] listOfFoldersReport = smbFileReportFolders.listFiles();
 		boolean isExist = false;

@@ -16,7 +16,6 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.Dimension;
-import net.miginfocom.swing.MigLayout;
 import javax.swing.SwingConstants;
 
 

@@ -2,20 +2,13 @@ package util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Properties;
 
-import javax.swing.JOptionPane;
-
 import log.LOg;
-import windows.MainRunWindow;
 
 public class MyProperties {
 
