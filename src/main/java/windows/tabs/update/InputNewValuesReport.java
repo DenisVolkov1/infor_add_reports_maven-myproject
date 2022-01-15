@@ -83,7 +83,7 @@ public class InputNewValuesReport extends JDialog {
 		//
 		
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setBounds(100, 100, 830, 234);
+		setBounds(100, 100, 674, 234);
 		Point p = MainRunWindow.getInstance().getLocation();
 		p.setLocation(p.getX(), p.getY()+100);
 		this.setLocation(p);
@@ -92,9 +92,9 @@ public class InputNewValuesReport extends JDialog {
 		panel.setAlignmentX(0.0f);
 		panel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{70, 342, 377};
+		gbl_panel.columnWidths = new int[]{70, 195, 377};
 		gbl_panel.rowHeights = new int[]{26, 27, 27, 27, 27};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0};
+		gbl_panel.columnWeights = new double[]{0.0, 1.0, 0.0};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 		panel.setLayout(gbl_panel);
 		
@@ -150,7 +150,8 @@ public class InputNewValuesReport extends JDialog {
 		RPT_IDLabel.setAlignmentX(1.8f);
 		RPT_IDLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_RPT_IDLabel = new GridBagConstraints();
-		gbc_RPT_IDLabel.fill = GridBagConstraints.BOTH;
+		gbc_RPT_IDLabel.anchor = GridBagConstraints.WEST;
+		gbc_RPT_IDLabel.fill = GridBagConstraints.VERTICAL;
 		gbc_RPT_IDLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_RPT_IDLabel.gridx = 1;
 		gbc_RPT_IDLabel.gridy = 1;
@@ -190,7 +191,8 @@ public class InputNewValuesReport extends JDialog {
 		categoryLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		categoryLabel.setFont(new Font("Dialog", Font.PLAIN, 14));
 		GridBagConstraints gbc_categoryLabel = new GridBagConstraints();
-		gbc_categoryLabel.fill = GridBagConstraints.BOTH;
+		gbc_categoryLabel.anchor = GridBagConstraints.WEST;
+		gbc_categoryLabel.fill = GridBagConstraints.VERTICAL;
 		gbc_categoryLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_categoryLabel.gridx = 1;
 		gbc_categoryLabel.gridy = 2;
@@ -229,7 +231,8 @@ public class InputNewValuesReport extends JDialog {
 		nameReportLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		nameReportLabel.setFont(new Font("Dialog", Font.PLAIN, 14));
 		GridBagConstraints gbc_nameReportLabel = new GridBagConstraints();
-		gbc_nameReportLabel.fill = GridBagConstraints.BOTH;
+		gbc_nameReportLabel.anchor = GridBagConstraints.WEST;
+		gbc_nameReportLabel.fill = GridBagConstraints.VERTICAL;
 		gbc_nameReportLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_nameReportLabel.gridx = 1;
 		gbc_nameReportLabel.gridy = 3;
@@ -270,7 +273,8 @@ public class InputNewValuesReport extends JDialog {
 		fileNameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		fileNameLabel.setFont(new Font("Dialog", Font.PLAIN, 14));
 		GridBagConstraints gbc_fileNameLabel = new GridBagConstraints();
-		gbc_fileNameLabel.fill = GridBagConstraints.BOTH;
+		gbc_fileNameLabel.anchor = GridBagConstraints.WEST;
+		gbc_fileNameLabel.fill = GridBagConstraints.VERTICAL;
 		gbc_fileNameLabel.insets = new Insets(0, 0, 0, 5);
 		gbc_fileNameLabel.gridx = 1;
 		gbc_fileNameLabel.gridy = 4;

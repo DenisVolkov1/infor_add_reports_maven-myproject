@@ -110,7 +110,7 @@ public class ParamsRelatedData {
 		Vector<ParamFromDataBase> resultVector = new Vector<ParamFromDataBase>();
 		
 		String sql = "USE [SCPRD] "
-					  + "SELECT PARAM_NAME, PARAM_LABEL, PARAM_TYPE, PARAM_CONTENTS "
+					  + "SELECT PARAM_NAME, PARAM_LABEL, IS_REQUIRED, PARAM_TYPE, PARAM_CONTENTS "
 					  + "FROM ["+schema+"].[PBSRPT_REPORTS_PARAMS]  "
 					  + "WHERE [RPT_ID] = '"+RPT_ID+"'";
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
@@ -118,7 +118,7 @@ public class ParamsRelatedData {
 						ResultSet rs = statement.executeQuery(sql)) {
 			
 			while(rs.next()) {
-				resultVector.add(new ParamFromDataBase(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)));
+				resultVector.add(new ParamFromDataBase(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
 			}
 		} 
 		return resultVector;
@@ -237,10 +237,11 @@ public class ParamsRelatedData {
 		if (listParams.size() != 0) {
 			String PARAM_CONTENTS_TYPE = "NULL";
 			
-			 String PARAM_NAME   	= null;
-			 String PARAM_LABEL  	= null;
-			 String PARAM_TYPE   	= null;
-			 String PARAM_CONTENTS  = null;
+			 String PARAM_NAME   	    = null;
+			 String PARAM_LABEL  	    = null;
+			 String PARAM_IS_REQUIRED  	= null;
+			 String PARAM_TYPE   	    = null;
+			 String PARAM_CONTENTS      = null;
 				
 				String insertPBSRPT_REPORTS_PARAMS = ""
 						+ "USE [SCPRD] "
@@ -264,10 +265,11 @@ public class ParamsRelatedData {
 				
 					for(int i = 0; listParams.size() > i; i++) {
 						
-						PARAM_NAME 	 = listParams.get(i).getPARAM_NAME();
-					    PARAM_LABEL	 = listParams.get(i).getPARAM_LABEL();
-					    PARAM_TYPE 	 = listParams.get(i).getPARAM_TYPE();
-					    PARAM_CONTENTS = listParams.get(i).getPARAM_CONTENTS();
+						PARAM_NAME 	      = listParams.get(i).getPARAM_NAME();
+					    PARAM_LABEL	      = listParams.get(i).getPARAM_LABEL();
+					    PARAM_IS_REQUIRED = listParams.get(i).getPARAM_ISREQUIRED();
+					    PARAM_TYPE 	      = listParams.get(i).getPARAM_TYPE();
+					    PARAM_CONTENTS    = listParams.get(i).getPARAM_CONTENTS();
 					
 					  if(PARAM_CONTENTS == null) {
 						  PARAM_CONTENTS = "NULL";
@@ -289,7 +291,7 @@ public class ParamsRelatedData {
 				        "   1,                   "+
 				        "   NULL,                "+
 				        "   NULL,                "+
-				        "   '1'                  "+
+				        "'"+PARAM_IS_REQUIRED+"' "+
 						"),"
 				        );
 					}

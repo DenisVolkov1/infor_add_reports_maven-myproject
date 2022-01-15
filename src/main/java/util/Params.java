@@ -18,7 +18,7 @@ public interface Params {
 	 *  <p>'select s.STORERKEY as OWNERKEY, s.COMPANY as OWNERNAME from wmwhse1.STORER s where s.TYPE = ''1'''
 	 */
 	public String getPARAM_CONTENTS();
-	/**@return String or 'null'
+	/**@return
 	 *  <p> '0'-false or '1'-true
 	 */
 	public String getPARAM_ISREQUIRED();

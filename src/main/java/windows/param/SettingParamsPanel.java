@@ -22,6 +22,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JComboBox;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JButton;
@@ -37,6 +38,7 @@ public class SettingParamsPanel extends JPanel {
 	
 	private List<MyField> paramNameField = new Vector<MyField>(15);
 	private List<MyField> paramLabelField = new Vector<MyField>(15);
+	private List<JCheckBox> paramIsReqCheckBox = new Vector<JCheckBox>(15);
 	private List<JComboBox<String>> paramTypeComboBox = new Vector<JComboBox<String>>(15);
 	private List<JButtonContentsDialog > contentsButton = new Vector<JButtonContentsDialog >(15);
 	private List<JButton> deleteButton = new Vector<JButton>(15);
@@ -56,27 +58,27 @@ public class SettingParamsPanel extends JPanel {
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
 		panelGrid = new JPanel();
-		panelGrid.setBounds(7, 47, 515, 2);
+		panelGrid.setBounds(7, 54, 600, -7);
 	    gbl_panelGrid = new GridBagLayout();
-		gbl_panelGrid.columnWidths = new int[] {150, 157, 115, 40, 40};
+		gbl_panelGrid.columnWidths = new int[] {150, 157, 50, 115, 40, 40};
 		//gbl_panelGrid.rowHeights = new int[] {30, 0};
-		gbl_panelGrid.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+		gbl_panelGrid.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		//gbl_panelGrid.rowWeights = new double[]{0.0, 4.9E-324};
 		panelGrid.setLayout(gbl_panelGrid);
 		
 		addButton = new MyHoverButton("+",new Color(50,205,50),new Color(119,221,119));
-		addButton.setBounds(539, 12, 48, 26);
+		addButton.setBounds(619, 12, 48, 30);
 		addButton.setFont(new Font("Dialog", Font.BOLD, 14));
 		setLayout(null);
 
 		JPanel header = new JPanel();
 		header.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		header.setBounds(7, 12, 515, 30);
+		header.setBounds(7, 12, 610, 30);
 		
 		GridBagLayout gbl_header = new GridBagLayout();
-		gbl_header.columnWidths = new int[] {150, 157, 115, 40, 40};
+		gbl_header.columnWidths = new int[] {150, 157, 50, 115, 40, 40};
 		gbl_header.rowHeights = new int[]{30, 0};
-		gbl_header.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+		gbl_header.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		gbl_header.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		header.setLayout(gbl_header);
 		
@@ -100,13 +102,22 @@ public class SettingParamsPanel extends JPanel {
 		gbc_lblNewLabel_1_1.gridy = 0;
 		header.add(lblNewLabel_1_1, gbc_lblNewLabel_1_1);
 		
+		JLabel lblNewLabel_1_1_1 = new JLabel("isReq.");
+		lblNewLabel_1_1_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_1_1_1.setFont(new Font("Verdana", Font.PLAIN, 14));
+		GridBagConstraints gbc_lblNewLabel_1_1_1 = new GridBagConstraints();
+		gbc_lblNewLabel_1_1_1.insets = new Insets(0, 0, 0, 5);
+		gbc_lblNewLabel_1_1_1.gridx = 2;
+		gbc_lblNewLabel_1_1_1.gridy = 0;
+		header.add(lblNewLabel_1_1_1, gbc_lblNewLabel_1_1_1);
+		
 		JLabel lblNewLabel_2_1 = new JLabel("Param type");
 		lblNewLabel_2_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_2_1.setFont(new Font("Verdana", Font.PLAIN, 14));
 		GridBagConstraints gbc_lblNewLabel_2_1 = new GridBagConstraints();
 		gbc_lblNewLabel_2_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_lblNewLabel_2_1.insets = new Insets(0, 0, 0, 5);
-		gbc_lblNewLabel_2_1.gridx = 2;
+		gbc_lblNewLabel_2_1.gridx = 3;
 		gbc_lblNewLabel_2_1.gridy = 0;
 		header.add(lblNewLabel_2_1, gbc_lblNewLabel_2_1);
 		
@@ -115,7 +126,7 @@ public class SettingParamsPanel extends JPanel {
 		lblNewLabel_3_1.setFont(new Font("Verdana", Font.PLAIN, 14));
 		GridBagConstraints gbc_lblNewLabel_3_1 = new GridBagConstraints();
 		gbc_lblNewLabel_3_1.insets = new Insets(0, 0, 0, 5);
-		gbc_lblNewLabel_3_1.gridx = 3;
+		gbc_lblNewLabel_3_1.gridx = 4;
 		gbc_lblNewLabel_3_1.gridy = 0;
 		header.add(lblNewLabel_3_1, gbc_lblNewLabel_3_1);
 		
@@ -128,7 +139,7 @@ public class SettingParamsPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (paramNameField.size() >= 15) return;
 				//add new param
-				addParam(null , null, null, null);
+				addParam(null, null, true, null, null);
 			}
 		});
 		
@@ -139,10 +150,11 @@ public class SettingParamsPanel extends JPanel {
 				int c = Integer.parseInt(e.getActionCommand());
 				
 				panelGrid.removeAll();
-				panelGrid.setBounds(7, 47, 515, 2);
+				panelGrid.setBounds(7, 47, 600, 2);
 		
 				paramNameField.remove(c);
 				paramLabelField.remove(c);
+				paramIsReqCheckBox.remove(c);
 				paramTypeComboBox.remove(c);
 				contentsButton.remove(c);
 				deleteButton.remove(c);
@@ -151,6 +163,7 @@ public class SettingParamsPanel extends JPanel {
 				for (int i = 0; count > i; i++) {
 					addParamDinamic(paramNameField.get(i),
 									paramLabelField.get(i),
+									paramIsReqCheckBox.get(i),
 									paramTypeComboBox.get(i),
 									contentsButton.get(i),
 									deleteButton.get(i),
@@ -166,9 +179,9 @@ public class SettingParamsPanel extends JPanel {
 		};
 	}
 	
-	public void addParam(String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS) {
+	public void addParam(String PARAM_NAME,String PARAM_LABEL,boolean IS_REQ, String PARAM_TYPE,String PARAM_CONTENTS) {
 		
-		panelGrid.setBounds(7, 47, 515, panelGrid.getHeight()+34);
+		panelGrid.setBounds(7, 47, 600, panelGrid.getHeight()+34);
 			
 		MyField nameField = new MyField("param: param name");
 		nameField.setHorizontalAlignment(SwingConstants.CENTER);
@@ -179,7 +192,7 @@ public class SettingParamsPanel extends JPanel {
 		
 		gbc_paramNameField.insets = new Insets(0, 0, 5, 5);
 		gbc_paramNameField.fill = GridBagConstraints.BOTH;
-		gbc_paramNameField.gridx = 0;
+		//gbc_paramNameField.gridx = 0;
 		gbc_paramNameField.gridy = paramNameField.size()-1;
 		panelGrid.add(nameField, gbc_paramNameField);
 		nameField.setColumns(10);
@@ -193,9 +206,21 @@ public class SettingParamsPanel extends JPanel {
 	
 		gbc_paramLabelField.insets = new Insets(0, 0, 5, 5);
 		gbc_paramLabelField.fill = GridBagConstraints.BOTH;
+		//gbc_paramLabelField.gridx = 1;
 		gbc_paramLabelField.gridy = paramLabelField.size()-1;
 		panelGrid.add(labelField, gbc_paramLabelField);
 		labelField.setColumns(10);
+		
+		JCheckBox isReqCheckBox = new JCheckBox();
+		isReqCheckBox.setSelected(IS_REQ);
+		paramIsReqCheckBox.add(isReqCheckBox);
+		GridBagConstraints gbc_paramisReqCheckBox = new GridBagConstraints();
+	
+		gbc_paramisReqCheckBox.insets = new Insets(0, 0, 5, 5);
+		gbc_paramisReqCheckBox.fill = GridBagConstraints.CENTER;
+		//gbc_paramisReqCheckBox.gridx=2;
+		gbc_paramisReqCheckBox.gridy = paramIsReqCheckBox.size()-1;
+		panelGrid.add(isReqCheckBox, gbc_paramisReqCheckBox);
 		
 		JComboBox<String> typeComboBox = new JComboBox<String>(new String[] {"Date" , "Dropdown" , "MultiSelect" , "Number" , "Text" , "Boolean" , "Time"});
 		typeComboBox.setSelectedItem(PARAM_TYPE == null ? "Text" : PARAM_TYPE);
@@ -203,7 +228,8 @@ public class SettingParamsPanel extends JPanel {
 		GridBagConstraints gbc_paramTypeComboBox = new GridBagConstraints();
 	
 		gbc_paramTypeComboBox.insets = new Insets(0, 0, 5, 5);
-		gbc_paramTypeComboBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_paramTypeComboBox.fill = GridBagConstraints.CENTER;
+		//gbc_paramTypeComboBox.gridx = 3;
 		gbc_paramTypeComboBox.gridy = paramTypeComboBox.size()-1;
 		panelGrid.add(typeComboBox, gbc_paramTypeComboBox);
 		
@@ -212,9 +238,9 @@ public class SettingParamsPanel extends JPanel {
 		contentsButton.add(contBtn);
 		contBtn.setFont(new Font("Dialog", Font.BOLD, 14));
 		GridBagConstraints gbc_contentsButton = new GridBagConstraints();
-		gbc_contentsButton.fill = GridBagConstraints.HORIZONTAL;
+		gbc_contentsButton.fill = GridBagConstraints.CENTER;
 		gbc_contentsButton.insets = new Insets(0, 0, 5, 5);
-		gbc_contentsButton.gridx = 3;
+		//gbc_contentsButton.gridx = 4;
 		gbc_contentsButton.gridy = contentsButton.size()-1;
 		panelGrid.add(contBtn, gbc_contentsButton);
 		
@@ -224,9 +250,9 @@ public class SettingParamsPanel extends JPanel {
 		deleteBtn.addActionListener(deleteButtonListener);
 		deleteBtn.setFont(new Font("Dialog", Font.BOLD, 14));
 		GridBagConstraints gbc_deleteButton = new GridBagConstraints();
-		gbc_deleteButton.fill = GridBagConstraints.HORIZONTAL;
+		gbc_deleteButton.fill = GridBagConstraints.CENTER;
 		gbc_deleteButton.insets = new Insets(0, 0, 5, 5);
-		gbc_deleteButton.gridx = 4;
+		//gbc_deleteButton.gridx = 5;
 		gbc_deleteButton.gridy = deleteButton.size()-1;
 		panelGrid.add(deleteBtn, gbc_deleteButton);
 		
@@ -235,9 +261,9 @@ public class SettingParamsPanel extends JPanel {
 		panelGrid.repaint();
 	}
 	
-	private void addParamDinamic(MyField nameField, MyField labelField, JComboBox<String> typeComboBox,JButtonContentsDialog contBtn, JButton deleteBtn, int gridy) {
+	private void addParamDinamic(MyField nameField, MyField labelField,JCheckBox isReqCheckBox, JComboBox<String> typeComboBox,JButtonContentsDialog contBtn, JButton deleteBtn, int gridy) {
 
-		panelGrid.setBounds(7, 47, 515, panelGrid.getHeight()+34);
+		panelGrid.setBounds(7, 47, 600, panelGrid.getHeight()+34);
 		
 		GridBagConstraints gbc_paramNameField = new GridBagConstraints();
 		gbc_paramNameField.insets = new Insets(0, 0, 5, 5);
@@ -254,24 +280,31 @@ public class SettingParamsPanel extends JPanel {
 		gbc_paramLabelField.gridy = gridy;
 		panelGrid.add(labelField, gbc_paramLabelField);
 		
+		GridBagConstraints gbc_paramIsReqCheckBox = new GridBagConstraints();
+		gbc_paramIsReqCheckBox.insets = new Insets(0, 0, 5, 5);
+		gbc_paramIsReqCheckBox.fill = GridBagConstraints.CENTER;
+		gbc_paramIsReqCheckBox.gridx = 2;
+		gbc_paramIsReqCheckBox.gridy = gridy;
+		panelGrid.add(isReqCheckBox, gbc_paramIsReqCheckBox);
+		
 		GridBagConstraints gbc_paramTypeComboBox = new GridBagConstraints();
 		gbc_paramTypeComboBox.insets = new Insets(0, 0, 5, 5);
-		gbc_paramTypeComboBox.fill = GridBagConstraints.HORIZONTAL;
-		gbc_paramTypeComboBox.gridx = 2;
+		gbc_paramTypeComboBox.fill = GridBagConstraints.CENTER;
+		gbc_paramTypeComboBox.gridx = 3;
 		gbc_paramTypeComboBox.gridy = gridy;
 		panelGrid.add(typeComboBox, gbc_paramTypeComboBox);
 		
 		GridBagConstraints gbc_contentsButton = new GridBagConstraints();
-		gbc_contentsButton.fill = GridBagConstraints.HORIZONTAL;
+		gbc_contentsButton.fill = GridBagConstraints.CENTER;
 		gbc_contentsButton.insets = new Insets(0, 0, 5, 5);
-		gbc_contentsButton.gridx = 3;
+		gbc_contentsButton.gridx = 4;
 		gbc_contentsButton.gridy = gridy;
 		panelGrid.add(contBtn, gbc_contentsButton);
 		
 		GridBagConstraints gbc_deleteButton = new GridBagConstraints();
-		gbc_deleteButton.fill = GridBagConstraints.HORIZONTAL;
+		gbc_deleteButton.fill = GridBagConstraints.CENTER;
 		gbc_deleteButton.insets = new Insets(0, 0, 5, 5);
-		gbc_deleteButton.gridx = 4;
+		gbc_deleteButton.gridx = 5;
 		gbc_deleteButton.gridy = gridy;
 		panelGrid.add(deleteBtn, gbc_deleteButton);
 		
@@ -284,10 +317,11 @@ public class SettingParamsPanel extends JPanel {
 		for(int i = 0;paramNameField.size() > i;i++) {
 			String pARAM_NAME     = paramNameField.get(i).getTextWithCheck();
 			String pARAM_LABEL    = paramLabelField.get(i).getTextWithCheck();
+			String pARAM_ISREQUIRED = (paramIsReqCheckBox.get(i).isSelected()) ? "1" : "0";
 			String pARAM_TYPE     = (String)(paramTypeComboBox.get(i).getSelectedItem()); 
 			String pARAM_CONTENTS = contentsButton.get(i).getContentDialog().getText();
 			//
-			ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_NAME, pARAM_LABEL, pARAM_TYPE, pARAM_CONTENTS);
+			ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_NAME, pARAM_LABEL, pARAM_ISREQUIRED, pARAM_TYPE, pARAM_CONTENTS);
 			res.add(p);
 		}
 		return res;
@@ -296,19 +330,20 @@ public class SettingParamsPanel extends JPanel {
 		Vector<ParamFromParamsPanel> res = new Vector<ParamFromParamsPanel>();
 		//
 		for(int i = 0;paramNameField.size() > i;i++) {
-			String pARAM_NAME     = paramNameField.get(i).getText();
-			String pARAM_LABEL    = paramLabelField.get(i).getText();
-			String pARAM_TYPE     = (String)(paramTypeComboBox.get(i).getSelectedItem()); 
-			String pARAM_CONTENTS = contentsButton.get(i).getContentDialog().getText();
+			String pARAM_NAME       = paramNameField.get(i).getText();
+			String pARAM_LABEL      = paramLabelField.get(i).getText();
+			String pARAM_ISREQUIRED = (paramIsReqCheckBox.get(i).isSelected()) ? "1" : "0";
+			String pARAM_TYPE       = (String)(paramTypeComboBox.get(i).getSelectedItem()); 
+			String pARAM_CONTENTS   = contentsButton.get(i).getContentDialog().getText();
 			//
-			ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_NAME, pARAM_LABEL, pARAM_TYPE, pARAM_CONTENTS);
+			ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_NAME, pARAM_LABEL,pARAM_ISREQUIRED, pARAM_TYPE, pARAM_CONTENTS);
 			res.add(p);
 		}
 		return res;
 	}
 	public void addlistParams(List<? extends Params> listParams) {
 		for (Params p : listParams) {
-			addParam(p.getPARAM_NAME() , p.getPARAM_LABEL(), p.getPARAM_TYPE(), p.getPARAM_CONTENTS());
+			addParam(p.getPARAM_NAME() , p.getPARAM_LABEL(),(p.getPARAM_ISREQUIRED().equals("1") ? true : false), p.getPARAM_TYPE(), p.getPARAM_CONTENTS());
 		}
 	}
 }
