@@ -43,6 +43,8 @@ import javax.swing.JRadioButton;
 
 public class SettingsWindow extends JDialog {
 
+	private static final String DEV_VERSION = "Version 1.02";
+	///////////////////////////////////////////////////////////////////
 	private final JPanel contentPanel = new JPanel();
 	private JButton saveButton;
 	private JTextField schemaField;
@@ -248,7 +250,7 @@ public class SettingsWindow extends JDialog {
 		
 			}
 			
-			JLabel lblNewLabel = new JLabel("Version 1.02");
+			JLabel lblNewLabel = new JLabel(DEV_VERSION);
 			lblNewLabel.setForeground(Color.GRAY);
 			GroupLayout gl_buttonPane = new GroupLayout(buttonPane);
 			gl_buttonPane.setHorizontalGroup(
