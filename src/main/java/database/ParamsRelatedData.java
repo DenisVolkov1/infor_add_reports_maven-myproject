@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Vector;
 
+import log.LOg;
 import parce_rptdesign.ParamFromRptDesign;
 import util.MyProperties;
 import util.Params;
@@ -25,7 +26,9 @@ public class ParamsRelatedData {
 						ResultSet rs = statement.executeQuery(sql)) {
 				rs.next();
 				Integer result = rs.getInt(1);
+				LOg.logToFile_SQL(sql);
 				return (result == 1) ? true : false; 
+				
 			}
 	}
 	/**
@@ -85,6 +88,7 @@ public class ParamsRelatedData {
 			connection.commit();
 			
 		}
+		LOg.logToFile_SQL(insertPBSRPT_REPORTS_PARAMS);
 		
 	}
 	
@@ -103,6 +107,7 @@ public class ParamsRelatedData {
 				resultVector.add(rs.getString(1));
 			}
 		} 
+		LOg.logToFile_SQL(sql);
 		return resultVector;
 	}
 	public static Vector<ParamFromDataBase> getListOfParam(String RPT_ID) throws ClassNotFoundException, SQLException {
@@ -121,6 +126,7 @@ public class ParamsRelatedData {
 				resultVector.add(new ParamFromDataBase(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
 			}
 		} 
+		LOg.logToFile_SQL(sql);
 		return resultVector;
 	}
 	
@@ -199,6 +205,7 @@ public class ParamsRelatedData {
 						insertPar.execute();
 						connection.commit();
 				}	
+		LOg.logToFile_SQL(insertPBSRPT_REPORTS_PARAMS);		
 	}
 	public static void deleteParam(List<? extends Params> listParams, String RPT_ID) throws Exception {
 		String schema = MyProperties.getProperty("schema");
@@ -216,6 +223,7 @@ public class ParamsRelatedData {
 			delPar.executeBatch();
 			connection.commit();
 		} 
+		LOg.logToFile_SQL(deletePBSRPT_REPORTS_PARAMS);		
 	}
 	public static void deleteParam(String RPT_ID) throws Exception {
 		String schema = MyProperties.getProperty("schema");
@@ -226,7 +234,8 @@ public class ParamsRelatedData {
 				PreparedStatement delPar = connection.prepareStatement(deleteALL_PBSRPT_REPORTS_PARAMS)) {
 			
 			delPar.execute();
-		} 
+		}
+		LOg.logToFile_SQL(deleteALL_PBSRPT_REPORTS_PARAMS);		
 	}
 	public static void updateParam(List<? extends Params> listParams, String RPT_ID) throws Exception {
 		String schema = MyProperties.getProperty("schema");
@@ -234,6 +243,7 @@ public class ParamsRelatedData {
 		String deleteALL_PBSRPT_REPORTS_PARAMS = "USE [SCPRD] DELETE FROM ["+schema+"].[PBSRPT_REPORTS_PARAMS] " + 
 				  "WHERE RPT_ID = '"+RPT_ID+"'";
 		
+		String insertPBSRPT_REPORTS_PARAMS=null;
 		if (listParams.size() != 0) {
 			String PARAM_CONTENTS_TYPE = "NULL";
 			
@@ -243,7 +253,7 @@ public class ParamsRelatedData {
 			 String PARAM_TYPE   	    = null;
 			 String PARAM_CONTENTS      = null;
 				
-				String insertPBSRPT_REPORTS_PARAMS = ""
+				 insertPBSRPT_REPORTS_PARAMS = ""
 						+ "USE [SCPRD] "
 						+ "INSERT INTO ["+schema+"].[PBSRPT_REPORTS_PARAMS](" + 
 						" [RPT_ID] "+
@@ -317,6 +327,9 @@ public class ParamsRelatedData {
 				delPar.execute();
 				connection.commit();
 			}
-		}	
+		}
+		
+		LOg.logToFile_SQL(deleteALL_PBSRPT_REPORTS_PARAMS + "\r\n" + insertPBSRPT_REPORTS_PARAMS);	
+		
 	}
 }

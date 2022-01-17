@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import exception.InfoException;
+import log.LOg;
 import util.DialogWindows;
 import util.MyProperties;
 
@@ -46,6 +47,7 @@ public class ReportRelatedData {
 				if (!resultVector.contains(descr)) resultVector.add(descr);
 			}
 		} 
+			LOg.logToFile_SQL(sql);
 		return resultVector;
 	}
 	public static Vector<String> getListOfReportNames(int categoryId) throws ClassNotFoundException, SQLException {
@@ -63,6 +65,7 @@ public class ReportRelatedData {
 				resultVector.add(rs.getString(1));
 			}
 		} 
+			LOg.logToFile_SQL(sql);
 		return resultVector;
 	}
 	public static Vector<String> getListOfReportNames(String nameFileReport) throws ClassNotFoundException, SQLException {
@@ -80,6 +83,7 @@ public class ReportRelatedData {
 				resultVector.add(rs.getString(1));
 			}
 		} 
+			LOg.logToFile_SQL(sql);
 		return resultVector;
 	}
 
@@ -192,57 +196,62 @@ public class ReportRelatedData {
 			connection.commit();
 			connection.setAutoCommit(true);
 		}
+		LOg.logToFile_SQL(insertPBSRPT_REPORTS + "\r\n "+ insertTRANSLATIONLIST);
+
 	}
 
 	public static String getRPT_ID (String nameReport, int categoryId) throws Exception {
 		String schema = MyProperties.getProperty("schema");
-		String getRptId = "USE [SCPRD] "
+		String sql_getRptId = "USE [SCPRD] "
 						  +"SELECT RPT_ID " + 
 						  "FROM ["+schema+"].PBSRPT_REPORTS " + 
 						  "WHERE RPT_TITLE = '"+nameReport+"' AND CATEGORY_ID = "+categoryId;	
 		String result = null;
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();
-						ResultSet rs = statement.executeQuery(getRptId)) {	
+						ResultSet rs = statement.executeQuery(sql_getRptId)) {	
 			while(rs.next()) {
 				result = rs.getString(1);
 				if (rs.getRow() > 1) throw new InfoException("Two or more reports with equality name is unacceptable!");
 			}
 		}
+		LOg.logToFile_SQL(sql_getRptId);
 		return result; 
 	}
 	public static Boolean getRPT_ACTIVE (String nameReport, int categoryId) throws Exception {
 		String schema = MyProperties.getProperty("schema");
 		String RPT_ID = getRPT_ID(nameReport, categoryId);
-		String getRptActive = "USE [SCPRD] "
+		String sql_getRptActive = "USE [SCPRD] "
 							 +"SELECT RPT_ACTIVE " 
 							 +"FROM ["+schema+"].PBSRPT_REPORTS " 
 							 +"WHERE RPT_ID = '"+RPT_ID+"'";	
 		String result = null;
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();
-						ResultSet rs = statement.executeQuery(getRptActive)) {	
+						ResultSet rs = statement.executeQuery(sql_getRptActive)) {	
 			while(rs.next()) {
 				result = rs.getString(1);
 			}
 		}
+		LOg.logToFile_SQL(sql_getRptActive);
 		return result.equals("Y") ? true : false; 
 	}
 	public static String getReportFilePath(String nameReport, int categoryId) throws Exception {
 		String schema = MyProperties.getProperty("schema");
 		String RPT_ID = getRPT_ID(nameReport, categoryId);
 		String result = null;
-		String getBirtrptUrl = "USE [SCPRD] "
+		String sql_getBirtrptUrl = "USE [SCPRD] "
 							   +"SELECT BIRTRPT_URL " 
 				  			   +"FROM ["+schema+"].PBSRPT_REPORTS " 
 				               +"WHERE RPT_ID = '"+RPT_ID+"'";
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();
-						ResultSet rs = statement.executeQuery(getBirtrptUrl)) {	
+						ResultSet rs = statement.executeQuery(sql_getBirtrptUrl)) {	
 			while(rs.next()) {
 				result = rs.getString(1);
 			}
 		}
+		LOg.logToFile_SQL(sql_getBirtrptUrl);
 		return result;
 	}
 
@@ -279,7 +288,7 @@ public class ReportRelatedData {
 									  +",EDITDATE = getutcdate()"
 									  +"WHERE RPT_ID = '"+RPT_ID+"'";
 		
-		
+		String updateTRANSLATIONLIST=null;
 		if (newRPT_ID != null || newNameReport != null) {
 			
 			String setJOINKEY12345, setDescription = null;
@@ -291,7 +300,7 @@ public class ReportRelatedData {
 			String temp2 = (setJOINKEY12345 + setDescription);
 			String setFildsTrans = temp2.substring(1, temp2.length());
 			
-			String updateTRANSLATIONLIST = "USE [SCPRD] "
+			     updateTRANSLATIONLIST = "USE [SCPRD] "
 										   +"UPDATE [SCPRD].["+schema+"].[TRANSLATIONLIST] "
 					  					   +"SET "+setFildsTrans
 					  					   +",EDITWHO = user_name() "
@@ -322,6 +331,7 @@ public class ReportRelatedData {
 					connection.setAutoCommit(true);
 			}
 		}
+		LOg.logToFile_SQL(updatePBSRPT_REPORTS + "\r\n "+ updateTRANSLATIONLIST);
 	}
 	public static void deleteReport(String nameReport, int categoryId) throws Exception {
 		String schema = MyProperties.getProperty("schema");
@@ -350,6 +360,7 @@ public class ReportRelatedData {
 			connection.commit();
 			connection.setAutoCommit(true);
 		}
+		LOg.logToFile_SQL(deletePBSRPT_REPORTS + "\r\n "+ deleteTRANSLATIONLIST);
 	}
 	/**
 	 * @return
@@ -364,7 +375,7 @@ public class ReportRelatedData {
 		String schema = MyProperties.getProperty("schema");
 		String RPT_ID = getRPT_ID(nameReport, categoryId);
 		String[] result = new String [4];
-		String getBirtrptUrl = "USE [SCPRD] "
+		String sql_getBirtrptUrl = "USE [SCPRD] "
 							   + "SELECT "   
 							   + "r.RPT_ID, "
 							   + "(CASE "
@@ -386,7 +397,7 @@ public class ReportRelatedData {
 								 	+"WHERE RPT_ID = '"+RPT_ID+"'";
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();
-						ResultSet rs = statement.executeQuery(getBirtrptUrl)) {	
+						ResultSet rs = statement.executeQuery(sql_getBirtrptUrl)) {	
 			while(rs.next()) {
 				result[0] = rs.getString(1);
 				result[1] = rs.getString(2);
@@ -394,6 +405,7 @@ public class ReportRelatedData {
 				result[3] = rs.getString(4).replace("/frameset?__report=report/", "").replace(".rptdesign", "");
 			}
 		}
+		LOg.logToFile_SQL(sql_getBirtrptUrl);
 		return result;
 	}
 }

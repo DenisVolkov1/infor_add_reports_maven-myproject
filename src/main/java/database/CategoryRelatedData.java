@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
+import log.LOg;
 import util.CategoryAndId;
 import util.MyProperties;
 import windows.MainRunWindow;
@@ -42,6 +43,7 @@ public class CategoryRelatedData {
 				resultVector.add(new CategoryAndId(rs.getInt(1), rs.getString(2)));
 			}
 		} 
+		LOg.logToFile_SQL(sql);
 		return resultVector;
 	}
 	
@@ -59,6 +61,7 @@ public class CategoryRelatedData {
 				result = rs.getInt(1);
 			}
 		}
+		LOg.logToFile_SQL(sql);
 		return result;
 	}
 	public static Vector<String> getListOfCategoryNames() throws ClassNotFoundException, SQLException {
@@ -88,7 +91,8 @@ public class CategoryRelatedData {
 				if (!resultVector.contains(cat)) resultVector.add(cat);
 				if (!resultVector.contains(descr)) resultVector.add(descr);
 			}
-		}  
+		} 
+		LOg.logToFile_SQL(sql);
 		return resultVector;
 	}
 	public static boolean insertCategory(String newCategory) throws ClassNotFoundException, SQLException {
@@ -147,6 +151,7 @@ public class CategoryRelatedData {
 			connection.commit();
 			connection.setAutoCommit(true);
 		} 
+		LOg.logToFile_SQL(insertPBSRPT_CATEGORY + "\r\n " + insertTRANSLATIONLIST);
 		return true;		
 	}
 	public static void updateCategory(String newNameCategory, int categoryId) throws Exception {
@@ -184,6 +189,7 @@ public class CategoryRelatedData {
 			connection.setAutoCommit(true);
 			
 		}
+		LOg.logToFile_SQL(updatePBSRPT_CATEGORY + "\r\n " + updateTRANSLATIONLIST);
 	}
 	
 }

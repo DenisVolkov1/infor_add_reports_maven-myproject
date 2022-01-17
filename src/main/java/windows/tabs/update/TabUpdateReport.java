@@ -687,6 +687,7 @@ public class TabUpdateReport extends TabSuperClass {
 		int categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
 		Vector<String> listReportStrings = ReportRelatedData.getListOfReportNames(categoryId);
 			boolean b = false;
+			//LOg.logToFile_SQL(listReportStrings.toString());
 			for (String repNameExists : listReportStrings) {
 				if (nameReport.equals(repNameExists.trim())) b = true;
 			}
