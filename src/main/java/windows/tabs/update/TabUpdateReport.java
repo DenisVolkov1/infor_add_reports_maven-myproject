@@ -376,80 +376,6 @@ public class TabUpdateReport extends TabSuperClass {
 				} finally {setCursor(null);}
 			}
 		});
-//		updateReportButton.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				String nameReport, updateNameFileReport = null, nameProgect = null;
-//				String[] oldValues = null;
-//				Integer categoryId = null;
-//				File selectedFile = null;
-//					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-//				try {
-//					matchCheckingValidInputData();
-//					String newRPT_ID         = null;
-//					Integer newCategoryId    = null;
-//					String newNameReport     = null;
-//					String newNameFileReport = null;
-//					Boolean newRptActive 	 = null;
-//					if (updateDataBaseToggleButton.isSelected()) {
-//						nameReport = nameReportField.getTextWithCheck();
-//						categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
-//						//
-//						if (inputNewValuesReport != null) {
-//							 newRPT_ID         = inputNewValuesReport.getRPT_ID();
-//							 newCategoryId     = inputNewValuesReport.getCategory();
-//							 newNameReport     = inputNewValuesReport.getNameReport();
-//							 newNameFileReport = inputNewValuesReport.getNameFileReport();
-//							 newRptActive 	   = inputNewValuesReport.getRPT_ACTIVE();
-//						}
-//						if (ParamsRelatedData.isExistTableParams()) {
-//							if (isChangeRepAttr()) {
-//									ReportRelatedData.updateReport(nameReport, categoryId, newRPT_ID, newCategoryId, newNameReport, newNameFileReport, newRptActive);
-//											inputNewValuesReport = null;
-//							}
-//							if(isChangeParams()) {
-//								List<ParamFromParamsPanel> listParamsForUpdate = params.getSettingParamsPanel().getlistOfParams();
-//								String RPT_ID = ReportRelatedData.getRPT_ID(newNameReport != null ? newNameReport : nameReport,
-//																			newCategoryId != null ? newCategoryId : categoryId);
-//									ParamsRelatedData.updateParam(listParamsForUpdate, RPT_ID);
-//									params = null;
-//										paramButton.setEmptyHover();
-//							}
-//							DialogWindows.dialogWindowWarning("Report successfully update!");
-//							
-//						} else {
-//								ReportRelatedData.updateReport(nameReport, categoryId, newRPT_ID, newCategoryId, newNameReport, newNameFileReport, newRptActive);
-//										inputNewValuesReport = null;
-//										inputNewValuesButton.setEmptyHover();
-//											DialogWindows.dialogWindowWarning("Report successfully update!");
-//						}
-//					} else if (updateFileArchiveToggleButton.isSelected()) {
-//						updateNameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
-//						nameProgect    = (String)foldersProjectComboBox.getSelectedItem();
-//						selectedFile = fileChooser.getSelectedFile();
-//						//
-//						 WarArchive.createBackup(selectedFile);
-//						 	WarArchive.addOrUpdateReportFileInArchive(selectedFile);
-//							if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
-//								nameReport = FilesRepository.getNameReport(getNameRptFile(), nameProgect);
-//								FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile,FilesRepository.Type.UPDATE);
-//									DialogWindows.dialogWindowWarning("Report file successfully update! For report:\r\n\n"+nameReport);
-//									return;
-//							}
-//						 	DialogWindows.dialogWindowWarning("Report file successfully update!");
-//					}
-//				} catch (InfoException ie) {
-//					 DialogWindows.dialogWindowError(ie); 
-//				} catch (ConfirmException ce) { 
-//					//return
-//				} catch (Exception e1) {
-//					 DialogWindows.dialogWindowError(e1);
-//					 	LOg.logToFile(e1);
-//				} finally {
-//					 setCursor(null);
-//				}	
-//			}
-//		});
-		
 		
 		updateReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -479,6 +405,7 @@ public class TabUpdateReport extends TabSuperClass {
 							String newNameReport     = null;
 							String newNameFileReport = null;
 							Boolean newRptActive 	 = null;
+							
 							if (updateDataBaseToggleButton.isSelected()) {
 								nameReport = nameReportField.getTextWithCheck();
 								categoryId = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
@@ -503,13 +430,15 @@ public class TabUpdateReport extends TabSuperClass {
 											params = null;
 												paramButton.setEmptyHover();
 									}
-									//DialogWindows.dialogWindowWarning("Report successfully update!");
+									hideWaitPanel();
+									DialogWindows.dialogWindowWarning("Report successfully update!");
 									
 								} else {
 										ReportRelatedData.updateReport(nameReport, categoryId, newRPT_ID, newCategoryId, newNameReport, newNameFileReport, newRptActive);
 												inputNewValuesReport = null;
 												inputNewValuesButton.setEmptyHover();
-													//DialogWindows.dialogWindowWarning("Report successfully update!");
+												hideWaitPanel();
+													DialogWindows.dialogWindowWarning("Report successfully update!");
 								}
 							} else if (updateFileArchiveToggleButton.isSelected()) {
 								updateNameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
@@ -537,6 +466,8 @@ public class TabUpdateReport extends TabSuperClass {
 							hideWaitPanel();
 							 DialogWindows.dialogWindowError(e1);
 							 	LOg.logToFile(e1);
+						} finally {
+							hideWaitPanel();
 						}
 					return null;	
 					}

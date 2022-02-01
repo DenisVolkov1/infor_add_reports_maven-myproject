@@ -294,7 +294,7 @@ public class ReportRelatedData {
 									  +"SET "
 									  +setFildsReport
 									  +",EDITWHO = N'add_rep' "
-									  +",EDITDATE = getutcdate()"
+									  +",EDITDATE = getutcdate() "
 									  +"WHERE RPT_ID = '"+RPT_ID+"'";
 		
 		String updateTRANSLATIONLIST=null;

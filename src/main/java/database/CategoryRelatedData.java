@@ -23,7 +23,7 @@ public class CategoryRelatedData {
 		Vector<CategoryAndId> resultVector = new Vector<CategoryAndId>();
 				String sql = "USE [SCPRD] "
 							  + "SELECT cat.CATEGORY_ID, "
-							  + "(CASE"
+							  + "(CASE "
 							  + "	WHEN tr.DESCRIPTION IS NULL THEN cat.CATEGORY "
 							  + "	ELSE tr.DESCRIPTION "
 							  + "END)"
@@ -70,7 +70,7 @@ public class CategoryRelatedData {
 		
 		String sql = "USE [SCPRD] "
 				  + "SELECT cat.CATEGORY, "
-				  + "(CASE"
+				  + "(CASE "
 				  + "	WHEN tr.DESCRIPTION IS NULL THEN '-' "
 				  + "	ELSE tr.DESCRIPTION "
 				  + "END) "
