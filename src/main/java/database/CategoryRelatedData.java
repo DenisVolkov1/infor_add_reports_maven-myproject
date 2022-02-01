@@ -102,12 +102,16 @@ public class CategoryRelatedData {
 				"INSERT INTO ["+schema+"].[PBSRPT_CATEGORY] (" + 
 				"	[WHSEID], " + 
 				"	[CATEGORY_ID], " + 
-				"	[CATEGORY] " +  
+				"	[CATEGORY], " +
+				"	[ADDWHO], " +
+				"	[EDITWHO] " +
 				") " + 
 				"VALUES (" + 
-				"	'"+schema+"'," + 
-				"	"+CATEGORY_ID+"," + 
-				"	'"+newCategory+"'" + 
+				"	N'"+schema+"',  " + 
+				"	"+CATEGORY_ID+",  " + 
+				"	N'"+newCategory+"',  " + 
+				"	N'add_rep',  " +
+				"	N'add_rep'" +
 				")";
 		String insertTRANSLATIONLIST = "USE [SCPRD] " +   
 				"INSERT INTO ["+schema+"].[TRANSLATIONLIST] " + 
@@ -121,21 +125,25 @@ public class CategoryRelatedData {
 				"           ,[JOINKEY5]   " + 
 				"           ,[COLUMNNAME] " + 
 				"           ,[CODE]       " + 
-				"           ,[DESCRIPTION]" + 
+				"           ,[DESCRIPTION]" +
+				"			,[ADDWHO] " +
+				"			,[EDITWHO] " +
 				"           )" + 
 				"     VALUES" + 
 				"          (" + 
 				"		   '"+schema+"'," + 
 				"           'PBSRPT_CATEGORY'," + 
 				"           'ru'," + 
-				"           '"+CATEGORY_ID+"',   " + 
-				"           '"+CATEGORY_ID+"',   " + 
-				"           '"+CATEGORY_ID+"',   " + 
-				"           '"+CATEGORY_ID+"',   " + 
-				"           '"+CATEGORY_ID+"',   " + 
+				"           N'"+CATEGORY_ID+"',  " + 
+				"           N'"+CATEGORY_ID+"',  " + 
+				"           N'"+CATEGORY_ID+"',  " + 
+				"           N'"+CATEGORY_ID+"',  " + 
+				"           N'"+CATEGORY_ID+"',  " + 
 				"           'CATEGORY',    " + 
-				"           '"+CATEGORY_ID+"',   " + 
-				"           '"+newCategory+"'" + 
+				"           '"+CATEGORY_ID+"',  " + 
+				"           N'"+newCategory+"',  " +
+				"	        N'add_rep',  " +
+				"	        N'add_rep'" +
 				"		   )";
 		
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
@@ -159,21 +167,21 @@ public class CategoryRelatedData {
 		
 		String updatePBSRPT_CATEGORY = "USE [SCPRD] UPDATE ["+schema+"].[PBSRPT_CATEGORY] " + 
 									  "SET "
-									   +"CATEGORY = '"+newNameCategory+"', "
-									   +"EDITWHO = user_name(), "
+									   +"CATEGORY = N'"+newNameCategory+"', "
+									   +"EDITWHO = N'add_rep', "
 									   +"EDITDATE = getutcdate() "
 									   +"WHERE CATEGORY_ID = "+categoryId;
 		
 		String updateTRANSLATIONLIST = "USE [SCPRD] UPDATE ["+schema+"].[TRANSLATIONLIST] " + 
 				  					   "SET "
-				  					   +"[DESCRIPTION] = '"+newNameCategory+"' "
-				  					   +",EDITWHO = user_name() "
+				  					   +"[DESCRIPTION] = N'"+newNameCategory+"' "
+				  					   +",EDITWHO = N'add_rep' "
 									   +",EDITDATE = getutcdate() "
-				  					   +"WHERE JOINKEY1 = '"+categoryId+"' "
-				  					   +"AND JOINKEY2 = '"+categoryId+"' "
-				  					   +"AND JOINKEY3 = '"+categoryId+"' "
-				  					   +"AND JOINKEY4 = '"+categoryId+"' "
-				  					   +"AND JOINKEY5 = '"+categoryId+"' AND TBLNAME = 'PBSRPT_CATEGORY' AND LOCALE = 'ru' AND COLUMNNAME = 'CATEGORY'";
+				  					   +"WHERE JOINKEY1 = N'"+categoryId+"' "
+				  					   +"AND JOINKEY2 = N'"+categoryId+"' "
+				  					   +"AND JOINKEY3 = N'"+categoryId+"' "
+				  					   +"AND JOINKEY4 = N'"+categoryId+"' "
+				  					   +"AND JOINKEY5 = N'"+categoryId+"' AND TBLNAME = 'PBSRPT_CATEGORY' AND LOCALE = 'ru' AND COLUMNNAME = 'CATEGORY'";
 		
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();

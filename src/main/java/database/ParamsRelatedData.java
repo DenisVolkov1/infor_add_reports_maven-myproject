@@ -63,12 +63,14 @@ public class ParamsRelatedData {
 		        ",[PARAM_GROUP] "+
 		        ",[PARAM_GROUP_LABEL] "+
 		        ",[IS_REQUIRED] "+
+				",[ADDWHO] " +
+				",[EDITWHO] " +
 		        ") "+
 		        "VALUES("+
 		        "  '"+RPT_ID+"',         "+
-		        "  '"+PARAM_NAME+"',     "+
+		        "  N'"+PARAM_NAME+"',     "+
 		        "   '"+PARAM_TYPE+"',    "+
-		        "   '"+PARAM_LABEL+"',   "+
+		        "  N'"+PARAM_LABEL+"',   "+
 		        "   "+PARAM_CONTENTS+",  "+
 		        "   '',                  "+
 		        "   NULL,                "+
@@ -77,7 +79,9 @@ public class ParamsRelatedData {
 		        "   1,                   "+
 		        "   NULL,                "+
 		        "   NULL,                "+
-		        "   '"+PARAM_ISREQUIRED+"'"+
+		        "   '"+PARAM_ISREQUIRED+"',"+
+				"	N'add_rep',  " +
+				"	N'add_rep'" +
 				")";
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();
@@ -158,6 +162,9 @@ public class ParamsRelatedData {
 			        ",[PARAM_GROUP] "+
 			        ",[PARAM_GROUP_LABEL] "+
 			        ",[IS_REQUIRED] "+
+					",[ADDWHO] " +
+					",[EDITWHO] " +
+					
 			        ") "+
 			        "VALUES ";
 			StringBuilder values = new StringBuilder();
@@ -179,9 +186,9 @@ public class ParamsRelatedData {
 				 }
 			     values.append("("+
 			        "  '"+RPT_ID+"',         "+
-			        "  '"+PARAM_NAME+"',     "+
+			        "  N'"+PARAM_NAME+"',     "+
 			        "   '"+PARAM_TYPE+"',    "+
-			        "   '"+PARAM_LABEL+"',   "+
+			        "  N'"+PARAM_LABEL+"',   "+
 			        "   "+PARAM_CONTENTS+",  "+
 			        "   '',                  "+
 			        "   NULL,                "+
@@ -190,7 +197,9 @@ public class ParamsRelatedData {
 			        "   1,                   "+
 			        "   NULL,                "+
 			        "   NULL,                "+
-			        "   '"+PARAM_ISREQUIRED+"' "+
+			        "   '"+PARAM_ISREQUIRED+"',  "+
+					"	N'add_rep',  " +
+					"	N'add_rep'" +
 					"),"//+"\n"
 			        );
 				}
@@ -269,6 +278,7 @@ public class ParamsRelatedData {
 				        ",[PARAM_GROUP] "+
 				        ",[PARAM_GROUP_LABEL] "+
 				        ",[IS_REQUIRED] "+
+				        ",[EDITWHO] " +
 				        ") "+
 				        "VALUES ";
 				StringBuilder values = new StringBuilder();
@@ -290,9 +300,9 @@ public class ParamsRelatedData {
 					 }
 				     values.append("("+
 				        "  '"+RPT_ID+"',         "+
-				        "  '"+PARAM_NAME+"',     "+
+				        "  N'"+PARAM_NAME+"',     "+
 				        "   '"+PARAM_TYPE+"',    "+
-				        "   '"+PARAM_LABEL+"',   "+
+				        "  N'"+PARAM_LABEL+"',   "+
 				        "   "+PARAM_CONTENTS+",  "+
 				        "   '',                  "+
 				        "   NULL,                "+
@@ -301,7 +311,8 @@ public class ParamsRelatedData {
 				        "   1,                   "+
 				        "   NULL,                "+
 				        "   NULL,                "+
-				        "'"+PARAM_IS_REQUIRED+"' "+
+				        "'"+PARAM_IS_REQUIRED+"',  "+
+				        "N'add_rep'" +
 						"),"
 				        );
 					}

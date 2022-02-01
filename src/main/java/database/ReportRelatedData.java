@@ -56,7 +56,7 @@ public class ReportRelatedData {
 		
 		String sql = "USE [SCPRD] "
 					  + "SELECT RPT_TITLE "
-					  + "FROM ["+schema+"].PBSRPT_REPORTS  "
+					  + "FROM ["+schema+"].PBSRPT_REPORTS "
 					  + "WHERE CATEGORY_ID = "+ categoryId;
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();
@@ -124,14 +124,17 @@ public class ReportRelatedData {
 				"			[CUSTOMREPORTTYPE], " + 
 				"			[SOURCEVERSION], " + 
 				"			[BASE_REPORT], " + 
-				"			[COMMENTS]) " + 
+				"			[COMMENTS], " +
+				"			[ADDWHO], " +
+				"			[EDITWHO] " +
+				") " + 
 				"     VALUES " + 
 				"           (" + 
 				"		   '"+schema+"',        " + 
 				"		    '"+RPT_ID+"',      " + 
 				"		   'r_appt_eqpt',    " + 
 				"		   'report01.pbl',   " + 
-				"		   '"+nameReport+"', " + 
+				"		  N'"+nameReport+"', " + 
 				"		   NULL,             " + 
 				"		   NULL,             " + 
 				"		   'Y',              " + 
@@ -155,7 +158,9 @@ public class ReportRelatedData {
 				"		   0,                " + 
 				"		   0,                " + 
 				"		   '1',              " + 
-				"		   null              " + 
+				"		   null,             " +
+				"	       N'add_rep',       " +
+				"	       N'add_rep'" +
 				"		   )";
 		String insertTRANSLATIONLIST = "USE [SCPRD] " +   
 				"INSERT INTO ["+schema+"].[TRANSLATIONLIST] " + 
@@ -169,7 +174,9 @@ public class ReportRelatedData {
 				"           ,[JOINKEY5]   " + 
 				"           ,[COLUMNNAME] " + 
 				"           ,[CODE]       " + 
-				"           ,[DESCRIPTION]" + 
+				"           ,[DESCRIPTION]" +
+				"			,[ADDWHO]     " +
+				"			,[EDITWHO]    " +
 				"           )" + 
 				"     VALUES" + 
 				"          (" + 
@@ -183,7 +190,9 @@ public class ReportRelatedData {
 				"           '"+RPT_ID+"',   " + 
 				"           'RPT_TITLE',    " + 
 				"           '"+RPT_ID+"',   " + 
-				"           '"+nameReport+"'" + 
+				"          N'"+nameReport+"',  " + 
+				"	        N'add_rep',  " +
+				"	        N'add_rep'" +
 				"		   )";
 		
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
@@ -205,7 +214,7 @@ public class ReportRelatedData {
 		String sql_getRptId = "USE [SCPRD] "
 						  +"SELECT RPT_ID " + 
 						  "FROM ["+schema+"].PBSRPT_REPORTS " + 
-						  "WHERE RPT_TITLE = '"+nameReport+"' AND CATEGORY_ID = "+categoryId;	
+						  "WHERE RPT_TITLE = N'"+nameReport+"' AND CATEGORY_ID = "+categoryId;	
 		String result = null;
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();
@@ -266,7 +275,7 @@ public class ReportRelatedData {
 		if (newCategoryId != null) setCategoryId = ",CATEGORY_ID = '"+newCategoryId+"' ";
 		else setCategoryId = "";
 		//
-		if (newNameReport != null) setNameReport = ",RPT_TITLE = '"+newNameReport+"' ";
+		if (newNameReport != null) setNameReport = ",RPT_TITLE = N'"+newNameReport+"' ";
 		else setNameReport = "";
 		//  
 		if (newNameFileReport != null) setNameFileReport = ",BIRTRPT_URL = '/frameset?__report=report/"+newNameFileReport+".rptdesign' ";
@@ -284,7 +293,7 @@ public class ReportRelatedData {
 									  +"UPDATE [SCPRD].["+schema+"].[PBSRPT_REPORTS] " 
 									  +"SET "
 									  +setFildsReport
-									  +",EDITWHO = user_name() "
+									  +",EDITWHO = N'add_rep' "
 									  +",EDITDATE = getutcdate()"
 									  +"WHERE RPT_ID = '"+RPT_ID+"'";
 		
@@ -295,7 +304,7 @@ public class ReportRelatedData {
 			if (newRPT_ID != null) setJOINKEY12345 = ",JOINKEY1 = '"+newRPT_ID+"' ,JOINKEY2 = '"+newRPT_ID+"' ,JOINKEY3 = '"+newRPT_ID+"' ,JOINKEY4 = '"+newRPT_ID+"' ,JOINKEY5 = '"+newRPT_ID+"' ,CODE = '"+newRPT_ID+"' ";                                                   
 			else setJOINKEY12345 = "";
 			//
-			if (newNameReport != null) setDescription = ",[DESCRIPTION] = '"+newNameReport+"'"; 
+			if (newNameReport != null) setDescription = ",[DESCRIPTION] = N'"+newNameReport+"'"; 
 			else setDescription = "";
 			String temp2 = (setJOINKEY12345 + setDescription);
 			String setFildsTrans = temp2.substring(1, temp2.length());
@@ -303,7 +312,7 @@ public class ReportRelatedData {
 			     updateTRANSLATIONLIST = "USE [SCPRD] "
 										   +"UPDATE [SCPRD].["+schema+"].[TRANSLATIONLIST] "
 					  					   +"SET "+setFildsTrans
-					  					   +",EDITWHO = user_name() "
+					  					   +",EDITWHO = N'add_rep' "
 										   +",EDITDATE = getutcdate() "
 					  					   +"WHERE JOINKEY1 = '"+RPT_ID+"' "
 				  					   	     +"AND JOINKEY2 = '"+RPT_ID+"' "
