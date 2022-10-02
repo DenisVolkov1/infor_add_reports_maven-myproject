@@ -12,7 +12,7 @@ public class ParamsPanelAdd extends ParamsPanel {
 	
 	public ParamsPanelAdd() {
 
-		setBounds(100, 100, 736, 288);
+		setBounds(100, 100, 932, 288);
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {

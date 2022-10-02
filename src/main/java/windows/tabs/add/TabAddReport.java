@@ -318,7 +318,7 @@ public class TabAddReport extends TabSuperClass {
 		nameReportFileField.setEnabled(false);
 		nameReportFileField.setEditable(false);
 		nameFileReportLabelTF.setEnabled(false);
-		paramButton.setEnabled(false);
+		//paramButton.setEnabled(false);
 		paramButton.setVisible(false);
 		RPT_IDField.setEnabled(false);
 		RPT_IDField.setEditable(false);
@@ -396,7 +396,7 @@ public class TabAddReport extends TabSuperClass {
 					nameReportFileField.setEnabled(false);
 					nameReportFileField.setEditable(false);
 					nameFileReportLabelTF.setEnabled(false);
-					paramButton.setEnabled(false);
+					//paramButton.setEnabled(false);
 		
 					autoInsertCheckBox.setEnabled(false);
 					rptIdLabel.setEnabled(false);
@@ -427,7 +427,7 @@ public class TabAddReport extends TabSuperClass {
 						nameReportFileField.setEnabled(true);
 						nameReportFileField.setEditable(true);
 						nameFileReportLabelTF.setEnabled(true);
-						paramButton.setEnabled(true);
+						//paramButton.setEnabled(true);
 					}
 				}
 			}
@@ -440,13 +440,13 @@ public class TabAddReport extends TabSuperClass {
 					fileReportButton.setEnabled(false);
 					nameFileReportLabel.setEnabled(false);
 					fileReportLabel.setEnabled(false);
-					paramButton.setEnabled(false);
+					//paramButton.setEnabled(false);
 					ipDataSrcLabel.setVisible(false);
 					if (addDataBaseToggleButton.isSelected()) {
 						nameReportFileField.setEnabled(true);
 						nameReportFileField.setEditable(true);
 						nameFileReportLabelTF.setEnabled(true);
-						paramButton.setEnabled(true);
+						//paramButton.setEnabled(true);
 					}
 				} else {
 					if (addDataBaseToggleButton.isSelected()) {
@@ -463,7 +463,7 @@ public class TabAddReport extends TabSuperClass {
 						nameReportFileField.setEnabled(false);
 						nameReportFileField.setEditable(false);
 						nameFileReportLabelTF.setEnabled(false);
-						paramButton.setEnabled(false);
+						//paramButton.setEnabled(false);
 					}
 					
 				}
