@@ -2,6 +2,10 @@ package util;
 
 public interface Params {
 	/**
+	 * @return String number "1", "2", "3", "4", "5"...
+	 */
+	public String getPARAM_SEQNO();
+	/**
 	 * @return String
 	 */
 	public String getPARAM_NAME();
@@ -22,6 +26,10 @@ public interface Params {
 	 *  <p> '0'-false or '1'-true
 	 */
 	public String getPARAM_ISREQUIRED();
+	/**
+	 * @return String or 'null'
+	 */
+	public String getPARAM_DEFAULT();
 
 	boolean equals(Object obj);
 	

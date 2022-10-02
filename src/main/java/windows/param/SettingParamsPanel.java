@@ -163,7 +163,7 @@ public class SettingParamsPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (paramNameField.size() >= 15) return;
 				//add new param
-				addParam(null, null, true, null, null);
+				addParam(null, null, null, true, null, null, null);
 			}
 		});
 		
@@ -207,7 +207,7 @@ public class SettingParamsPanel extends JPanel {
 		};
 	}
 	
-	public void addParam(String PARAM_NAME,String PARAM_LABEL,boolean IS_REQ, String PARAM_TYPE,String PARAM_CONTENTS) {
+	public void addParam(String PARAM_SEQNO,String PARAM_NAME,String PARAM_LABEL,boolean IS_REQ, String PARAM_TYPE,String PARAM_CONTENTS,String PARAM_DEFAULT) {
 		
 		panelGrid.setBounds(_X, 47, _WIDTH, panelGrid.getHeight()+34); // change width
 		
@@ -264,7 +264,7 @@ public class SettingParamsPanel extends JPanel {
 		gbc_paramisReqCheckBox.gridy = paramIsReqCheckBox.size()-1;
 		panelGrid.add(isReqCheckBox, gbc_paramisReqCheckBox);
 		
-		JComboBox<String> typeComboBox = new JComboBox<String>(new String[] {"Date" , "Dropdown" , "MultiSelect" , "Number" , "Text" , "Boolean" , "Time"});
+		JComboBox<String> typeComboBox = new JComboBox<String>(new String[] {"Date" , "Dropdown" , "MultiSelect" , "Number" , "Text" , "Time"});
 		typeComboBox.setSelectedItem(PARAM_TYPE == null ? "Text" : PARAM_TYPE);
 		paramTypeComboBox.add(typeComboBox);
 		GridBagConstraints gbc_paramTypeComboBox = new GridBagConstraints();
@@ -385,13 +385,15 @@ public class SettingParamsPanel extends JPanel {
 		Vector<ParamFromParamsPanel> res = new Vector<ParamFromParamsPanel>();
 		//
 		for(int i = 0;paramNameField.size() > i;i++) {
+			String pARAM_SEQNO      = paramSeqNoField.get(i).getTextWithCheck();
 			String pARAM_NAME     = paramNameField.get(i).getTextWithCheck();
 			String pARAM_LABEL    = paramLabelField.get(i).getTextWithCheck();
 			String pARAM_ISREQUIRED = (paramIsReqCheckBox.get(i).isSelected()) ? "1" : "0";
 			String pARAM_TYPE     = (String)(paramTypeComboBox.get(i).getSelectedItem()); 
 			String pARAM_CONTENTS = contentsButton.get(i).getContentDialog().getText();
+			String pARAM_DEFAULT      = paramDefaultField.get(i).getTextWithCheck();
 			//
-			ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_NAME, pARAM_LABEL, pARAM_ISREQUIRED, pARAM_TYPE, pARAM_CONTENTS);
+			ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_SEQNO,pARAM_NAME, pARAM_LABEL, pARAM_ISREQUIRED, pARAM_TYPE, pARAM_CONTENTS,pARAM_DEFAULT);
 			res.add(p);
 		}
 		return res;
@@ -400,20 +402,22 @@ public class SettingParamsPanel extends JPanel {
 		Vector<ParamFromParamsPanel> res = new Vector<ParamFromParamsPanel>();
 		//
 		for(int i = 0;paramNameField.size() > i;i++) {
+			String pARAM_SEQNO      = paramSeqNoField.get(i).getText();
 			String pARAM_NAME       = paramNameField.get(i).getText();
 			String pARAM_LABEL      = paramLabelField.get(i).getText();
 			String pARAM_ISREQUIRED = (paramIsReqCheckBox.get(i).isSelected()) ? "1" : "0";
 			String pARAM_TYPE       = (String)(paramTypeComboBox.get(i).getSelectedItem()); 
 			String pARAM_CONTENTS   = contentsButton.get(i).getContentDialog().getText();
+			String pARAM_DEFAULT      = paramDefaultField.get(i).getText();
 			//
-			ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_NAME, pARAM_LABEL,pARAM_ISREQUIRED, pARAM_TYPE, pARAM_CONTENTS);
+			ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_SEQNO,pARAM_NAME, pARAM_LABEL,pARAM_ISREQUIRED, pARAM_TYPE, pARAM_CONTENTS,pARAM_DEFAULT);
 			res.add(p);
 		}
 		return res;
 	}
 	public void addlistParams(List<? extends Params> listParams) {
 		for (Params p : listParams) {
-			addParam(p.getPARAM_NAME() , p.getPARAM_LABEL(),(p.getPARAM_ISREQUIRED().equals("1") ? true : false), p.getPARAM_TYPE(), p.getPARAM_CONTENTS());
+			addParam(p.getPARAM_SEQNO(),p.getPARAM_NAME() , p.getPARAM_LABEL(),(p.getPARAM_ISREQUIRED().equals("1") ? true : false), p.getPARAM_TYPE(), p.getPARAM_CONTENTS(), p.getPARAM_DEFAULT());
 		}
 	}
 }

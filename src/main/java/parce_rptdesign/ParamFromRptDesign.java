@@ -4,6 +4,7 @@ import util.Params;
 
 public class ParamFromRptDesign implements Params {
 	
+	private String seqno;
 	private String name;
 	private String promptText;
 	/**
@@ -27,11 +28,13 @@ public class ParamFromRptDesign implements Params {
 	 */
 	private String isRequired;
 	private String queryText;
+	private String _default;
 	private String dataSetName;
 	
 	
-	public ParamFromRptDesign(String name, String promptText, String dataType, String paramType, String controlType,String isRequired,String dataSetName) {
+	public ParamFromRptDesign(String seqno,String name, String promptText, String dataType, String paramType, String controlType,String isRequired,String _default,String dataSetName) {
 		super();
+		this.seqno = seqno;
 		this.name = name;
 		this.promptText = promptText;
 		this.dataType = dataType;
@@ -39,10 +42,12 @@ public class ParamFromRptDesign implements Params {
 		this.controlType = controlType;
 		this.isRequired = isRequired;
 		this.dataSetName = dataSetName;
+		this._default = _default;
 	}
 	
-	public ParamFromRptDesign(String name, String promptText, String dataType, String paramType, String controlType,String isRequired, String dataSetName, String queryText) {
+	public ParamFromRptDesign(String seqno,String name, String promptText, String dataType, String paramType, String controlType,String isRequired, String dataSetName, String queryText,String _default) {
 		super();
+		this.seqno = seqno;
 		this.name = name;
 		this.promptText = promptText;
 		this.dataType = dataType;
@@ -51,6 +56,7 @@ public class ParamFromRptDesign implements Params {
 		this.isRequired = isRequired;
 		this.queryText = queryText;
 		this.dataSetName = dataSetName;
+		this._default = _default;
 	}
 
 	public String getPARAM_CONTENTS() {
@@ -133,16 +139,13 @@ public class ParamFromRptDesign implements Params {
 		return dataSetName;
 	}
 
-	
-	
-	
+	@Override
+	public String getPARAM_SEQNO() {
+		return seqno;
+	}
 
-
-	
-	
-	
-	
-	
-	
-
+	@Override
+	public String getPARAM_DEFAULT() {
+		return _default;
+	}
 }

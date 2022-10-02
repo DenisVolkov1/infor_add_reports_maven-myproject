@@ -4,15 +4,17 @@ import util.Params;
 
 public class ParamFromParamsPanel implements Params {
 	
-	private String PARAM_NAME, PARAM_LABEL, PARAM_TYPE, PARAM_CONTENTS, PARAM_ISREQUIRED;
+	private String PARAM_SEQNO,PARAM_NAME, PARAM_LABEL, PARAM_TYPE, PARAM_CONTENTS, PARAM_ISREQUIRED, PARAM_DEFAULT;
 
-	public ParamFromParamsPanel(String pARAM_NAME, String pARAM_LABEL,String pARAM_ISREQUIRED, String pARAM_TYPE, String pARAM_CONTENTS) {
+	public ParamFromParamsPanel(String pARAM_SEQNO,String pARAM_NAME, String pARAM_LABEL,String pARAM_ISREQUIRED, String pARAM_TYPE, String pARAM_CONTENTS,String pARAM_DEFAULT) {
 		super();
+		PARAM_SEQNO = pARAM_SEQNO;
 		PARAM_NAME = pARAM_NAME;
 		PARAM_LABEL = pARAM_LABEL;
 		PARAM_ISREQUIRED = pARAM_ISREQUIRED;
 		PARAM_TYPE = pARAM_TYPE;
 		PARAM_CONTENTS = pARAM_CONTENTS;
+		PARAM_DEFAULT=pARAM_DEFAULT;
 		
 	}
 	@Override
@@ -55,7 +57,20 @@ public class ParamFromParamsPanel implements Params {
 	public String getPARAM_ISREQUIRED() {
 		return (PARAM_ISREQUIRED == null) ? "1" : PARAM_ISREQUIRED; 
 	}
-	
+	public void setPARAM_DEFAULT(String pARAM_DEFAULT) {
+		PARAM_DEFAULT = pARAM_DEFAULT;
+	}
+	public void setPARAM_SEQNO(String pARAM_SEQNO) {
+		PARAM_SEQNO = pARAM_SEQNO;
+	}
+	@Override
+	public String getPARAM_SEQNO() {
+		return PARAM_SEQNO;
+	}
+	@Override
+	public String getPARAM_DEFAULT() {
+		return PARAM_DEFAULT;
+	}
 	@Override
 	public String toString() {
 		return "PARAM_NAME = "+ getPARAM_NAME() + "\n" + 
@@ -111,5 +126,6 @@ public class ParamFromParamsPanel implements Params {
 			return false;
 		return true;
 	}
+
 
 }
