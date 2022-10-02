@@ -49,7 +49,7 @@ public class TabSuperClass extends JPanel {
 	
 	protected static ActionListener refreshService;
 	private static ComponentAdapter adapterForWaitingPanels;
-	//private static ComponentAdapter adapterRepositories;
+	
 	
 	
 	protected MyHoverButton paramButton;
@@ -74,46 +74,11 @@ public class TabSuperClass extends JPanel {
 						return null;
 					}
 				};
-				try { Thread.currentThread().sleep(80); } catch (InterruptedException e1) {}
-				
-				listNamesFoldersProject.clear();
-				
-				boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
-				if(isSetRepo) {
-					new DisplayConnectionDelay(TypeConnection.REPO_CONNECTION,"repPathDir", 370L) {
-						
-						@Override
-						protected Object taskThread() throws Exception {
-							refresListNameProjects();//task...
-							return null;
-						}
-					};
-				}
 			}
 		};
 		// add adapter listeners
 		//this.addComponentListener(adapterRepositories);
 		this.addComponentListener(adapterForWaitingPanels);
-		
-		
-//		refreshService = new ActionListener() { 
-//			@Override									
-//			public void actionPerformed(ActionEvent e) {
-//				//Infor SCE Reports Server scprd-reports1 - default
-//				
-//				String nameServiceReport = MyProperties.getProperty("nameServiceReport"); 
-//				try {	
-//					
-//						ServiceWindow.stopService(nameServiceReport);
-//						ServiceWindow.startService(nameServiceReport);
-//				} catch (InfoException e1) {
-//					DialogWindows.dialogWindowError(e1);			
-//				} catch (Exception e2) {
-//					DialogWindows.dialogWindowError(e2);
-//						LOg.logToFile(e2);
-//				}
-//			}
-//		};
 		
 		refreshService = new ActionListener() { 
 		@Override									
@@ -131,17 +96,6 @@ public class TabSuperClass extends JPanel {
 					  
 						File targetWarArchiveFile = Paths.get(MyProperties.getProperty("pathArchiveWar")+"\\scprd_scereports.war.isdeploying").toFile();
 						 public void run() {
-							 
-//							 System.out.println("N = "+n);
-//							 
-//							 if(n > 10) {
-//								 System.out.println("END!!");
-//								   System.out.println(uploadCheckerTimerTask.getClass().getName() + " выполняет фазу " + phaser.getPhase());
-//							        phaser.arriveAndDeregister(); // сообщаем о завершении фаз и удаляем с регистрации объекты 
-//								 uploadCheckerTimerTask.cancel();
-//								 
-//							 }
-//							 n++;
 							 
 							 if(!targetWarArchiveFile.exists()) {
 								 phaser.arriveAndDeregister();
@@ -162,13 +116,8 @@ public class TabSuperClass extends JPanel {
 						Timer uploadCheckerTimer = new Timer(true);
 						uploadCheckerTimer.scheduleAtFixedRate(uploadCheckerTimerTask, 0, 900L );
 						
-					    // ждем завершения фазы 0
-//				        int phase = phaser.getPhase();
 				        phaser.arriveAndAwaitAdvance();
-//				        System.out.println("Фаза " + phase + " завершена");
-//				        System.out.println("Продолжаем работу!");
-					
-						
+
 					} catch (InfoException e1) {
 						hideWaitPanel();
 						DialogWindows.dialogWindowError(e1);			
@@ -229,7 +178,5 @@ public class TabSuperClass extends JPanel {
 	public ComponentAdapter getAdapterForWaitingPanels() {
 		return adapterForWaitingPanels;
 	}
-//	public ComponentAdapter getAdapterRepositories() {
-//		return adapterRepositories;
-//	}
+
 }

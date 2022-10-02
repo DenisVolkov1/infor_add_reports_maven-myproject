@@ -18,8 +18,11 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import util.CategoryAndId;
 import util.DialogWindows;
+import util.DisplayConnectionDelay;
+import util.DisplayConnectionDelay.TypeConnection;
 import util.my_components.MyHoverButton;
 import windows.MainRunWindow;
+import windows.SettingsWindow;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -52,6 +55,7 @@ public class TabRepositories extends TabSuperClass {
 	private JTextField nameReportField;
 	private JComboBox<String> foldersProjectComboBox;
 	private JLabel fileReportLabel;
+	private MyHoverButton repConnectButton;
 	private MyHoverButton fileReportButton;
 	private MyHoverButton createToRepositoriesButton;
 	private JFileChooser fileChooser;
@@ -72,7 +76,7 @@ public class TabRepositories extends TabSuperClass {
 	
 		add(panel);
 		
-		panel.setBounds(55, 0, 437, 288);
+		panel.setBounds(55, 45, 437, 261);
 		
 		foldersProjectComboBox = new JComboBox<String>();
 		foldersProjectComboBox.setMaximumRowCount(10);
@@ -81,6 +85,7 @@ public class TabRepositories extends TabSuperClass {
 		foldersProjectComboBox.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		
 		JLabel lblNewLabel = new JLabel("Project folder in repositories");
+		lblNewLabel.setLocation(0, 10);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		fileReportLabel = new JLabel("");
@@ -88,6 +93,7 @@ public class TabRepositories extends TabSuperClass {
 		fileReportLabel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
 		JLabel nameFileReportLabel = new JLabel("Name file");
+		nameFileReportLabel.setLocation(0, 137);
 		nameFileReportLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		fileReportButton = new MyHoverButton("File ...");
@@ -157,8 +163,16 @@ public class TabRepositories extends TabSuperClass {
 		panel.setLayout(gl_panel);
 		upButton.setToolTipText("find name rep like(sql) '%+(your input in field)+%'");
 		upButton.setMargin(new Insets(2, 2, 2, 2));
-		upButton.setBounds(495, 97, 25, 26);
+		upButton.setBounds(497, 141, 25, 26);
 		add(upButton);
+		
+		repConnectButton = new MyHoverButton("\u2191");
+		repConnectButton.setText("Connection");
+
+		repConnectButton.setToolTipText("Connection to SMB repositories server. ");
+		repConnectButton.setMargin(new Insets(2, 2, 2, 2));
+		repConnectButton.setBounds(55, 12, 82, 26);
+		add(repConnectButton);
 		/////////////Code
 		///////
 		primaryInit();
@@ -177,6 +191,24 @@ public class TabRepositories extends TabSuperClass {
 		
 		fileChooser.addChoosableFileFilter(filter1);
 		fileChooser.addChoosableFileFilter(filterSQL);
+		// Connection to report server
+		repConnectButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				listNamesFoldersProject.clear();
+				
+				boolean isSetRepo = SettingsWindow.enableAddToRepositoriesGetSaveSelected();
+				if(isSetRepo) {
+					new DisplayConnectionDelay(TypeConnection.REPO_CONNECTION,"repPathDir", 370L) {
+						
+						@Override
+						protected Object taskThread() throws Exception {
+							refresListNameProjects();//task...
+							return null;
+						}
+					};
+				}		
+			}
+		});
 		//FILE...
 		fileReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
