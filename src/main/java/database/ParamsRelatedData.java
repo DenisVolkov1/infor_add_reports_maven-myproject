@@ -119,7 +119,7 @@ public class ParamsRelatedData {
 		Vector<ParamFromDataBase> resultVector = new Vector<ParamFromDataBase>();
 		
 		String sql = "USE [SCPRD] "
-					  + "SELECT PARAM_NAME, PARAM_LABEL, IS_REQUIRED, PARAM_TYPE, PARAM_CONTENTS "
+					  + "SELECT SEQ_NO, PARAM_NAME, PARAM_LABEL, IS_REQUIRED, PARAM_TYPE, PARAM_CONTENTS ,PARAM_DEFAULT "
 					  + "FROM ["+schema+"].[PBSRPT_REPORTS_PARAMS]  "
 					  + "WHERE [RPT_ID] = '"+RPT_ID+"'";
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
@@ -127,7 +127,7 @@ public class ParamsRelatedData {
 						ResultSet rs = statement.executeQuery(sql)) {
 			
 			while(rs.next()) {
-				resultVector.add(new ParamFromDataBase(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+				resultVector.add(new ParamFromDataBase(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
 			}
 		} 
 		LOg.logToFile_SQL(sql);

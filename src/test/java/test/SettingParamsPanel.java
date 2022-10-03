@@ -173,8 +173,8 @@ public class SettingParamsPanel extends JPanel {
 		
 
 			List<ParamFromDataBase> l = new Vector<ParamFromDataBase>(10);
-			l.add(new ParamFromDataBase("p1", "ï1", "Text", null, ""));
-			l.add(new ParamFromDataBase("p4", "ï4", "Text", null, ""));
+			//l.add(new ParamFromDataBase("p1", "ï1", "Text", null, ""));
+		//	l.add(new ParamFromDataBase("p4", "ï4", "Text", null, ""));
 			//l.add(new ParamFromDataBase("p5", "ï5", "Text", null));
 			//l.add(new ParamFromDataBase("p3", "ï3", "Text", null));
 			//l.add(new ParamFromDataBase("p2", "ï2", "Text", null));
@@ -304,8 +304,8 @@ public class SettingParamsPanel extends JPanel {
 			String pARAM_TYPE     = (String)(paramTypeComboBox.get(i).getSelectedItem()); 
 			String pARAM_CONTENTS = contentsButton.get(i).getContentDialog().getText();
 			//
-			ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_NAME, pARAM_LABEL, pARAM_TYPE, pARAM_CONTENTS, pARAM_CONTENTS);
-			res.add(p);
+			//ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_NAME, pARAM_LABEL, pARAM_TYPE, pARAM_CONTENTS, pARAM_CONTENTS);
+			//res.add(p);
 		}
 		return res;
 	}
@@ -318,8 +318,8 @@ public class SettingParamsPanel extends JPanel {
 			String pARAM_TYPE     = (String)(paramTypeComboBox.get(i).getSelectedItem()); 
 			String pARAM_CONTENTS = contentsButton.get(i).getContentDialog().getText();
 			//
-			ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_NAME, pARAM_LABEL, pARAM_TYPE, pARAM_CONTENTS, pARAM_CONTENTS);
-			res.add(p);
+			//ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_NAME, pARAM_LABEL, pARAM_TYPE, pARAM_CONTENTS, pARAM_CONTENTS);
+			//res.add(p);
 		}
 		return res;
 	}

@@ -110,6 +110,7 @@ public class ReadXML {
 			String queryText = null;
 			String hidden = null;
 			String isRequired = null;
+			String _default = null;
 			ParamFromRptDesign param = null;
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();  
@@ -118,6 +119,7 @@ public class ReadXML {
 		doc.getDocumentElement().normalize(); 
 		
 		NodeList nodeList = doc.getElementsByTagName("scalar-parameter");
+		int seqNoParamOnFileDesign = 1;
 		
 		NEXT_PARAMETR :
 			for (int itr = 0; itr < nodeList.getLength(); itr++) {  
@@ -166,20 +168,33 @@ public class ReadXML {
 									if ((eElement2.getAttribute("name")).equals("promptText")) {
 										promptText = eElement2.getTextContent();
 									}
+							}
+							
+					NodeList nodeListDefaultValuesProperty = eElement.getElementsByTagName("simple-property-list");	
+							
+							for (int itr2 = 0; itr2 < nodeListDefaultValuesProperty.getLength(); itr2++) {
+								Node node2 = nodeListDefaultValuesProperty.item(itr2); 
+									Element eElement2 = (Element) node2;
+									
+									if ((eElement2.getAttribute("name")).equals("defaultValue")) {
+										_default = eElement2.getTextContent().trim();
+									}
 							}		
 				}
 				
 				isRequired = (isRequired == null) ? "true" : isRequired; // bug property name="isRequired" maybe is not exists.
 				int i=0;
 				param = new ParamFromRptDesign(
-						i++,
+						Integer.toString(seqNoParamOnFileDesign++),
 						name,
 						promptText,
 						dataType,
 						paramType,
 						controlType,
 						isRequired,
+						_default,
 						dataSetName);
+				//
 				listParams.add(param);
 				//end loop
 			}
