@@ -3,18 +3,11 @@ package windows.tabs.add;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-
 import javax.swing.JLabel;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.joda.time.DateTime;
-import org.xml.sax.SAXException;
-
-import database.ConnectionMSSQL;
 import database.ParamsRelatedData;
 import database.ReportRelatedData;
 import exception.ConfirmException;
@@ -27,7 +20,6 @@ import util.CategoryAndId;
 import util.DialogWindows;
 import util.DisplayWaitingForWorkingTask;
 import util.ListCellRendererCategory;
-import util.MyProperties;
 import util.Util;
 import util.my_components.MyField;
 import util.my_components.MyHoverButton;
@@ -35,7 +27,6 @@ import util.my_components.MyHoverToggleButton;
 import war.WarArchive;
 import windows.MainRunWindow;
 import windows.SettingsWindow;
-import windows.param.ParamsPanel;
 import windows.param.ParamFromParamsPanel;
 import windows.tabs.TabSuperClass;
 
@@ -43,37 +34,26 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.JButton;
 import java.awt.Cursor;
 import java.awt.ComponentOrientation;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JToggleButton;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JCheckBox;
-import java.awt.CardLayout;
 
 public class TabAddReport extends TabSuperClass {
 	
@@ -396,7 +376,7 @@ public class TabAddReport extends TabSuperClass {
 					nameReportFileField.setEnabled(false);
 					nameReportFileField.setEditable(false);
 					nameFileReportLabelTF.setEnabled(false);
-					//paramButton.setEnabled(false);
+					paramButton.setEnabled(false);
 		
 					autoInsertCheckBox.setEnabled(false);
 					rptIdLabel.setEnabled(false);
@@ -427,8 +407,9 @@ public class TabAddReport extends TabSuperClass {
 						nameReportFileField.setEnabled(true);
 						nameReportFileField.setEditable(true);
 						nameFileReportLabelTF.setEnabled(true);
-						//paramButton.setEnabled(true);
+						//
 					}
+					paramButton.setEnabled(true);
 				}
 			}
 		});
@@ -471,123 +452,123 @@ public class TabAddReport extends TabSuperClass {
 		});
 		
 		addReportButton.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-			try {
-				matchCheckingValidInputDataAndConnections();
-			} catch (InfoException ie) {
-				 DialogWindows.dialogWindowError(ie); 
-				 return;
-			} catch (Exception e1) {
-				 DialogWindows.dialogWindowError(e1);
-				 	LOg.logToFile(e1);
-				 return;
-			} 
-			
-			new DisplayWaitingForWorkingTask("Adding report... please wait. ") {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					matchCheckingValidInputDataAndConnections();
+				} catch (InfoException ie) {
+					 DialogWindows.dialogWindowError(ie); 
+					 return;
+				} catch (Exception e1) {
+					 DialogWindows.dialogWindowError(e1);
+					 	LOg.logToFile(e1);
+					 return;
+				} 
 				
-				@Override
-				public Object taskThread() throws Exception {
+				new DisplayWaitingForWorkingTask("Adding report... please wait. ") {
 					
-					String RPT_ID;
-					String nameReport = null;
-					String nameFileReport = null;
-					String nameProgect = null;
-					Integer categoryId = null;
-					File selectedFile = null;
-					boolean isExistTableParams = false;
-					List<ParamFromRptDesign> paramsFromDesign = null;
-					List<ParamFromParamsPanel> paramsFromPanel = null;
-					
-					final String autoRPT_ID = new DateTime().toString("ddHHmmss");
-			
-					try {
+					@Override
+					public Object taskThread() throws Exception {
 						
-						if(addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
+						String RPT_ID;
+						String nameReport = null;
+						String nameFileReport = null;
+						String nameProgect = null;
+						Integer categoryId = null;
+						File selectedFile = null;
+						boolean isExistTableParams = false;
+						List<ParamFromRptDesign> paramsFromDesign = null;
+						List<ParamFromParamsPanel> paramsFromPanel = null;
+						
+						final String autoRPT_ID = new DateTime().toString("ddHHmmss");
+				
+						try {
 							
-							isExistTableParams = ParamsRelatedData.isExistTableParams();
-							//
-							RPT_ID         = RPT_IDField.getTextWithCheck();
-							nameReport     = nameReportField.getTextWithCheck();
-							categoryId     = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
-							selectedFile   = fileChooser.getSelectedFile();
-							nameFileReport = selectedFile.toPath().getFileName().toString();
-							nameProgect    = (String)foldersProjectComboBox.getSelectedItem();
-							paramsFromDesign = ReadXML.getListOfParamsFromRptDesign(selectedFile);
+							if(addDataBaseToggleButton.isSelected() && addArchiveToggleButton.isSelected()) {
+								
+								isExistTableParams = ParamsRelatedData.isExistTableParams();
+								//
+								RPT_ID         = RPT_IDField.getTextWithCheck();
+								nameReport     = nameReportField.getTextWithCheck();
+								categoryId     = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
+								selectedFile   = fileChooser.getSelectedFile();
+								nameFileReport = selectedFile.toPath().getFileName().toString();
+								nameProgect    = (String)foldersProjectComboBox.getSelectedItem();
+								paramsFromDesign = ReadXML.getListOfParamsFromRptDesign(selectedFile);
+								
+								if (autoInsertCheckBox.isSelected()) {
+									ReportRelatedData.insertReport(autoRPT_ID, nameReport, categoryId, nameFileReport);
+									if (isExistTableParams) ParamsRelatedData.insertParam(paramsFromDesign, autoRPT_ID);
+								} else {
+									ReportRelatedData.insertReport(RPT_ID, nameReport, categoryId, nameFileReport);
+									if (isExistTableParams) ParamsRelatedData.insertParam(paramsFromDesign, RPT_ID);
+								}
+								
+								WarArchive.createBackup(selectedFile);
+									WarArchive.addOrUpdateReportFileInArchive(selectedFile);
+									if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
+										FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile,FilesRepository.Type.CREATE);
+									}
+									if (newParam != null) {
+										newParam = null;
+										paramButton.setEmptyHover();
+									}
+										//DialogWindows.dialogWindowWarning("Report successfully added!");
+							} else if (addDataBaseToggleButton.isSelected()) {
+								isExistTableParams = ParamsRelatedData.isExistTableParams();
+								//
+								RPT_ID         = RPT_IDField.getTextWithCheck();
+								nameReport     = nameReportField.getTextWithCheck();
+								nameFileReport = nameReportFileField.getTextWithCheck();
+								categoryId     = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
+								if (newParam != null) paramsFromPanel = newParam.getSettingParamsPanel().getlistOfParams();
 							
-							if (autoInsertCheckBox.isSelected()) {
-								ReportRelatedData.insertReport(autoRPT_ID, nameReport, categoryId, nameFileReport);
-								if (isExistTableParams) ParamsRelatedData.insertParam(paramsFromDesign, autoRPT_ID);
-							} else {
-								ReportRelatedData.insertReport(RPT_ID, nameReport, categoryId, nameFileReport);
-								if (isExistTableParams) ParamsRelatedData.insertParam(paramsFromDesign, RPT_ID);
-							}
-							
-							WarArchive.createBackup(selectedFile);
-								WarArchive.addOrUpdateReportFileInArchive(selectedFile);
-								if (SettingsWindow.enableAddToRepositoriesGetSaveSelected()) {
-									FilesRepository.sendFilesToStorage(nameReport, nameProgect, selectedFile,FilesRepository.Type.CREATE);
+								//
+								if (autoInsertCheckBox.isSelected()) {
+									ReportRelatedData.insertReport(autoRPT_ID, nameReport, categoryId, nameFileReport);
+									if (isExistTableParams && newParam != null) {
+										ParamsRelatedData.insertParam(paramsFromPanel, autoRPT_ID);
+									}
+								
+								} else {
+									ReportRelatedData.insertReport(RPT_ID, nameReport, categoryId, nameFileReport);
+									if (isExistTableParams && newParam != null) ParamsRelatedData.insertParam(paramsFromPanel, RPT_ID);
 								}
 								if (newParam != null) {
 									newParam = null;
 									paramButton.setEmptyHover();
 								}
-									//DialogWindows.dialogWindowWarning("Report successfully added!");
-						} else if (addDataBaseToggleButton.isSelected()) {
-							isExistTableParams = ParamsRelatedData.isExistTableParams();
-							//
-							RPT_ID         = RPT_IDField.getTextWithCheck();
-							nameReport     = nameReportField.getTextWithCheck();
-							nameFileReport = nameReportFileField.getTextWithCheck();
-							categoryId     = ((CategoryAndId) categoriesComboBox.getSelectedItem()).getCategoryId();
-							if (newParam != null) paramsFromPanel = newParam.getSettingParamsPanel().getlistOfParams();
+										//DialogWindows.dialogWindowWarning("Report successfully added!");
+							} else if (addArchiveToggleButton.isSelected()) {
+								selectedFile = fileChooser.getSelectedFile();
+								nameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
 						
-							//
-							if (autoInsertCheckBox.isSelected()) {
-								ReportRelatedData.insertReport(autoRPT_ID, nameReport, categoryId, nameFileReport);
-								if (isExistTableParams && newParam != null) {
-									ParamsRelatedData.insertParam(paramsFromPanel, autoRPT_ID);
-								}
-							
+								 WarArchive.createBackup(selectedFile);
+								 	WarArchive.addOrUpdateReportFileInArchive(selectedFile);
+								 		//DialogWindows.dialogWindowWarning("Report file successfully added!");
+								 		
 							} else {
-								ReportRelatedData.insertReport(RPT_ID, nameReport, categoryId, nameFileReport);
-								if (isExistTableParams && newParam != null) ParamsRelatedData.insertParam(paramsFromPanel, RPT_ID);
+								hideWaitPanel();
+								DialogWindows.dialogWindowWarning("No one toggle button is pressed!");
+								return null;
 							}
-							if (newParam != null) {
-								newParam = null;
-								paramButton.setEmptyHover();
-							}
-									//DialogWindows.dialogWindowWarning("Report successfully added!");
-						} else if (addArchiveToggleButton.isSelected()) {
-							selectedFile = fileChooser.getSelectedFile();
-							nameFileReport = fileChooser.getSelectedFile().toPath().getFileName().toString();
-					
-							 WarArchive.createBackup(selectedFile);
-							 	WarArchive.addOrUpdateReportFileInArchive(selectedFile);
-							 		//DialogWindows.dialogWindowWarning("Report file successfully added!");
-							 		
-						} else {
 							hideWaitPanel();
-							DialogWindows.dialogWindowWarning("No one toggle button is pressed!");
-							return null;
+								DialogWindows.dialogWindowWarning("Report file successfully added!");
+							//
+						} catch (InfoException ie) {
+							hideWaitPanel();
+							 DialogWindows.dialogWindowError(ie); 
+						} catch (ConfirmException ce) { 
+							//return
+						} catch (Exception e1) {
+							hideWaitPanel();
+							 DialogWindows.dialogWindowError(e1);
+							 	LOg.logToFile(e1);
 						}
-						hideWaitPanel();
-							DialogWindows.dialogWindowWarning("Report file successfully added!");
-						//
-					} catch (InfoException ie) {
-						hideWaitPanel();
-						 DialogWindows.dialogWindowError(ie); 
-					} catch (ConfirmException ce) { 
-						//return
-					} catch (Exception e1) {
-						hideWaitPanel();
-						 DialogWindows.dialogWindowError(e1);
-						 	LOg.logToFile(e1);
+						
+					return null;
 					}
-					
-				return null;
-				}
-			};
-		}	
+				};
+			}	
 	});
 		
 		

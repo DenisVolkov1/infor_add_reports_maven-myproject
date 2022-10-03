@@ -73,11 +73,13 @@ public class ParamFromParamsPanel implements Params {
 	}
 	@Override
 	public String toString() {
-		return "PARAM_NAME = "+ getPARAM_NAME() + "\n" + 
+		return "PARAM_SEQNO = "+ getPARAM_SEQNO() + "\n" + 
+				"PARAM_NAME = "+ getPARAM_NAME() + "\n" + 
 			   "PARAM_LABEL = "+ getPARAM_LABEL() + "\n"+
 			   "PARAM_ISREQUIRED = "+ getPARAM_ISREQUIRED() + "\n"+
 			   "PARAM_TYPE = "+ getPARAM_TYPE()+ "\n"+
-			   "PARAM_CONTENTS = "+ getPARAM_CONTENTS()+ "\n";
+			   "PARAM_CONTENTS = "+ getPARAM_CONTENTS()+ "\n"+
+			   "PARAM_DEFAULT = "+ getPARAM_DEFAULT()+ "\n";
 	}
 	@Override
 	public int hashCode() {
