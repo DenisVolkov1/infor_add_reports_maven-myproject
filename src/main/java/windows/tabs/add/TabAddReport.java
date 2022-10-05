@@ -339,6 +339,9 @@ public class TabAddReport extends TabSuperClass {
 						ipDataSrcLabel.setText(ReadXML.getIpDataSource(fileChooser.getSelectedFile()));
 						ipDataSrcLabel.setToolTipText(ReadXML.getIpDataSource(fileChooser.getSelectedFile()));
 							Util.changeColorErrDataSource(ReadXML.getIpDataSource(fileChooser.getSelectedFile()), ipDataSrcLabel);
+							
+						List<ParamFromRptDesign> paramsFromDesign = ReadXML.getListOfParamsFromRptDesign(fileChooser.getSelectedFile());	
+						newParam = new ParamsPanelAdd(paramsFromDesign);						
 					}
 				} catch (Exception e2) {
 					DialogWindows.dialogWindowError(e2);

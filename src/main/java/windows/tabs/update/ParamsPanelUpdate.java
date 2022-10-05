@@ -26,7 +26,7 @@ public class ParamsPanelUpdate extends ParamsPanel {
 			Vector<ParamFromDataBase> params = ParamsRelatedData.getListOfParam(RPT_ID);
 			settingParamsPanel.addlistParams(params);
 		// init params
-			initParams = settingParamsPanel.getlistOfParamsNotCheck();
+			initParams = super.settingParamsPanel.getlistOfParamsNotCheck();
 			
 			this.addWindowListener(new WindowAdapter() {
 				@Override
