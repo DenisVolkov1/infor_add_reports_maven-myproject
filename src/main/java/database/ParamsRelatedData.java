@@ -39,7 +39,7 @@ public class ParamsRelatedData {
 	 * @param PARAM_ISREQUIRED - '0'-false '1'-true
 	 * */
 
-	public static void insertParam(String RPT_ID, String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS,String PARAM_ISREQUIRED) throws ClassNotFoundException, SQLException {
+	public static void insertParam(String RPT_ID, String PARAM_SEQNO, String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS,String PARAM_ISREQUIRED, String PARAM_DEFAULT) throws ClassNotFoundException, SQLException {
 		String schema = MyProperties.getProperty("schema");
 		String PARAM_CONTENTS_TYPE = "NULL";
 		if(PARAM_CONTENTS == null) PARAM_CONTENTS = "NULL";
@@ -139,12 +139,13 @@ public class ParamsRelatedData {
 		
 		String schema = MyProperties.getProperty("schema");
 		String PARAM_CONTENTS_TYPE = "NULL";
-		
+		 String PARAM_SEQNO       = null;
 		 String PARAM_NAME   	  = null;
 		 String PARAM_LABEL  	  = null;
 		 String PARAM_TYPE   	  = null;
 		 String PARAM_CONTENTS    = null;
 		 String PARAM_ISREQUIRED  = null;
+		 String PARAM_DEFAULT     = null;
 			
 			String insertPBSRPT_REPORTS_PARAMS = ""
 					+ "USE [SCPRD] "
@@ -170,12 +171,13 @@ public class ParamsRelatedData {
 			StringBuilder values = new StringBuilder();
 			
 				for(int i = 0; listParams.size() > i; i++) {
-					
+					PARAM_SEQNO  = listParams.get(i).getPARAM_SEQNO();
 					PARAM_NAME 	 = listParams.get(i).getPARAM_NAME();
 				    PARAM_LABEL	 = listParams.get(i).getPARAM_LABEL();
 				    PARAM_TYPE 	 = listParams.get(i).getPARAM_TYPE();
 				    PARAM_CONTENTS = listParams.get(i).getPARAM_CONTENTS();
 				    PARAM_ISREQUIRED = listParams.get(i).getPARAM_ISREQUIRED();
+				    PARAM_DEFAULT = listParams.get(i).getPARAM_DEFAULT();
 				
 				  if(PARAM_CONTENTS == null) {
 					  PARAM_CONTENTS = "NULL";
@@ -193,8 +195,8 @@ public class ParamsRelatedData {
 			        "   '',                  "+
 			        "   NULL,                "+
 			        "   "+PARAM_CONTENTS_TYPE+","+
-			        "   NULL,                "+
-			        "   1,                   "+
+			        "   "+PARAM_DEFAULT+",   "+
+			        "   "+PARAM_SEQNO+",     "+
 			        "   NULL,                "+
 			        "   NULL,                "+
 			        "   '"+PARAM_ISREQUIRED+"',  "+
