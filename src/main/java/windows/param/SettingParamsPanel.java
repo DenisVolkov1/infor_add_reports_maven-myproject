@@ -51,6 +51,7 @@ public class SettingParamsPanel extends JPanel {
 	private JPanel panelGrid;
 	private ActionListener deleteButtonListener;
 	private GridBagLayout gbl_panelGrid;
+	protected int seqNo_=1;
 	
 	private static int _WIDTH = 890;
 	private static int _X = 1;
@@ -158,19 +159,21 @@ public class SettingParamsPanel extends JPanel {
 		add(panelGrid);
 		add(addButton);
 		
+		
 		addButton.addActionListener(new ActionListener() {
-	    
+			
 			public void actionPerformed(ActionEvent e) {
 				if (paramNameField.size() >= 15) return;
 				//add new param
-				addParam(null, null, null, true, null, null, null);
+				addParam(Integer.toString(seqNo_++), null, null, true, null, null, null);
 			}
 		});
 		
 		deleteButtonListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-		
+				if(seqNo_!=1)seqNo_--;
+				
 				int c = Integer.parseInt(e.getActionCommand());
 				
 				panelGrid.removeAll();
