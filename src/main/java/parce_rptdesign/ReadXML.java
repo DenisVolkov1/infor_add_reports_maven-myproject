@@ -183,7 +183,7 @@ public class ReadXML {
 				}
 				
 				isRequired = (isRequired == null) ? "true" : isRequired; // bug property name="isRequired" maybe is not exists.
-				int i=0;
+				
 				param = new ParamFromRptDesign(
 						Integer.toString(seqNoParamOnFileDesign++),
 						name,

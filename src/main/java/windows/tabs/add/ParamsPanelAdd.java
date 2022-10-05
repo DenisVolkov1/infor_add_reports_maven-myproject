@@ -10,11 +10,12 @@ import database.ParamFromDataBase;
 import database.ParamsRelatedData;
 import parce_rptdesign.ParamFromRptDesign;
 import parce_rptdesign.ReadXML;
+import windows.param.ParamFromParamsPanel;
 import windows.param.ParamsPanel;
 import windows.param.SettingParamsPanel;
 
 public class ParamsPanelAdd extends ParamsPanel {
-	
+	private Vector <ParamFromParamsPanel> initParams = null;
 	private SettingParamsPanel spp;
 	
 	public ParamsPanelAdd() {
@@ -43,17 +44,25 @@ public class ParamsPanelAdd extends ParamsPanel {
 		setBounds(100, 100, 932, 288);
 		// set params
 		spp.addlistParams(paramsFromDesign);
+		// init params
+		initParams = super.settingParamsPanel.getlistOfParamsNotCheck();
 		
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 			
-				int size = spp.getlistOfParamsNotCheck().size();
+				int size = initParams.size();
 
 				if (size != 0) TabAddReport.getInstance().getNewParamButton().setStandartHover();
 				else TabAddReport.getInstance().getNewParamButton().setEmptyHover();
 			}
 		});
 		this.setVisible(true);
+	}
+	public void setParams(List<ParamFromRptDesign> paramsFromDesign) {
+		spp.addlistParams(paramsFromDesign);
+	}
+	public Vector<ParamFromParamsPanel> getInitParams() {
+		return initParams;
 	}
 }

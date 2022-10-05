@@ -214,7 +214,7 @@ public class SettingParamsPanel extends JPanel {
 		MyField seqnoField = new MyField("param: param seqno");
 		seqnoField.setHorizontalAlignment(SwingConstants.CENTER);
 		seqnoField.setFont(new Font("Dialog", Font.PLAIN, 14));
-		seqnoField.setText(PARAM_NAME == null ? "" : PARAM_NAME);
+		seqnoField.setText(PARAM_SEQNO == null ? "" : PARAM_SEQNO);
 		paramSeqNoField.add(seqnoField);
 		GridBagConstraints gbc_paramSeqnoField = new GridBagConstraints();
 		
@@ -289,7 +289,7 @@ public class SettingParamsPanel extends JPanel {
 		MyField defaultField = new MyField("param: param default");
 		defaultField.setHorizontalAlignment(SwingConstants.CENTER);
 		defaultField.setFont(new Font("Dialog", Font.PLAIN, 14));
-		defaultField.setText(PARAM_NAME == null ? "" : PARAM_NAME);
+		defaultField.setText(PARAM_DEFAULT == null ? "" : PARAM_DEFAULT);
 		paramDefaultField.add(defaultField);
 		GridBagConstraints gbc_paramDefaultField = new GridBagConstraints();
 		
