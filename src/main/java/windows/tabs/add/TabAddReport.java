@@ -81,6 +81,7 @@ public class TabAddReport extends TabSuperClass {
 	private JComboBox<String> foldersProjectComboBox;
 	private JLabel lblNewLabel;
 	protected ParamsPanelAdd newParam;
+	private MyHoverButton newParamButton;
 
 
 	/**
@@ -169,10 +170,11 @@ public class TabAddReport extends TabSuperClass {
 		lblNewLabel = new JLabel("Project folder in repositories");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		//newParamButton = new MyHoverButton("New Param");
-		paramButton.setText("New Param");
-		paramButton.setFont(new Font("Dialog", Font.BOLD, 12));
-		paramButton.setEmptyHover();
+		newParamButton = new MyHoverButton("New Param");
+		super.paramButton=newParamButton;
+		newParamButton.setText("New Param");
+		newParamButton.setFont(new Font("Dialog", Font.BOLD, 12));
+		newParamButton.setEmptyHover();
 	
 		GroupLayout gl_addReportPanel = new GroupLayout(addReportPanel);
 		gl_addReportPanel.setHorizontalGroup(
@@ -220,7 +222,7 @@ public class TabAddReport extends TabSuperClass {
 																.addPreferredGap(ComponentPlacement.RELATED)
 																.addComponent(autoInsertCheckBox)
 																.addPreferredGap(ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
-																.addComponent(paramButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+																.addComponent(newParamButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 															.addComponent(nameReportField, GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
 															.addComponent(nameReportFileField, GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE))))))))
 								.addComponent(foldersProjectComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE))
@@ -251,7 +253,7 @@ public class TabAddReport extends TabSuperClass {
 									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 									.addComponent(nameReportLabel))
 								.addGroup(gl_addReportPanel.createSequentialGroup()
-									.addComponent(paramButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+									.addComponent(newParamButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 									.addGap(8)))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)

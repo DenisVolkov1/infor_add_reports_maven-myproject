@@ -77,7 +77,7 @@ public class TabUpdateReport extends TabSuperClass {
 	private JFileChooser fileChooser;
 	private MyHoverButton refreshServiceButton;
 	private MyHoverButton inputNewValuesButton;
-	//private MyHoverButton paramsButton;
+	private MyHoverButton paramsButton;
 	private JLabel ipDataSrcLabel;
 	private JComboBox<String> foldersProjectComboBox;
 	private JLabel lblProjectFolderIn;
@@ -87,7 +87,7 @@ public class TabUpdateReport extends TabSuperClass {
 	/**
 	 * Create the panel.
 	 */
-	private TabUpdateReport() {
+	public TabUpdateReport() {
 		
 		setPreferredSize(new Dimension(582, 398));
 		setLayout(null);
@@ -157,10 +157,11 @@ public class TabUpdateReport extends TabSuperClass {
 		lblProjectFolderIn = new JLabel("Project folder in repositories");
 		lblProjectFolderIn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		//paramsButton = new MyHoverButton("Params");
-		paramButton.setText("Params");
-		paramButton.setFont(new Font("Dialog", Font.BOLD, 12));
-		paramButton.setEmptyHover();
+		paramsButton = new MyHoverButton("Params");
+		super.paramButton = paramsButton;
+		paramsButton.setText("Params");
+		paramsButton.setFont(new Font("Dialog", Font.BOLD, 12));
+		paramsButton.setEmptyHover();
 		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
@@ -187,7 +188,7 @@ public class TabUpdateReport extends TabSuperClass {
 												.addComponent(fileReportButton, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
 											.addComponent(nameFileReportLabel, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
 										.addGroup(gl_panel.createSequentialGroup()
-											.addComponent(paramButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(paramsButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 											.addPreferredGap(ComponentPlacement.UNRELATED)
 											.addComponent(inputNewValuesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 								.addGroup(gl_panel.createSequentialGroup()
@@ -221,7 +222,7 @@ public class TabUpdateReport extends TabSuperClass {
 							.addGap(36)
 							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
 								.addComponent(inputNewValuesButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-								.addComponent(paramButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(paramsButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)))
 						.addComponent(updateDataBaseToggleButton, GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(gl_panel.createSequentialGroup()

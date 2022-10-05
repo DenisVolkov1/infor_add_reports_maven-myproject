@@ -56,7 +56,7 @@ public class TabSuperClass extends JPanel {
 
 	
 	public TabSuperClass() {
-		paramButton = new MyHoverButton();
+		//paramButton = new MyHoverButton();
 		//
 		adapterForWaitingPanels = new ComponentAdapter() {
 			@Override
@@ -69,8 +69,10 @@ public class TabSuperClass extends JPanel {
 					@Override
 					protected Object taskThread() throws Exception {
 				    		refreshCategory();
-				    		if(!ParamsRelatedData.isExistTableParams()) paramButton.setVisible(false);
-				    		else paramButton.setVisible(true);
+				    		if(paramButton != null ) {
+					    		if(!ParamsRelatedData.isExistTableParams()) paramButton.setVisible(false);
+					    		else paramButton.setVisible(true);
+				    		}
 						return null;
 					}
 				};
@@ -171,10 +173,10 @@ public class TabSuperClass extends JPanel {
 			smbFile.connect();
 		}
 	}
-	protected void checkConnection() throws Exception {
-		checkBaseConnection();
-		checkRepoConnection();
-	}
+//	protected void checkConnection() throws Exception {
+//		checkBaseConnection();
+//		checkRepoConnection();
+//	}
 	public ComponentAdapter getAdapterForWaitingPanels() {
 		return adapterForWaitingPanels;
 	}
