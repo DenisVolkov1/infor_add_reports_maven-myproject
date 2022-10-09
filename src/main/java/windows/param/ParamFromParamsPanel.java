@@ -69,6 +69,7 @@ public class ParamFromParamsPanel implements Params {
 	}
 	@Override
 	public String getPARAM_DEFAULT() {
+		if(PARAM_DEFAULT==null) return null;
 		return (PARAM_DEFAULT.isEmpty()) ? null : PARAM_DEFAULT;
 	}
 	@Override

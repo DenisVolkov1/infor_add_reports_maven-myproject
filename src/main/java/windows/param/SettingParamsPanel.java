@@ -421,7 +421,14 @@ public class SettingParamsPanel extends JPanel {
 	}
 	public void addlistParams(List<? extends Params> listParams) {
 		for (Params p : listParams) {
-			addParam(p.getPARAM_SEQNO(),p.getPARAM_NAME() , p.getPARAM_LABEL(),(p.getPARAM_ISREQUIRED().equals("1") ? true : false), p.getPARAM_TYPE(), p.getPARAM_CONTENTS(), p.getPARAM_DEFAULT());
+			this.addParam(p.getPARAM_SEQNO(),
+						  p.getPARAM_NAME(),
+						  p.getPARAM_LABEL(),
+						  p.getPARAM_ISREQUIRED().equals("1") ? true : false,
+						  p.getPARAM_TYPE(),
+						  p.getPARAM_CONTENTS() == null ? "" : p.getPARAM_CONTENTS(),
+						  p.getPARAM_DEFAULT() == null ? "" : p.getPARAM_DEFAULT());
 		}
+		seqNo_=listParams.size()+1;	
 	}
 }

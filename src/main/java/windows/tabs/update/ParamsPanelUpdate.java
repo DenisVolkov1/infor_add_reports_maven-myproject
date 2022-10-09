@@ -21,7 +21,7 @@ public class ParamsPanelUpdate extends ParamsPanel {
 	public ParamsPanelUpdate(String RPT_ID) throws Exception {
 	
 		this.RPT_IDInput = RPT_ID; 
-		setBounds(100, 100, 652, 88);
+		setBounds(100, 100, 932, 138);
 		// set params
 			Vector<ParamFromDataBase> params = ParamsRelatedData.getListOfParam(RPT_ID);
 			settingParamsPanel.addlistParams(params);
@@ -37,7 +37,7 @@ public class ParamsPanelUpdate extends ParamsPanel {
 			});
 			
 			int plusHeight = params.size() * 34;
-			setBounds(100, 100, 757, startHeight + 50 + plusHeight);
+			setBounds(100, 100, 932, startHeight + 50 + plusHeight);
 	setVisible(true);		
 	}
 

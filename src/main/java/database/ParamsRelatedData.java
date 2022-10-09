@@ -39,62 +39,7 @@ public class ParamsRelatedData {
 	 * @param PARAM_ISREQUIRED - '0'-false '1'-true
 	 * */
 
-	public static void insertParam(String RPT_ID, String PARAM_SEQNO, String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS,String PARAM_ISREQUIRED, String PARAM_DEFAULT) throws ClassNotFoundException, SQLException {
-		String schema = MyProperties.getProperty("schema");
-		String PARAM_CONTENTS_TYPE = "NULL";
-		if(PARAM_CONTENTS == null) PARAM_CONTENTS = "NULL";
-		else {
-			PARAM_CONTENTS_TYPE = "'SQL'";
-		}
-		
-		String insertPBSRPT_REPORTS_PARAMS = ""
-				+ "USE [SCPRD] "
-				+ "INSERT INTO ["+schema+"].[PBSRPT_REPORTS_PARAMS](" + 
-				" [RPT_ID] "+
-		        ",[PARAM_NAME] "+
-		        ",[PARAM_TYPE] "+
-		        ",[PARAM_LABEL] "+
-		        ",[PARAM_CONTENTS] "+
-		        ",[SQL_PARAMS] "+
-		        ",[SQL_SCHEMA] "+
-		        ",[PARAM_CONTENTS_TYPE] "+
-		        ",[PARAM_DEFAULT] "+
-		        ",[SEQ_NO] "+
-		        ",[PARAM_GROUP] "+
-		        ",[PARAM_GROUP_LABEL] "+
-		        ",[IS_REQUIRED] "+
-				",[ADDWHO] " +
-				",[EDITWHO] " +
-		        ") "+
-		        "VALUES("+
-		        "  '"+RPT_ID+"',         "+
-		        "  N'"+PARAM_NAME+"',     "+
-		        "   '"+PARAM_TYPE+"',    "+
-		        "  N'"+PARAM_LABEL+"',   "+
-		        "   "+PARAM_CONTENTS+",  "+
-		        "   '',                  "+
-		        "   NULL,                "+
-		        "   "+PARAM_CONTENTS_TYPE+","+
-		        "   NULL,                "+
-		        "   1,                   "+
-		        "   NULL,                "+
-		        "   NULL,                "+
-		        "   '"+PARAM_ISREQUIRED+"',"+
-				"	N'add_rep',  " +
-				"	N'add_rep'" +
-				")";
-		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
-				Statement statement = connection.createStatement();
-				PreparedStatement insertPar = connection.prepareStatement(insertPBSRPT_REPORTS_PARAMS)) {
-			
-			connection.setAutoCommit(false);	
-			insertPar.execute();
-			connection.commit();
-			
-		}
-		LOg.logToFile_SQL(insertPBSRPT_REPORTS_PARAMS);
-		
-	}
+	public static void insertParam(String RPT_ID, String PARAM_SEQNO, String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS,String PARAM_ISREQUIRED, String PARAM_DEFAULT) throws ClassNotFoundException, SQLException {}
 	
 	public static Vector<String> getListOfParamName(String RPT_ID) throws ClassNotFoundException, SQLException {
 		String schema = MyProperties.getProperty("schema"); 
@@ -139,7 +84,6 @@ public class ParamsRelatedData {
 		
 		String schema = MyProperties.getProperty("schema");
 		String insertPBSRPT_REPORTS_PARAMS = getStringINSERT_REPORT_GATPARAM(schema, RPT_ID, listParams);
-		System.out.println(insertPBSRPT_REPORTS_PARAMS);
 		
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();
@@ -257,6 +201,7 @@ public class ParamsRelatedData {
 			    PARAM_DEFAULT = listParams.get(i).getPARAM_DEFAULT();
 			    
 			  if(PARAM_DEFAULT == null)  PARAM_DEFAULT = "NULL";
+			  else PARAM_DEFAULT="'"+PARAM_DEFAULT+"'";
 			  if(PARAM_CONTENTS == null) {
 				  PARAM_CONTENTS = "NULL";
 				  PARAM_CONTENTS_TYPE = "NULL";
