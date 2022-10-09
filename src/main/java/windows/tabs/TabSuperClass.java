@@ -64,7 +64,7 @@ public class TabSuperClass extends JPanel {
 				listCategoryAndCodes.clear();
 				if(!ConnectionMSSQL.isGoodLastsConnection) return;
 				
-				new DisplayConnectionDelay(TypeConnection.BASE_CONNECTION,"ipDataBase", 470L) {
+				new DisplayConnectionDelay(TypeConnection.BASE_CONNECTION,"ipDataBase", 1000L) {
 					
 					@Override
 					protected Object taskThread() throws Exception {

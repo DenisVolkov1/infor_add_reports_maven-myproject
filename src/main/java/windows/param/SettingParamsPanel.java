@@ -388,19 +388,20 @@ public class SettingParamsPanel extends JPanel {
 		Vector<ParamFromParamsPanel> res = new Vector<ParamFromParamsPanel>();
 		//
 		for(int i = 0;paramNameField.size() > i;i++) {
-			String pARAM_SEQNO      = paramSeqNoField.get(i).getTextWithCheck();
+			String pARAM_SEQNO      = paramSeqNoField.get(i).getTextWithCheckNumber();
 			String pARAM_NAME     = paramNameField.get(i).getTextWithCheck();
 			String pARAM_LABEL    = paramLabelField.get(i).getTextWithCheck();
 			String pARAM_ISREQUIRED = (paramIsReqCheckBox.get(i).isSelected()) ? "1" : "0";
 			String pARAM_TYPE     = (String)(paramTypeComboBox.get(i).getSelectedItem()); 
 			String pARAM_CONTENTS = contentsButton.get(i).getContentDialog().getText();
-			String pARAM_DEFAULT      = paramDefaultField.get(i).getTextWithCheck();
+			String pARAM_DEFAULT      = paramDefaultField.get(i).getText();
 			//
 			ParamFromParamsPanel p = new ParamFromParamsPanel(pARAM_SEQNO,pARAM_NAME, pARAM_LABEL, pARAM_ISREQUIRED, pARAM_TYPE, pARAM_CONTENTS,pARAM_DEFAULT);
 			res.add(p);
 		}
 		return res;
 	}
+	
 	public Vector<ParamFromParamsPanel> getlistOfParamsNotCheck() {
 		Vector<ParamFromParamsPanel> res = new Vector<ParamFromParamsPanel>();
 		//

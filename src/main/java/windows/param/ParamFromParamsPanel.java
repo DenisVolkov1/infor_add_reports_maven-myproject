@@ -44,7 +44,7 @@ public class ParamFromParamsPanel implements Params {
 
 	public String getPARAM_CONTENTS() {
 		if(PARAM_CONTENTS == null) return null;
-		return (PARAM_CONTENTS.length() != 0) ? PARAM_CONTENTS : null;
+		return (PARAM_CONTENTS.equals("''")) ? null: PARAM_CONTENTS;
 	}
 
 	public void setPARAM_CONTENTS(String pARAM_CONTENTS) {
@@ -65,11 +65,11 @@ public class ParamFromParamsPanel implements Params {
 	}
 	@Override
 	public String getPARAM_SEQNO() {
-		return PARAM_SEQNO;
+		return (PARAM_SEQNO.isEmpty()) ? "1" : PARAM_SEQNO;
 	}
 	@Override
 	public String getPARAM_DEFAULT() {
-		return PARAM_DEFAULT;
+		return (PARAM_DEFAULT.isEmpty()) ? null : PARAM_DEFAULT;
 	}
 	@Override
 	public String toString() {

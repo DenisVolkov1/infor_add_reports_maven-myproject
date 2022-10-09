@@ -92,7 +92,68 @@ public class ReportRelatedData {
 		if (!nameFileReport.matches(".*.rptdesign")) {
 			nameFileReport = nameFileReport+".rptdesign";
 		}
+		String insertPBSRPT_REPORTS = getStringINSERT_REPORT(schema,RPT_ID,nameReport,categoryId,nameFileReport);
+		String insertTRANSLATIONLIST = getStringTRANSLATION_LIST(schema,RPT_ID,nameReport);
 		
+		String insertPBSRPT_REPORTS_enterprise = getStringINSERT_REPORT("enterprise",RPT_ID,nameReport,categoryId,nameFileReport);
+		String insertTRANSLATIONLIST_enterprise = getStringTRANSLATION_LIST("enterprise",RPT_ID,nameReport);
+		
+		
+		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
+				Statement statement = connection.createStatement();
+					PreparedStatement insertRep = connection.prepareStatement(insertPBSRPT_REPORTS);
+				PreparedStatement insertTranslate = connection.prepareStatement(insertTRANSLATIONLIST);
+				PreparedStatement insertRep_enterprise = connection.prepareStatement(insertPBSRPT_REPORTS_enterprise);
+						PreparedStatement insertTranslate_enterprise = connection.prepareStatement(insertTRANSLATIONLIST_enterprise)) {
+			connection.setAutoCommit(false);	
+			insertRep.execute();
+			insertTranslate.execute();
+			insertRep_enterprise.execute();
+			insertTranslate_enterprise.execute();
+			connection.commit();
+			connection.setAutoCommit(true);
+		}
+		LOg.logToFile_SQL(insertPBSRPT_REPORTS + "\r\n "+ insertTRANSLATIONLIST);
+
+	}
+
+	private static String getStringTRANSLATION_LIST(String schema, String RPT_ID, String nameReport) {
+		String insertTRANSLATIONLIST = "USE [SCPRD] " +   
+				"INSERT INTO ["+schema+"].[TRANSLATIONLIST] " + 
+				"           ([WHSEID]     " + 
+				"           ,[TBLNAME]    " + 
+				"           ,[LOCALE]     " + 
+				"           ,[JOINKEY1]   " + 
+				"           ,[JOINKEY2]   " + 
+				"           ,[JOINKEY3]   " + 
+				"           ,[JOINKEY4]   " + 
+				"           ,[JOINKEY5]   " + 
+				"           ,[COLUMNNAME] " + 
+				"           ,[CODE]       " + 
+				"           ,[DESCRIPTION]" +
+				"			,[ADDWHO]     " +
+				"			,[EDITWHO]    " +
+				"           )" + 
+				"     VALUES" + 
+				"          (" + 
+				"		   '"+schema+"'," + 
+				"           'PBSRPT_REPORTS'," + 
+				"           'ru'," + 
+				"           '"+RPT_ID+"',   " + 
+				"           '"+RPT_ID+"',   " + 
+				"           '"+RPT_ID+"',   " + 
+				"           '"+RPT_ID+"',   " + 
+				"           '"+RPT_ID+"',   " + 
+				"           'RPT_TITLE',    " + 
+				"           '"+RPT_ID+"',   " + 
+				"          N'"+nameReport+"',  " + 
+				"	        N'add_rep',  " +
+				"	        N'add_rep'" +
+				"		   )";
+		return insertTRANSLATIONLIST;
+	}
+
+	private static String getStringINSERT_REPORT(String schema,String RPT_ID,String nameReport,int categoryId,String nameFileReport) {
 		String insertPBSRPT_REPORTS = ""
 				+ "USE [SCPRD] "
 				+ "INSERT INTO ["+schema+"].[PBSRPT_REPORTS](" + 
@@ -162,51 +223,7 @@ public class ReportRelatedData {
 				"	       N'add_rep',       " +
 				"	       N'add_rep'" +
 				"		   )";
-		String insertTRANSLATIONLIST = "USE [SCPRD] " +   
-				"INSERT INTO ["+schema+"].[TRANSLATIONLIST] " + 
-				"           ([WHSEID]     " + 
-				"           ,[TBLNAME]    " + 
-				"           ,[LOCALE]     " + 
-				"           ,[JOINKEY1]   " + 
-				"           ,[JOINKEY2]   " + 
-				"           ,[JOINKEY3]   " + 
-				"           ,[JOINKEY4]   " + 
-				"           ,[JOINKEY5]   " + 
-				"           ,[COLUMNNAME] " + 
-				"           ,[CODE]       " + 
-				"           ,[DESCRIPTION]" +
-				"			,[ADDWHO]     " +
-				"			,[EDITWHO]    " +
-				"           )" + 
-				"     VALUES" + 
-				"          (" + 
-				"		   '"+schema+"'," + 
-				"           'PBSRPT_REPORTS'," + 
-				"           'ru'," + 
-				"           '"+RPT_ID+"',   " + 
-				"           '"+RPT_ID+"',   " + 
-				"           '"+RPT_ID+"',   " + 
-				"           '"+RPT_ID+"',   " + 
-				"           '"+RPT_ID+"',   " + 
-				"           'RPT_TITLE',    " + 
-				"           '"+RPT_ID+"',   " + 
-				"          N'"+nameReport+"',  " + 
-				"	        N'add_rep',  " +
-				"	        N'add_rep'" +
-				"		   )";
-		
-		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
-				Statement statement = connection.createStatement();
-					PreparedStatement insertRep = connection.prepareStatement(insertPBSRPT_REPORTS);
-				PreparedStatement insertTranslate = connection.prepareStatement(insertTRANSLATIONLIST)) {
-			connection.setAutoCommit(false);	
-			insertRep.execute();
-			insertTranslate.execute();
-			connection.commit();
-			connection.setAutoCommit(true);
-		}
-		LOg.logToFile_SQL(insertPBSRPT_REPORTS + "\r\n "+ insertTRANSLATIONLIST);
-
+		return insertPBSRPT_REPORTS;
 	}
 
 	public static String getRPT_ID (String nameReport, int categoryId) throws Exception {

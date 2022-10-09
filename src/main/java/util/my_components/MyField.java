@@ -30,4 +30,15 @@ public class MyField extends JTextField {
 		
 		return textField;
 	}
+	public String getTextWithCheckNumber() throws InfoException {
+		String textField = this.getText().trim();
+		try {
+			Integer.parseInt(textField);
+		} catch (java.lang.NumberFormatException e) {
+			throw new InfoException("Field '"+nameField+"' is not a number.("+textField+")");
+		}	
+		return textField;
+	}
+	
+	
 }
