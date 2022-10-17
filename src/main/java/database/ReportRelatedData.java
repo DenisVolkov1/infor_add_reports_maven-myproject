@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import exception.InfoException;
@@ -432,6 +434,31 @@ public class ReportRelatedData {
 			}
 		}
 		LOg.logToFile_SQL(sql_getBirtrptUrl);
+		return result;
+	}
+
+	public static Map<String,Integer> getNameReports_LIKE_Pattern(String inputPattern) throws ClassNotFoundException, SQLException {
+		String schema = MyProperties.getProperty("schema");
+		String RPT_TITLE = null;
+		Integer CATEGORY_ID = null;
+		Map<String,Integer> result = new HashMap<String, Integer>();
+		
+		String sql_ = "USE [SCPRD]"
+				  +"SELECT RPT_TITLE, MIN(CATEGORY_ID) CATEGORY_ID "
+			      +"FROM +["+schema+"].PBSRPT_REPORTS "
+			      +"WHERE RPT_TITLE LIKE '%' + '"+inputPattern+"' + '%' "
+				  +"GROUP BY RPT_TITLE ";
+		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
+				Statement statement = connection.createStatement();
+						ResultSet rs = statement.executeQuery(sql_)) {	
+			while(rs.next()) {
+				RPT_TITLE = rs.getString(1);
+				CATEGORY_ID = rs.getInt(2);
+				result.put(RPT_TITLE, CATEGORY_ID);				
+			}
+		}
+		
+		LOg.logToFile_SQL(sql_);
 		return result;
 	}
 }

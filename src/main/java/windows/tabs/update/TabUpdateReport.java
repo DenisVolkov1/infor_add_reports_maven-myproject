@@ -7,6 +7,7 @@ import database.ParamsRelatedData;
 import database.ReportRelatedData;
 import exception.ConfirmException;
 import exception.InfoException;
+import exception.WarningException;
 import files_repository.FilesRepository;
 import log.LOg;
 import parce_rptdesign.ReadXML;
@@ -30,7 +31,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import util.CategoryAndId;
@@ -58,6 +63,7 @@ import java.awt.Dimension;
 import javax.swing.JToggleButton;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Insets;
 
 public class TabUpdateReport extends TabSuperClass {
 	private static TabUpdateReport TAB_UPDADE_REPORT = null;
@@ -81,9 +87,13 @@ public class TabUpdateReport extends TabSuperClass {
 	private JLabel ipDataSrcLabel;
 	private JComboBox<String> foldersProjectComboBox;
 	private JLabel lblProjectFolderIn;
+	private MyHoverButton upButton;
 	//
 	protected ComponentAdapter adapterParams;
 	protected ParamsPanelUpdate params;
+	
+	private Map<String,Integer> listNamereports = new HashMap<String,Integer>();
+	private String lastInputPattern;
 	/**
 	 * Create the panel.
 	 */
@@ -93,7 +103,7 @@ public class TabUpdateReport extends TabSuperClass {
 		setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(39, 0, 504, 398);
+		panel.setBounds(39, 0, 514, 398);
 		add(panel);
 		
 		categoryLabel = new JLabel("Category");
@@ -163,6 +173,10 @@ public class TabUpdateReport extends TabSuperClass {
 		paramsButton.setFont(new Font("Dialog", Font.BOLD, 12));
 		paramsButton.setEmptyHover();
 		
+		upButton = new MyHoverButton("\u2191");	
+		upButton.setToolTipText("find name rep like(sql) '%+(your input in field)+%'");
+		upButton.setMargin(new Insets(2, 2, 2, 2));
+		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.TRAILING)
@@ -172,35 +186,34 @@ public class TabUpdateReport extends TabSuperClass {
 							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
 								.addComponent(updateFileArchiveToggleButton, 0, 0, Short.MAX_VALUE)
 								.addComponent(updateDataBaseToggleButton, GroupLayout.PREFERRED_SIZE, 27, Short.MAX_VALUE))
+							.addGap(18)
 							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel.createSequentialGroup()
-									.addGap(18)
-									.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-										.addComponent(refreshServiceButton, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
-										.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
-											.addGroup(gl_panel.createSequentialGroup()
-												.addComponent(ipDataSrcLabel, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-												.addComponent(updateReportButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-											.addGroup(gl_panel.createSequentialGroup()
-												.addComponent(fileReportLabel, GroupLayout.PREFERRED_SIZE, 359, GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(fileReportButton, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
-											.addComponent(nameFileReportLabel, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+									.addComponent(refreshServiceButton, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
+									.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
 										.addGroup(gl_panel.createSequentialGroup()
-											.addComponent(paramsButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.UNRELATED)
-											.addComponent(inputNewValuesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+											.addComponent(ipDataSrcLabel, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+											.addComponent(updateReportButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+										.addGroup(gl_panel.createSequentialGroup()
+											.addComponent(fileReportLabel, GroupLayout.PREFERRED_SIZE, 359, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(fileReportButton, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
+										.addComponent(nameFileReportLabel, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE))
+									.addGroup(gl_panel.createSequentialGroup()
+										.addComponent(paramsButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(ComponentPlacement.UNRELATED)
+										.addComponent(inputNewValuesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
+								.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
 								.addGroup(gl_panel.createSequentialGroup()
-									.addGap(18)
-									.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-										.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
-										.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
-										.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 429, GroupLayout.PREFERRED_SIZE)
-										.addComponent(nameReportLabel, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)))))
+									.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 429, GroupLayout.PREFERRED_SIZE)
+									.addGap(5)
+									.addComponent(upButton, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
+								.addComponent(nameReportLabel, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)))
 						.addComponent(foldersProjectComboBox, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblProjectFolderIn, GroupLayout.PREFERRED_SIZE, 268, GroupLayout.PREFERRED_SIZE))
-					.addGap(24))
+					.addContainerGap())
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -211,19 +224,22 @@ public class TabUpdateReport extends TabSuperClass {
 					.addComponent(foldersProjectComboBox, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 					.addGap(8)
 					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(updateDataBaseToggleButton, GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(nameReportLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+								.addComponent(upButton, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_panel.createSequentialGroup()
+									.addComponent(categoryLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(categoriesComboBox, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(nameReportLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(nameReportField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)))
 							.addGap(36)
 							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
 								.addComponent(inputNewValuesButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-								.addComponent(paramsButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(updateDataBaseToggleButton, GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))
+								.addComponent(paramsButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))))
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(gl_panel.createSequentialGroup()
 							.addGap(23)
@@ -303,7 +319,25 @@ public class TabUpdateReport extends TabSuperClass {
 				}
 			}
 		});
-
+		
+		upButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				categoriesComboBox.setSelectedItem(new CategoryAndId(16, null));
+			}
+		});
+		//UP LISTENER focus name Report field , click button 'up arrow'. 
+		nameReportField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode()==KeyEvent.VK_UP) {
+					upListener();
+				}
+			}
+			@Override
+			public void keyTyped(KeyEvent e) {
+				lastInputPattern = null;
+			}
+		});
 		//if change this field refresh params and input object	
 		nameReportField.addKeyListener(new KeyAdapter() {
 			@Override
@@ -558,6 +592,46 @@ public class TabUpdateReport extends TabSuperClass {
 			paramButton.setEnabled(false);
 		}
 	}
+	private void upListener() {
+		try {
+			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			String inputPattern = nameReportField.getText().trim();
+			//String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
+			Entry<String, Integer> findOnPatternNameRep = findNameReportOnPattern(inputPattern);
+			if (findOnPatternNameRep != null) {
+				//nameReportField.setText(findOnPatternNameRep);
+			} else {
+				throw new InfoException("Filename on this pattern '"+lastInputPattern+"' is absent.");
+			}
+			
+		} catch (WarningException we) {
+			DialogWindows.dialogWindowWarning(we);
+		} catch (InfoException ie) {
+			DialogWindows.dialogWindowError(ie);
+		} catch (Exception e) {
+			DialogWindows.dialogWindowError(e);
+			LOg.logToFile(e);
+		} finally {
+			setCursor(null);
+		}
+	}
+	private Map.Entry<String, Integer> findNameReportOnPattern(String inputPattern) throws Exception {
+		if (lastInputPattern == null) {// if field keyTyped then lastInputPattern = null
+			listNamereports.clear();
+			listNamereports.putAll(ReportRelatedData.getNameReports_LIKE_Pattern(inputPattern));
+			lastInputPattern = inputPattern;
+			//lastNameProgect = nameProgect;
+		}
+		while(!listNamereports.isEmpty()) {
+			String key = (String) listNamereports.values().toArray()[0];
+			if (key.matches(".*"+lastInputPattern+".*")) {
+				
+				//return listNamereports.entrySet().get(Map.Entry<String, Integer>());
+			}
+		}
+		return null;
+	}
+	
 	private void matchCheckingValidInputDataAndConnections() throws Exception {
 		if (updateDataBaseToggleButton.isSelected()) {
 			checkBaseConnection();
