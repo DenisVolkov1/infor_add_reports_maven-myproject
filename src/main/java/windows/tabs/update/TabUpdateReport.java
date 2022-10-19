@@ -31,6 +31,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.AbstractMap;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -286,6 +288,7 @@ public class TabUpdateReport extends TabSuperClass {
 		nameReportLabel.setEnabled(false);
 		nameReportField.setEnabled(false);
 		inputNewValuesButton.setEnabled(false);
+		upButton.setEnabled(false);
 		//
 
 		fileChooser = new JFileChooser();
@@ -322,7 +325,7 @@ public class TabUpdateReport extends TabSuperClass {
 		
 		upButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				categoriesComboBox.setSelectedItem(new CategoryAndId(16, null));
+				upListener();
 			}
 		});
 		//UP LISTENER focus name Report field , click button 'up arrow'. 
@@ -570,6 +573,7 @@ public class TabUpdateReport extends TabSuperClass {
 			foldersProjectComboBox.setEnabled(false);
 			foldersProjectComboBox.setSelectedIndex(-1);
 			//
+			upButton.setEnabled(true);
 			categoryLabel.setEnabled(true);
 			categoriesComboBox.setEnabled(true);
 			nameReportLabel.setEnabled(true);
@@ -583,7 +587,7 @@ public class TabUpdateReport extends TabSuperClass {
 				foldersProjectComboBox.setEnabled(false);
 				foldersProjectComboBox.setSelectedIndex(-1);
 			}
-			
+			upButton.setEnabled(false);
 			categoryLabel.setEnabled(false);
 			categoriesComboBox.setEnabled(false);
 			nameReportLabel.setEnabled(false);
@@ -596,12 +600,12 @@ public class TabUpdateReport extends TabSuperClass {
 		try {
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			String inputPattern = nameReportField.getText().trim();
-			//String nameProgect = (String)foldersProjectComboBox.getSelectedItem();
 			Entry<String, Integer> findOnPatternNameRep = findNameReportOnPattern(inputPattern);
 			if (findOnPatternNameRep != null) {
-				//nameReportField.setText(findOnPatternNameRep);
+				nameReportField.setText(findOnPatternNameRep.getKey());
+				categoriesComboBox.setSelectedItem(new CategoryAndId(findOnPatternNameRep.getValue(), null));
 			} else {
-				throw new InfoException("Filename on this pattern '"+lastInputPattern+"' is absent.");
+				throw new InfoException("Name report on this pattern '"+lastInputPattern+"' is absent.");
 			}
 			
 		} catch (WarningException we) {
@@ -615,21 +619,20 @@ public class TabUpdateReport extends TabSuperClass {
 			setCursor(null);
 		}
 	}
-	private Map.Entry<String, Integer> findNameReportOnPattern(String inputPattern) throws Exception {
+	private Entry<String, Integer> findNameReportOnPattern(String inputPattern) throws Exception {
 		if (lastInputPattern == null) {// if field keyTyped then lastInputPattern = null
 			listNamereports.clear();
 			listNamereports.putAll(ReportRelatedData.getNameReports_LIKE_Pattern(inputPattern));
 			lastInputPattern = inputPattern;
 			//lastNameProgect = nameProgect;
 		}
-		while(!listNamereports.isEmpty()) {
-			String key = (String) listNamereports.values().toArray()[0];
-			if (key.matches(".*"+lastInputPattern+".*")) {
-				
-				//return listNamereports.entrySet().get(Map.Entry<String, Integer>());
-			}
+		Collection<String> keys = listNamereports.keySet();
+		Entry<String, Integer> entry = null;
+		if(!keys.isEmpty()) {
+			String key = (String) keys.toArray()[0];
+			entry = new AbstractMap.SimpleEntry<String, Integer>(key, listNamereports.remove(key));
 		}
-		return null;
+		return entry;
 	}
 	
 	private void matchCheckingValidInputDataAndConnections() throws Exception {

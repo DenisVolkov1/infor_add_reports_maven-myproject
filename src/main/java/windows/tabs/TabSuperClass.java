@@ -173,10 +173,7 @@ public class TabSuperClass extends JPanel {
 			smbFile.connect();
 		}
 	}
-//	protected void checkConnection() throws Exception {
-//		checkBaseConnection();
-//		checkRepoConnection();
-//	}
+
 	public ComponentAdapter getAdapterForWaitingPanels() {
 		return adapterForWaitingPanels;
 	}

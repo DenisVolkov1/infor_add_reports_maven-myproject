@@ -43,7 +43,7 @@ import javax.swing.JRadioButton;
 
 public class SettingsWindow extends JDialog {
 
-	private static final String DEV_VERSION = "Version 1.02";
+	private static final String DEV_VERSION = "Version 1.1";
 	///////////////////////////////////////////////////////////////////
 	private final JPanel contentPanel = new JPanel();
 	private JButton saveButton;
