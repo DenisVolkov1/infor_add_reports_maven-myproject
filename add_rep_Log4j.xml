@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>C:\Users\user\git\infor_add_reports_maven-myproject\target\infor_add_reports_maven-myproject-0.0.1-SNAPSHOT-jar-with-dependencies.jar</jar>
+  <outfile>C:\Users\user\Desktop\Infor Add Rep.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon>C:\Users\user\git\infor_add_reports_maven-myproject\target\classes\add rep.ico</icon>
+  <jre>
+    <path></path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion>1.7.0_045</minVersion>
+    <maxVersion>1.7.0_055</maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+  </jre>
+  <versionInfo>
+    <fileVersion>1.1.0.0</fileVersion>
+    <txtFileVersion>1.1.0.0</txtFileVersion>
+    <fileDescription>Adding report for INFOR 10 - 11</fileDescription>
+    <copyright>LOGICON</copyright>
+    <productVersion>1.1.0.0</productVersion>
+    <txtProductVersion>1.1</txtProductVersion>
+    <productName>Infor Add Rep</productName>
+    <companyName>LOGICON</companyName>
+    <internalName>Infor Add Rep</internalName>
+    <originalFilename>Infor Add Rep.exe</originalFilename>
+    <trademarks></trademarks>
+    <language>RUSSIAN</language>
+  </versionInfo>
+</launch4jConfig>
