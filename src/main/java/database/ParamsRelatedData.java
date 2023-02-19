@@ -38,8 +38,6 @@ public class ParamsRelatedData {
 	 * @param PARAM_LABEL - Rus name
 	 * @param PARAM_ISREQUIRED - '0'-false '1'-true
 	 * */
-
-	public static void insertParam(String RPT_ID, String PARAM_SEQNO, String PARAM_NAME,String PARAM_LABEL, String PARAM_TYPE,String PARAM_CONTENTS,String PARAM_ISREQUIRED, String PARAM_DEFAULT) throws ClassNotFoundException, SQLException {}
 	
 	public static Vector<String> getListOfParamName(String RPT_ID) throws ClassNotFoundException, SQLException {
 		String schema = MyProperties.getProperty("schema"); 
@@ -59,6 +57,7 @@ public class ParamsRelatedData {
 		LOg.logToFile_SQL(sql);
 		return resultVector;
 	}
+	
 	public static Vector<ParamFromDataBase> getListOfParam(String RPT_ID) throws ClassNotFoundException, SQLException {
 		String schema = MyProperties.getProperty("schema"); 
 		Vector<ParamFromDataBase> resultVector = new Vector<ParamFromDataBase>();
@@ -83,36 +82,51 @@ public class ParamsRelatedData {
 		if (listParams.size() == 0) return;
 		
 		String schema = MyProperties.getProperty("schema");
-		String insertPBSRPT_REPORTS_PARAMS = getStringINSERT_REPORT_GATPARAM(schema, RPT_ID, listParams);
+		String insertPBSRPT_REPORTS_PARAMS = getStringINSERT_REPORT_PARAMS(schema, RPT_ID, listParams);
+		String insertPBSRPT_REPORTS_PARAMS_enterprise = getStringINSERT_REPORT_PARAMS("enterprise", RPT_ID, listParams);
 		
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();
-				PreparedStatement insertPar = connection.prepareStatement(insertPBSRPT_REPORTS_PARAMS)) {
+					PreparedStatement insertPar = connection.prepareStatement(insertPBSRPT_REPORTS_PARAMS);
+					PreparedStatement insertPar_enterprise = connection.prepareStatement(insertPBSRPT_REPORTS_PARAMS_enterprise)) {
 				
 				connection.setAutoCommit(false);	
 				insertPar.execute();
+				insertPar_enterprise.execute();
 				connection.commit();
 		}	
 		LOg.logToFile_SQL(insertPBSRPT_REPORTS_PARAMS);		
 	}
+	
 	public static void deleteParam(List<? extends Params> listParams, String RPT_ID) throws Exception {
 		String schema = MyProperties.getProperty("schema");
 		
-		String deletePBSRPT_REPORTS_PARAMS = "USE [SCPRD] DELETE FROM ["+schema+"].[PBSRPT_REPORTS_PARAMS] " + 
-				  "WHERE RPT_ID = '"+RPT_ID+"'" + " AND PARAM_NAME = ?";
+		String deletePBSRPT_REPORTS_PARAMS = getString_deletePBSRPT_REPORTS_PARAMS(schema, RPT_ID);
+		String deletePBSRPT_REPORTS_PARAMS_enterprise = getString_deletePBSRPT_REPORTS_PARAMS("enterprise", RPT_ID);
+
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
-				PreparedStatement delPar = connection.prepareStatement(deletePBSRPT_REPORTS_PARAMS)) {
+				PreparedStatement delPar = connection.prepareStatement(deletePBSRPT_REPORTS_PARAMS);
+				PreparedStatement delPar_enterprise = connection.prepareStatement(deletePBSRPT_REPORTS_PARAMS_enterprise);) {
 			
 			connection.setAutoCommit(false);
 			for (Params p : listParams) {
 				delPar.setString(1, p.getPARAM_NAME());
+				delPar_enterprise.setString(1, p.getPARAM_NAME());
 				delPar.addBatch();
+				delPar_enterprise.addBatch();
 			}
 			delPar.executeBatch();
+			delPar_enterprise.executeBatch();
 			connection.commit();
 		} 
 		LOg.logToFile_SQL(deletePBSRPT_REPORTS_PARAMS);		
 	}
+	
+	private static String getString_deletePBSRPT_REPORTS_PARAMS(String schema, String RPT_ID) {
+		String deletePBSRPT_REPORTS_PARAMS = "USE [SCPRD] DELETE FROM ["+schema+"].[PBSRPT_REPORTS_PARAMS] WHERE RPT_ID = '"+RPT_ID+"'" + " AND PARAM_NAME = ? ";
+		return deletePBSRPT_REPORTS_PARAMS;
+	}
+	
 	public static void deleteParam(String RPT_ID) throws Exception {
 		String schema = MyProperties.getProperty("schema");
 		
@@ -125,39 +139,139 @@ public class ParamsRelatedData {
 		}
 		LOg.logToFile_SQL(deleteALL_PBSRPT_REPORTS_PARAMS);		
 	}
+	
 	public static void updateParam(List<? extends Params> listParams, String RPT_ID) throws Exception {
 		String schema = MyProperties.getProperty("schema");		
-		String deleteALL_PBSRPT_REPORTS_PARAMS = "USE [SCPRD] DELETE FROM ["+schema+"].[PBSRPT_REPORTS_PARAMS] " + 
-				  "WHERE RPT_ID = '"+RPT_ID+"'";
+		
+		String deleteALL_PBSRPT_REPORTS_PARAMS = getString_deleteALL_PBSRPT_REPORTS_PARAMS(schema, RPT_ID);
+		String deleteALL_PBSRPT_REPORTS_PARAMS_enterprise = getString_deleteALL_PBSRPT_REPORTS_PARAMS("enterprise", RPT_ID);
+		String deleteAllTRANSLATIONLIST_PARAMS = getString_deleteAllTRANSLATIONLIST_PARAMS(schema, RPT_ID);
+		String deleteAllTRANSLATIONLIST_PARAMS_enterprise = getString_deleteAllTRANSLATIONLIST_PARAMS("enterprise", RPT_ID);
 		
 		String insertPBSRPT_REPORTS_PARAMS = null;
+		String insertPBSRPT_REPORTS_PARAMS_enterprise = null;
+		String insertTRANSLATIONLIST_PARAMS = null;
+		String insertTRANSLATIONLIST_PARAMS_enterprise =null;
 		
 		if (listParams.size() != 0) {
-			insertPBSRPT_REPORTS_PARAMS = getStringINSERT_REPORT_GATPARAM(schema, RPT_ID, listParams);	
+			insertPBSRPT_REPORTS_PARAMS = getStringINSERT_REPORT_PARAMS(schema, RPT_ID, listParams);	
+			insertPBSRPT_REPORTS_PARAMS_enterprise = getStringINSERT_REPORT_PARAMS("enterprise", RPT_ID, listParams);
 			
+			insertTRANSLATIONLIST_PARAMS = getStringINSERT_TRANSLATIONLIST_PARAMS(schema, RPT_ID);			
+			insertTRANSLATIONLIST_PARAMS_enterprise = getStringINSERT_TRANSLATIONLIST_PARAMS("enterprise", RPT_ID);
+					
 			try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
-					PreparedStatement delPar = connection.prepareStatement(deleteALL_PBSRPT_REPORTS_PARAMS);
-							PreparedStatement insertPar = connection.prepareStatement(insertPBSRPT_REPORTS_PARAMS)) {			
+					PreparedStatement deleteAllPar = connection.prepareStatement(deleteALL_PBSRPT_REPORTS_PARAMS);
+					PreparedStatement deleteAllPar_enterprise = connection.prepareStatement(deleteALL_PBSRPT_REPORTS_PARAMS_enterprise);
+					PreparedStatement deleteAllParTranslation = connection.prepareStatement(deleteAllTRANSLATIONLIST_PARAMS);
+					PreparedStatement deleteAllParTranslation_enterprise = connection.prepareStatement(deleteAllTRANSLATIONLIST_PARAMS_enterprise);
+					
+					PreparedStatement insertPar_enterprise = connection.prepareStatement(insertPBSRPT_REPORTS_PARAMS_enterprise);		
+					PreparedStatement insertPar = connection.prepareStatement(insertPBSRPT_REPORTS_PARAMS);
+					PreparedStatement insertParTranslation = connection.prepareStatement(insertTRANSLATIONLIST_PARAMS);
+					PreparedStatement insertParTranslation_enterprise = connection.prepareStatement(insertTRANSLATIONLIST_PARAMS_enterprise);
+					) {
+				
 				connection.setAutoCommit(false);
-				delPar.execute();
+				
+				deleteAllPar.execute();
+				deleteAllPar_enterprise.execute();
+				deleteAllParTranslation.execute();
+				deleteAllParTranslation_enterprise.execute();
+				
+				
 				insertPar.execute();
+				insertPar_enterprise.execute();
+				
+				for (Params p : listParams) {
+					insertParTranslation.setString(1, p.getPARAM_NAME());
+					insertParTranslation.setString(2, p.getPARAM_NAME());
+					insertParTranslation.setString(3, p.getPARAM_NAME());
+					insertParTranslation.setString(4, p.getPARAM_NAME());
+					insertParTranslation.setString(5, p.getPARAM_NAME());
+					insertParTranslation.setString(6, p.getPARAM_LABEL());
+					
+					insertParTranslation_enterprise.setString(1, p.getPARAM_NAME());
+					insertParTranslation_enterprise.setString(2, p.getPARAM_NAME());
+					insertParTranslation_enterprise.setString(3, p.getPARAM_NAME());
+					insertParTranslation_enterprise.setString(4, p.getPARAM_NAME());
+					insertParTranslation_enterprise.setString(5, p.getPARAM_NAME());
+					insertParTranslation_enterprise.setString(6, p.getPARAM_LABEL());
+					
+					insertParTranslation.addBatch();
+					insertParTranslation_enterprise.addBatch();
+				}
+				insertParTranslation.executeBatch();
+				insertParTranslation_enterprise.executeBatch();
+				
 				connection.commit();
 			}
 		} else {
 			try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
-					PreparedStatement delPar = connection.prepareStatement(deleteALL_PBSRPT_REPORTS_PARAMS)) {
+					PreparedStatement delPar = connection.prepareStatement(deleteALL_PBSRPT_REPORTS_PARAMS);
+					PreparedStatement delPar_enterprise = connection.prepareStatement(deleteALL_PBSRPT_REPORTS_PARAMS);) {
 				
 				connection.setAutoCommit(false);
 				delPar.execute();
+				delPar_enterprise.execute();
 				connection.commit();
 			}
 		}
 		
 		LOg.logToFile_SQL(deleteALL_PBSRPT_REPORTS_PARAMS + "\r\n" + insertPBSRPT_REPORTS_PARAMS);	
-		
+	}
+	private static String getStringINSERT_TRANSLATIONLIST_PARAMS(String schema, String rPT_ID) {
+			
+			String RPT_ID = rPT_ID;
+			String insertTRANSLATIONLIST = "USE [SCPRD] " +   
+					"INSERT INTO ["+schema+"].[TRANSLATIONLIST] " + 
+					"           ([WHSEID]     " + 
+					"           ,[TBLNAME]    " + 
+					"           ,[LOCALE]     " + 
+					"           ,[JOINKEY1]   " + 
+					"           ,[JOINKEY2]   " + 
+					"           ,[JOINKEY3]   " + 
+					"           ,[JOINKEY4]   " + 
+					"           ,[JOINKEY5]   " + 
+					"           ,[COLUMNNAME] " + 
+					"           ,[CODE]       " + 
+					"           ,[DESCRIPTION]" +
+					"			,[ADDWHO]     " +
+					"			,[EDITWHO]    " +
+					"           )" + 
+					"     VALUES" + 
+					"          (" + 
+					"		   '"+schema+"'," + 
+					"           'PBSRPT_REPORTS_PARAMS'," + 
+					"           'ru'," + 
+					"           '"+RPT_ID+"'," + 
+					"           ?," + 
+					"           ?," + 
+					"           ?," + 
+					"           ?," + 
+					"           'PARAM_LABEL'," + 
+					"           ?," + 
+					"           ?," + 
+					"	        N'add_rep'," +
+					"	        N'add_rep'" +
+					"		   )";
+			
+			return insertTRANSLATIONLIST;
 	}
 
-	private static String getStringINSERT_REPORT_GATPARAM(String schema,String RPT_ID, List<? extends Params> listParams) {		
+	private static String getString_deleteALL_PBSRPT_REPORTS_PARAMS(String schema,String RPT_ID) {
+		String deleteALL_PBSRPT_REPORTS_PARAMS = "USE [SCPRD] DELETE FROM ["+schema+"].[PBSRPT_REPORTS_PARAMS] WHERE RPT_ID = '"+RPT_ID+"' ";
+		return deleteALL_PBSRPT_REPORTS_PARAMS;
+	}
+	
+	private static String getString_deleteAllTRANSLATIONLIST_PARAMS(String schema,String RPT_ID) {
+		String deleteTRANSLATIONLIST_PARAMS = 
+				"USE [SCPRD] DELETE FROM ["+schema+"].[TRANSLATIONLIST] " +  
+				    "WHERE JOINKEY1 = '"+RPT_ID+"' AND TBLNAME = 'PBSRPT_REPORTS_PARAMS' AND LOCALE = 'ru' AND COLUMNNAME = 'PARAM_LABEL'";
+		return deleteTRANSLATIONLIST_PARAMS;
+	}
+
+	private static String getStringINSERT_REPORT_PARAMS(String schema,String RPT_ID, List<? extends Params> listParams) {		
 	
 		 String PARAM_SEQNO       = null;
 		 String PARAM_NAME   	  = null;

@@ -104,9 +104,9 @@ public class ReportRelatedData {
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();
 					PreparedStatement insertRep = connection.prepareStatement(insertPBSRPT_REPORTS);
-				PreparedStatement insertTranslate = connection.prepareStatement(insertTRANSLATIONLIST);
-				PreparedStatement insertRep_enterprise = connection.prepareStatement(insertPBSRPT_REPORTS_enterprise);
-						PreparedStatement insertTranslate_enterprise = connection.prepareStatement(insertTRANSLATIONLIST_enterprise)) {
+					PreparedStatement insertTranslate = connection.prepareStatement(insertTRANSLATIONLIST);
+					PreparedStatement insertRep_enterprise = connection.prepareStatement(insertPBSRPT_REPORTS_enterprise);
+					PreparedStatement insertTranslate_enterprise = connection.prepareStatement(insertTRANSLATIONLIST_enterprise)) {
 			connection.setAutoCommit(false);	
 			insertRep.execute();
 			insertTranslate.execute();
@@ -286,75 +286,39 @@ public class ReportRelatedData {
 	public static void updateReport(String nameReport, Integer categoryId, String newRPT_ID, Integer newCategoryId, String newNameReport, String newNameFileReport, Boolean rptActive) throws Exception {
 		String schema = MyProperties.getProperty("schema");
 		String RPT_ID = getRPT_ID(nameReport, categoryId);
-		//
-		String setRPT_ID, setCategoryId, setNameReport, setNameFileReport,setRptActive = null;
-		if (newRPT_ID != null) setRPT_ID = ",RPT_ID = '"+newRPT_ID+"' ";
-		else setRPT_ID = "";
-		//
-		if (newCategoryId != null) setCategoryId = ",CATEGORY_ID = '"+newCategoryId+"' ";
-		else setCategoryId = "";
-		//
-		if (newNameReport != null) setNameReport = ",RPT_TITLE = N'"+newNameReport+"' ";
-		else setNameReport = "";
-		//  
-		if (newNameFileReport != null) setNameFileReport = ",BIRTRPT_URL = '/frameset?__report=report/"+newNameFileReport+".rptdesign' ";
-		else setNameFileReport = "";
-		//
-		if (rptActive != null) {
-			String YN = rptActive ? "Y" : "N";
-			setRptActive = ",RPT_ACTIVE = '"+YN+"' ";
-		} 
-		else setRptActive = "";
-		String temp = (setRPT_ID + setCategoryId + setNameReport + setNameFileReport+setRptActive);
-		String setFildsReport = temp.substring(1, temp.length());	
 		
-		String updatePBSRPT_REPORTS = "USE [SCPRD] "
-									  +"UPDATE [SCPRD].["+schema+"].[PBSRPT_REPORTS] " 
-									  +"SET "
-									  +setFildsReport
-									  +",EDITWHO = N'add_rep' "
-									  +",EDITDATE = getutcdate() "
-									  +"WHERE RPT_ID = '"+RPT_ID+"'";
+		String updatePBSRPT_REPORTS = getString_updatePBSRPT_REPORTS( schema , nameReport,  categoryId,  newRPT_ID,  newCategoryId,  newNameReport,  newNameFileReport,  rptActive );
+		//
+		String updatePBSRPT_REPORTS_enterprise = getString_updatePBSRPT_REPORTS( "enterprise" , nameReport,  categoryId,  newRPT_ID,  newCategoryId,  newNameReport,  newNameFileReport,  rptActive );
 		
 		String updateTRANSLATIONLIST=null;
+		String updateTRANSLATIONLIST_enterprise=null;
 		if (newRPT_ID != null || newNameReport != null) {
-			
-			String setJOINKEY12345, setDescription = null;
-			if (newRPT_ID != null) setJOINKEY12345 = ",JOINKEY1 = '"+newRPT_ID+"' ,JOINKEY2 = '"+newRPT_ID+"' ,JOINKEY3 = '"+newRPT_ID+"' ,JOINKEY4 = '"+newRPT_ID+"' ,JOINKEY5 = '"+newRPT_ID+"' ,CODE = '"+newRPT_ID+"' ";                                                   
-			else setJOINKEY12345 = "";
-			//
-			if (newNameReport != null) setDescription = ",[DESCRIPTION] = N'"+newNameReport+"'"; 
-			else setDescription = "";
-			String temp2 = (setJOINKEY12345 + setDescription);
-			String setFildsTrans = temp2.substring(1, temp2.length());
-			
-			     updateTRANSLATIONLIST = "USE [SCPRD] "
-										   +"UPDATE [SCPRD].["+schema+"].[TRANSLATIONLIST] "
-					  					   +"SET "+setFildsTrans
-					  					   +",EDITWHO = N'add_rep' "
-										   +",EDITDATE = getutcdate() "
-					  					   +"WHERE JOINKEY1 = '"+RPT_ID+"' "
-				  					   	     +"AND JOINKEY2 = '"+RPT_ID+"' "
-				  					   	     +"AND JOINKEY3 = '"+RPT_ID+"' "
-				  					   	     +"AND JOINKEY4 = '"+RPT_ID+"' "
-				  					   	     +"AND JOINKEY5 = '"+RPT_ID+"' "
-				  					   	     +"AND TBLNAME = 'PBSRPT_REPORTS' AND LOCALE = 'ru' AND COLUMNNAME = 'RPT_TITLE'";
+			updateTRANSLATIONLIST = getString_updateTRANSLATIONLIST(schema,  RPT_ID,  newRPT_ID, newNameReport);
+			updateTRANSLATIONLIST_enterprise = getString_updateTRANSLATIONLIST("enterprise",  RPT_ID,  newRPT_ID, newNameReport);
 			
 			try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 					Statement statement = connection.createStatement();
-					PreparedStatement updateRep = connection.prepareStatement(updatePBSRPT_REPORTS);
-					PreparedStatement updateTranslate = connection.prepareStatement(updateTRANSLATIONLIST)) {
+						PreparedStatement updateRep = connection.prepareStatement(updatePBSRPT_REPORTS);
+						PreparedStatement updateRep_enterprise = connection.prepareStatement(updatePBSRPT_REPORTS_enterprise);
+						PreparedStatement updateTranslate = connection.prepareStatement(updateTRANSLATIONLIST);
+						PreparedStatement updateTranslate_enterprise = connection.prepareStatement(updateTRANSLATIONLIST_enterprise)) {
 					
 					updateRep.execute();
+					updateRep_enterprise.execute();
 					updateTranslate.execute();
+					updateTranslate_enterprise.execute();
 					connection.commit();
 					connection.setAutoCommit(true);
 			}
 		} else {
 			try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 					Statement statement = connection.createStatement();
-					PreparedStatement updateRep = connection.prepareStatement(updatePBSRPT_REPORTS)) {
+						PreparedStatement updateRep = connection.prepareStatement(updatePBSRPT_REPORTS);
+						PreparedStatement updateRep_enterprise = connection.prepareStatement(updatePBSRPT_REPORTS_enterprise)) {
+				
 					updateRep.execute();
+					updateRep_enterprise.execute();
 					connection.commit();
 					connection.setAutoCommit(true);
 			}
@@ -365,30 +329,45 @@ public class ReportRelatedData {
 		String schema = MyProperties.getProperty("schema");
 		String RPT_ID = getRPT_ID(nameReport, categoryId);
 		
-		String deletePBSRPT_REPORTS = "USE [SCPRD] DELETE FROM ["+schema+"].[PBSRPT_REPORTS] " + 
-									  "WHERE RPT_ID = '"+RPT_ID+"'";
+		String deletePBSRPT_REPORTS = getString_deletePBSRPT_REPORTS(schema, RPT_ID);
+		String deletePBSRPT_REPORTS_enterprise = getString_deletePBSRPT_REPORTS("enterprise", RPT_ID);
 		
-		String deleteTRANSLATIONLIST = "USE [SCPRD] DELETE FROM ["+schema+"].[TRANSLATIONLIST] " +  
-				  					    "WHERE JOINKEY1 = '"+RPT_ID+"' "
-   									     +"AND JOINKEY2 = '"+RPT_ID+"' "
-   									     +"AND JOINKEY3 = '"+RPT_ID+"' "
-   									     +"AND JOINKEY4 = '"+RPT_ID+"' "
-   									     +"AND JOINKEY5 = '"+RPT_ID+"' "
-   				 					     +"AND TBLNAME = 'PBSRPT_REPORTS' AND LOCALE = 'ru' AND COLUMNNAME = 'RPT_TITLE'";
+		String deleteTRANSLATIONLIST = getString_deleteTRANSLATIONLIST(schema, RPT_ID);
+		String deleteTRANSLATIONLIST_enterprise = getString_deleteTRANSLATIONLIST("enterprise", RPT_ID);
 		
 		try (Connection connection = ConnectionMSSQL.getInstanceConneectionJDBC();
 				Statement statement = connection.createStatement();
-				PreparedStatement updateRep = connection.prepareStatement(deletePBSRPT_REPORTS);
-				PreparedStatement updateTranslate = connection.prepareStatement(deleteTRANSLATIONLIST)) {
+					PreparedStatement updateRep = connection.prepareStatement(deletePBSRPT_REPORTS);			
+					PreparedStatement updateTranslate = connection.prepareStatement(deleteTRANSLATIONLIST);
+					PreparedStatement updateRep_enterprise = connection.prepareStatement(deletePBSRPT_REPORTS_enterprise);
+					PreparedStatement updateTranslate_enterprise = connection.prepareStatement(deleteTRANSLATIONLIST_enterprise);
+				
+				) {
 			connection.setAutoCommit(false);	
 			
 			updateRep.execute();
 			updateTranslate.execute();
+			updateRep_enterprise.execute();
+			updateTranslate_enterprise.execute();
 			
 			connection.commit();
 			connection.setAutoCommit(true);
 		}
 		LOg.logToFile_SQL(deletePBSRPT_REPORTS + "\r\n "+ deleteTRANSLATIONLIST);
+	}
+	private static String getString_deleteTRANSLATIONLIST(String schema, String RPT_ID) {
+		String deleteTRANSLATIONLIST = "USE [SCPRD] DELETE FROM ["+schema+"].[TRANSLATIONLIST] " +  
+				    "WHERE JOINKEY1 = '"+RPT_ID+"' "
+				     +"AND JOINKEY2 = '"+RPT_ID+"' "
+				     +"AND JOINKEY3 = '"+RPT_ID+"' "
+				     +"AND JOINKEY4 = '"+RPT_ID+"' "
+				     +"AND JOINKEY5 = '"+RPT_ID+"' "
+				     +"AND TBLNAME = 'PBSRPT_REPORTS' AND LOCALE = 'ru' AND COLUMNNAME = 'RPT_TITLE'";
+		return deleteTRANSLATIONLIST;
+	}
+	private static String getString_deletePBSRPT_REPORTS(String schema, String RPT_ID) {
+		String deletePBSRPT_REPORTS = "USE [SCPRD] DELETE FROM ["+schema+"].[PBSRPT_REPORTS] WHERE RPT_ID = '"+RPT_ID+"' ";
+		return deletePBSRPT_REPORTS;
 	}
 	/**
 	 * @return
@@ -462,5 +441,66 @@ public class ReportRelatedData {
 			LOg.logToFile_SQL(sql_);
 		}
 		return result;
+	}
+	
+	private static String getString_updatePBSRPT_REPORTS( String schema ,String nameReport, Integer categoryId, String newRPT_ID, Integer newCategoryId, String newNameReport, String newNameFileReport, Boolean rptActive ) throws Exception {
+		
+		String RPT_ID = getRPT_ID(nameReport, categoryId);
+		//
+		String setRPT_ID, setCategoryId, setNameReport, setNameFileReport,setRptActive = null;
+		if (newRPT_ID != null) setRPT_ID = ",RPT_ID = '"+newRPT_ID+"' ";
+		else setRPT_ID = "";
+		//
+		if (newCategoryId != null) setCategoryId = ",CATEGORY_ID = '"+newCategoryId+"' ";
+		else setCategoryId = "";
+		//
+		if (newNameReport != null) setNameReport = ",RPT_TITLE = N'"+newNameReport+"' ";
+		else setNameReport = "";
+		//  
+		if (newNameFileReport != null) setNameFileReport = ",BIRTRPT_URL = '/frameset?__report=report/"+newNameFileReport+".rptdesign' ";
+		else setNameFileReport = "";
+		//
+		if (rptActive != null) {
+			String YN = rptActive ? "Y" : "N";
+			setRptActive = ",RPT_ACTIVE = '"+YN+"' ";
+		} 
+		else setRptActive = "";
+		String temp = (setRPT_ID + setCategoryId + setNameReport + setNameFileReport+setRptActive);
+		String setFildsReport = temp.substring(1, temp.length());
+		
+		String updatePBSRPT_REPORTS = "USE [SCPRD] "
+				  +"UPDATE [SCPRD].["+schema+"].[PBSRPT_REPORTS] " 
+				  +"SET "
+				  +setFildsReport
+				  +",EDITWHO = N'add_rep' "
+				  +",EDITDATE = getutcdate() "
+				  +"WHERE RPT_ID = '"+RPT_ID+"'";
+		
+		return updatePBSRPT_REPORTS;
+		
+	}
+	
+	private static String getString_updateTRANSLATIONLIST(String schema, String RPT_ID, String newRPT_ID,String newNameReport) {
+		String setJOINKEY12345, setDescription = null;
+		if (newRPT_ID != null) setJOINKEY12345 = ",JOINKEY1 = '"+newRPT_ID+"' ,JOINKEY2 = '"+newRPT_ID+"' ,JOINKEY3 = '"+newRPT_ID+"' ,JOINKEY4 = '"+newRPT_ID+"' ,JOINKEY5 = '"+newRPT_ID+"' ,CODE = '"+newRPT_ID+"' ";                                                   
+		else setJOINKEY12345 = "";
+		//
+		if (newNameReport != null) setDescription = ",[DESCRIPTION] = N'"+newNameReport+"'"; 
+		else setDescription = "";
+		String temp2 = (setJOINKEY12345 + setDescription);
+		String setFildsTrans = temp2.substring(1, temp2.length());
+		
+		  String updateTRANSLATIONLIST = "USE [SCPRD] "
+									   +"UPDATE [SCPRD].["+schema+"].[TRANSLATIONLIST] "
+				  					   +"SET "+setFildsTrans
+				  					   +",EDITWHO = N'add_rep' "
+									   +",EDITDATE = getutcdate() "
+				  					   +"WHERE JOINKEY1 = '"+RPT_ID+"' "
+			  					   	     +"AND JOINKEY2 = '"+RPT_ID+"' "
+			  					   	     +"AND JOINKEY3 = '"+RPT_ID+"' "
+			  					   	     +"AND JOINKEY4 = '"+RPT_ID+"' "
+			  					   	     +"AND JOINKEY5 = '"+RPT_ID+"' "
+			  					   	     +"AND TBLNAME = 'PBSRPT_REPORTS' AND LOCALE = 'ru' AND COLUMNNAME = 'RPT_TITLE'";
+		return updateTRANSLATIONLIST;
 	}
 }
